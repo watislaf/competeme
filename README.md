@@ -1,6 +1,7 @@
 # Welcome to Remix + Vite + shadcn/ui!
 
-📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/future/vite) for details on supported features.
+📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/future/vite) for
+details on supported features.
 
 ## Getting Started
 
@@ -43,11 +44,3 @@ Run the Vite dev server:
 ```sh
 npm run dev
 ```
-
-## Deployment
-
-In the Cloudflare Dashboard:
-
-- Create a new Cloudflare Pages application
-- Set the `Build command` to `npm run build`
-- Set the `Build output directory` to `/build/client`
