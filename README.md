@@ -44,3 +44,30 @@ Run the Vite dev server:
 ```sh
 npm run dev
 ```
+
+### Run the Spring Server
+
+
+1. **Open the Project**  
+   Open the project in IntelliJ
+
+2. **Load Gradle Configurations**  
+   Navigate to `server/security/build.gradle.kts`, click **Load Script Configurations**, and select `/security`.
+
+3. **Set Up the Database**
+    - Click the **Database** button on the right panel.
+    - Click **+** → **Data Source** → **PostgreSQL**.
+    - Name the database **jwt_security** and copy its URL.
+
+4. **Configure Application Properties**  
+   Open `server/security/src/main/resources/application.properties` and paste the database URL after `spring.datasource.url=`.
+
+5. **Run the Project**
+    - Go to `server/security/src/main/java/com/colorpicker/security/SecurityApplication.java`.
+    - Click the **Run** button in the top right corner.
+
+6. **Verify Database Table**
+    - While the server is running, check if the `_user` table has been created:
+        - Open the **Database** menu.
+        - Click the **Refresh** button.
+        - Look under `jwt_security/public/tables` for the `_user` table.
