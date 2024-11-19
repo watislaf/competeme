@@ -45,29 +45,42 @@ Run the Vite dev server:
 npm run dev
 ```
 
+Here’s how to include instructions for running the Spring server through the command line:
+
+---
+
 ### Run the Spring Server
 
+1. **Navigate to the Project Directory**  
+   Open a terminal and navigate to the root directory of the project
 
-1. **Open the Project**  
-   Open the project in IntelliJ
+2. **Set Up the Database**
+   - Ensure you have PostgreSQL installed and running.
+   - Create a new database named `jwt_security`:
+     ```bash
+     psql -U your_username
+     CREATE DATABASE jwt_security;
 
-2. **Load Gradle Configurations**  
-   Navigate to `server/security/build.gradle.kts`, click **Load Script Configurations**, and select `/security`.
+3. **Build the Project**  
+   Run the following command to build the project using Gradle:
+   ```bash
+   ./gradlew build
+   ```
 
-3. **Set Up the Database**
-    - Click the **Database** button on the right panel.
-    - Click **+** → **Data Source** → **PostgreSQL**.
-    - Name the database **jwt_security** and copy its URL.
+4. **Run the Server**  
+   Start the server using the following command:
+   ```bash
+   ./gradlew bootRun
+   ```
 
-4. **Configure Application Properties**  
-   Open `server/security/src/main/resources/application.properties` and paste the database URL after `spring.datasource.url=`.
+5. **Verify Database Table**
+   - Open a PostgreSQL client (e.g., `psql`) and connect to the `jwt_security` database:
+     ```bash
+     psql -U your_username -d jwt_security
+     ```
+   - Check if the `_user` table has been created:
+     ```sql
+     \dt
+     ```
 
-5. **Run the Project**
-    - Go to `server/security/src/main/java/com/colorpicker/security/SecurityApplication.java`.
-    - Click the **Run** button in the top right corner.
-
-6. **Verify Database Table**
-    - While the server is running, check if the `_user` table has been created:
-        - Open the **Database** menu.
-        - Click the **Refresh** button.
-        - Look under `jwt_security/public/tables` for the `_user` table.
+If the `_user` table appears in the list of tables, the server has been successfully set up and is running.
