@@ -13,24 +13,90 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import axios from "axios";
+
+const API_URL = "http://localhost:8080/api/auth";
+
+const handleLogin = async (email: string, password: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/authenticate`, {
+      email,
+      password,
+    });
+    if (response.status === 200) {
+      return redirect("/dashboard");
+    }
+  } catch (error) {
+    console.error("Login error:", error.response?.data || error.message);
+    return json(
+      {
+        error:
+          error.response?.data?.message || "An error occurred during login",
+      },
+      { status: error.response?.status || 500 }
+    );
+  }
+};
+
+const handleSignup = async (email: string, password: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/register`, {
+      email,
+      password,
+    });
+    if (response.status === 200) {
+      return redirect("/onboarding");
+    }
+  } catch (error) {
+    console.error("Signup error:", error.response?.data || error.message);
+    return json(
+      {
+        error:
+          error.response?.data?.message || "An error occurred during signup",
+      },
+      { status: error.response?.status || 500 }
+    );
+  }
+};
+
+const validateCredentials = (email: string | null, password: string | null) => {
+  if (!email || !password) {
+    return json({ error: "Email and password are required" }, { status: 400 });
+  }
+  return null;
+};
+
+const validatePasswordsMatch = (
+  password: string,
+  confirmPassword: string | null
+) => {
+  if (password !== confirmPassword) {
+    return json({ error: "Passwords do not match" }, { status: 400 });
+  }
+  return null;
+};
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const action = formData.get("_action");
+  const email = formData.get("email");
+  const password = formData.get("password");
 
-  // Simulate authentication logic (replace with actual authentication in a real app)
+  const validationError = validateCredentials(email, password);
+  if (validationError) return validationError;
+
   if (action === "login") {
-    // Perform login
-    // If successful, redirect to dashboard
-    return redirect("/dashboard");
+    return handleLogin(email as string, password as string);
   } else if (action === "signup") {
-    // Perform signup
-    // If successful, redirect to onboarding
-    return redirect("/onboarding");
-  }
+    const confirmPassword = formData.get("confirmPassword");
+    const passwordMatchError = validatePasswordsMatch(
+      password as string,
+      confirmPassword
+    );
+    if (passwordMatchError) return passwordMatchError;
 
-  // If there's an error, return it
-  return json({ error: "Invalid credentials" });
+    return handleSignup(email as string, password as string);
+  }
 };
 
 export default function AuthPage() {
