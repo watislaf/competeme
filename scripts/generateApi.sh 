@@ -1,5 +1,5 @@
-API="$ADMIN_PANEL/api"
-SPEC_FILE="$API/api.json"
+API="app/api"
+SPEC_FILE="app/api/api.json"
 rm -f "$SPEC_FILE"
 
 if wget http://localhost:8080/api -O "$SPEC_FILE"; then

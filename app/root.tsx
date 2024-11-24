@@ -17,6 +17,30 @@ import {
 
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/remix";
+import {
+  MutationCache,
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    mutations: {
+      throwOnError: false,
+    },
+  },
+  queryCache: new QueryCache({
+    onError: (error, query) => {
+      console.error("Query Error:", error, query);
+    },
+  }),
+  mutationCache: new MutationCache({
+    onError: (error, variables, context, mutation) => {
+      console.error("Mutation Error:", error, { variables, context, mutation });
+    },
+  }),
+});
 
 function App({ children }: { children: React.ReactNode }) {
   return (
@@ -29,12 +53,13 @@ function App({ children }: { children: React.ReactNode }) {
         <ThemeSwitcherScript />
       </head>
       <body>
-        <GlobalPendingIndicator />
-        <Header />
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-        <Analytics />
+        <QueryClientProvider client={queryClient}>
+          <Header />
+          {children}
+          <ScrollRestoration />
+          <Scripts />
+          <Analytics />
+        </QueryClientProvider>
       </body>
     </ThemeSwitcherSafeHTML>
   );
