@@ -4,5 +4,9 @@
 .DS_Store
 .env
 *.log
+
+.idea
+.vscode
+
 build
 node_modules

@@ -23,34 +23,35 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegistrationRequest request) {
         var user = User.builder()
-                .email(request.email())
-                .password(passwordEncoder.encode(request.password()))
-                .role(Role.USER)
-                .build();
+            .email(request.email())
+            .password(passwordEncoder.encode(request.password()))
+            .role(Role.USER)
+            .build();
 
         repository.save(user);
+
         System.out.println("Saving user: " + user.getEmail());
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+            .token(jwtToken)
+            .build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.email(),
-                        request.password()
-                )
+            new UsernamePasswordAuthenticationToken(
+                request.email(),
+                request.password()
+            )
         );
 
         var user = repository.findByEmail(request.email())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         log.info("Saving user: {}", user.getEmail());
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+            .token(jwtToken)
+            .build();
     }
 }

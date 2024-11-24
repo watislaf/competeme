@@ -10,5 +10,10 @@
         <module name="security.main" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="security" target="21" />
+      <module name="security.main" target="21" />
+      <module name="security.test" target="21" />
+    </bytecodeTargetLevel>
   </component>
 </project>
