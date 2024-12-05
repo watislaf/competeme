@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Api } from "@/api/initializeApi";
 import type { AuthenticationRequest } from "@/api";
+import { ResponsiveContainer } from "recharts";
 
 export const useLoginMutation = () => {
   const navigate = useNavigate();
@@ -14,10 +15,10 @@ export const useLoginMutation = () => {
     mutationFn,
     onSuccess: (response) => {
       console.log(response);
-      // response.data.token;
-      // if (response.status === 200) {
-      //   navigate("/dashboard");
-      // }
+      if(response && response.data.accessToken){
+        localStorage.setItem("ACCESS_TOKEN_KEY", response.data.accessToken);
+        navigate("/dashboard");
+      }
     },
     // axios err
     onError: (error: any) => {
