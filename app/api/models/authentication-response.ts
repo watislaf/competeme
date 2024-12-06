@@ -25,6 +25,12 @@ export interface AuthenticationResponse {
      * @type {string}
      * @memberof AuthenticationResponse
      */
-    'token'?: string;
+    'accessToken'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthenticationResponse
+     */
+    'refreshToken'?: string;
 }
 

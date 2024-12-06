@@ -38,6 +38,8 @@ export default function AuthPage() {
     }
   };
 
+  const errorMessage = signUpError || loginError;
+
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center"
@@ -58,7 +60,7 @@ export default function AuthPage() {
           <AuthForm
             isSignUp={isSignUp}
             onSubmit={onSubmit}
-            error={signUpError || loginError}
+            error={errorMessage}
           />
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">

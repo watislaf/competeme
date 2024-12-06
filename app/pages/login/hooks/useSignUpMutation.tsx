@@ -2,14 +2,22 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Api } from "@/api/initializeApi";
+import { on } from "events";
 
 export const useSignUpMutation = () => {
   const navigate = useNavigate();
 
   const mutation = useMutation({
-    mutationFn: Api().auth.authenticate,
+    mutationFn: Api().auth.register,
     onSuccess: (response) => {
       console.log(response);
+     if(response && response.data.accessToken){
+       localStorage.setItem("ACCESS_TOKEN_KEY", response.data.accessToken);
+        navigate("/dashboard");
+     }
+    },
+    onError: (error: any) => {
+      return "An error occurred";
     },
     throwOnError: false,
   });
