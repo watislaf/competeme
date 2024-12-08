@@ -14,16 +14,18 @@ const isTokenAboutToExpire = (
 
 const getAccessToken = (): Promise<string> =>
   new Promise(async (resolve, reject) => {
-    console.log("fwefwe");
-
     const accessToken = localStorage.getItem("ACCESS_TOKEN_KEY");
     if (!accessToken) {
       return resolve("");
     }
+    // powinno zadziałać beztej linijki . Proszę się upewnić że useProfile się pobiera.
+    // Proszę przetestować przyapdek kiedy token nie działa (ani access ani refresh) wtedy
+    //  work/competeme/app/root.tsx tutaj w queryClient należy przechwycić ten błąd że token nie działa
+    // i przekeirować na stronę logowania
+    // if (!isTokenAboutToExpire(accessToken)) {
+    //   return resolve(accessToken);
+    // }
 
-    if (!isTokenAboutToExpire(accessToken)) {
-      return resolve(accessToken);
-    }
     const refreshToken = localStorage.getItem("REFRESH_TOKEN_KEY");
     if (!refreshToken) {
       return resolve("");
