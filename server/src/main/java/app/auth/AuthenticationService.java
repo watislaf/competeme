@@ -28,10 +28,10 @@ public class AuthenticationService {
         }
 
         var user = User.builder()
-                .email(request.email())
-                .password(passwordEncoder.encode(request.password()))
-                .role(Role.USER)
-                .build();
+            .email(request.email())
+            .password(passwordEncoder.encode(request.password()))
+            .role(Role.USER)
+            .build();
 
         repository.save(user);
 
@@ -40,21 +40,18 @@ public class AuthenticationService {
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
-        return AuthenticationResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        return new AuthenticationResponse(accessToken, refreshToken);
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var user = repository.findByEmail(request.email())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.email(),
-                        request.password()
-                )
+            new UsernamePasswordAuthenticationToken(
+                request.email(),
+                request.password()
+            )
         );
 
         log.info("Authenticating user: {}", user.getEmail());
@@ -62,11 +59,7 @@ public class AuthenticationService {
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        return new AuthenticationResponse(accessToken, refreshToken);
     }
 
     public AuthenticationResponse refresh(String refreshToken) {
@@ -76,9 +69,10 @@ public class AuthenticationService {
 
         String username = jwtService.extractUserEmail(refreshToken);
         var user = repository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         String newAccessToken = jwtService.generateAccessToken(user);
-        return new AuthenticationResponse(newAccessToken, refreshToken);
+        String newRefreshToken = jwtService.generateRefreshToken(user);
+        return new AuthenticationResponse(newAccessToken, newRefreshToken);
     }
 }

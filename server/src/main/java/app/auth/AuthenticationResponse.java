@@ -1,7 +1,9 @@
 package app.auth;
 
-import lombok.Builder;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@Builder
-public record AuthenticationResponse(String accessToken, String refreshToken) {
+public record AuthenticationResponse(
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) String accessToken,
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) String refreshToken
+) {
 }

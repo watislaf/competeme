@@ -1,4 +1,3 @@
-import { Link } from "@remix-run/react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,6 +30,7 @@ export default function AuthPage() {
     type: SubmitAction;
   }) => {
     if (type === SubmitAction.Login) {
+      console.log("login");
       login({ email, password });
     }
     if (type === SubmitAction.Signup) {
@@ -70,11 +70,6 @@ export default function AuthPage() {
             <Button variant="link" className="p-0" onClick={toggleAuthMode}>
               {isSignUp ? "Log In" : "Sign Up"}
             </Button>
-          </div>
-          <div className="text-center text-sm">
-            <Link to="/demo" className="text-primary hover:underline">
-              Try the demo
-            </Link>
           </div>
         </CardFooter>
       </Card>

@@ -1,39 +1,45 @@
-import globalAxios from "axios";
 import { AuthenticationControllerApi } from "./apis/authentication-controller-api";
 import { Configuration } from "./configuration";
 import { API_URL } from "@/config/vars";
+import { jwtDecode } from "jwt-decode";
 
-export class NoAccess extends Error {}
+const isTokenAboutToExpire = (
+  token: string,
+  thresholdInSeconds: number = 60
+): boolean => {
+  const decoded: { exp: number } = jwtDecode(token);
+  const currentTime = Math.floor(Date.now() / 1000);
+  return decoded.exp - currentTime <= thresholdInSeconds;
+};
 
 const getAccessToken = (): Promise<string> =>
-  new Promise((resolve) => {
-    return resolve(localStorage.getItem("ACCESS_TOKEN_KEY") || "");
-    // if (!getLocalAccessTokenExp()) {
-    //   resolve("");
-    // }
-    //
-    // const maxRequestTimeSec = 10;
-    // console.log(getLocalAccessTokenExp());
-    //
-    // const restTime =
-    //   +(getLocalAccessTokenExp() || 0) - Date.now() / 1000 - maxRequestTimeSec;
-    //
-    // if (restTime <= 0) {
-    //   const refreshToken = getLocalRefreshToken();
-    //
-    //   apis()
-    //     .auth.refresh({ refreshToken })
-    //     .then(({ data }) => {
-    //       setToken(data);
-    //       resolve(getLocalAccessToken());
-    //     })
-    //     .catch((_) => resolve(""));
-    // } else {
-    //   resolve(getLocalAccessToken());
-    // }
+  new Promise(async () => {
+    console.log("fwefwe");
+    const accessToken = localStorage.getItem("ACCESS_TOKEN_KEY");
+    if (!accessToken) {
+      return Promise.resolve("");
+    }
+
+    if (!isTokenAboutToExpire(accessToken)) {
+      return Promise.resolve(accessToken);
+    }
+    const refreshToken = localStorage.getItem("REFRESH_TOKEN_KEY");
+    if (!refreshToken) {
+      return Promise.resolve("");
+    }
+    const refreshedData = await apis().auth.refresh(refreshToken);
+    if (refreshedData.status === 200) {
+      localStorage.setItem("ACCESS_TOKEN_KEY", refreshedData.data.accessToken);
+      localStorage.setItem(
+        "REFRESH_TOKEN_KEY",
+        refreshedData.data.refreshToken
+      );
+      return Promise.resolve(refreshedData.data.accessToken);
+    }
+    return Promise.resolve("");
   });
 
-export const Api = () => {
+const Api = () => {
   const configuration = new Configuration({
     basePath: API_URL,
     accessToken: getAccessToken,

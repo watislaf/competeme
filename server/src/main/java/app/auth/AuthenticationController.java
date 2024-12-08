@@ -1,10 +1,11 @@
 package app.auth;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -14,36 +15,29 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public AuthenticationResponse register(
-            @RequestBody RegistrationRequest request
+        @RequestBody RegistrationRequest request
     ) {
         return service.register(request);
     }
 
     @PostMapping("/authenticate")
     public AuthenticationResponse authenticate(
-            @RequestBody AuthenticationRequest request
+        @RequestBody AuthenticationRequest request
     ) {
         return service.authenticate(request);
     }
 
     @PostMapping("/refresh-token")
     public AuthenticationResponse refresh(
-            @RequestBody String refreshToken
+        @RequestBody String refreshToken
     ) {
         return service.refresh(refreshToken);
     }
 
-//    @GetMapping("/email")
-//    @Parameter(
-//        name = "userDetails",
-//        required = true,
-//        description = "Details of the authenticated user",
-//        content = @Content(
-//            mediaType = "application/json",
-//            schema = @Schema(implementation = UserDetails.class)
-//        )
-//    )
-//    public String getEmail(@AuthenticationPrincipal UserDetails userDetails) {
-//        return userDetails.getUsername();
-//    }
+    @GetMapping("/email")
+    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    public String getEmail(@AuthenticationPrincipal UserDetails userDetails) {
+        System.out.println(userDetails);
+        return userDetails.getUsername();
+    }
 }

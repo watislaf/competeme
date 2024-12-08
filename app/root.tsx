@@ -7,8 +7,6 @@ import {
   ScrollRestoration,
   useRouteError,
 } from "@remix-run/react";
-
-import { GlobalPendingIndicator } from "@/components/global-pending-indicator";
 import { Header } from "@/components/header";
 import {
   ThemeSwitcherSafeHTML,
@@ -23,26 +21,38 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    mutations: {
-      throwOnError: false,
-    },
-  },
-  queryCache: new QueryCache({
-    onError: (error, query) => {
-      console.error("Query Error:", error, query);
-    },
-  }),
-  mutationCache: new MutationCache({
-    onError: (error, variables, context, mutation) => {
-      console.error("Mutation Error:", error, { variables, context, mutation });
-    },
-  }),
-});
+import { useNavigate } from "react-router-dom";
 
 function App({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
+
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      mutations: {
+        throwOnError: false,
+      },
+    },
+    queryCache: new QueryCache({
+      onError: (error, query) => {
+        if (error?.response?.status === 401) {
+          navigate("/login");
+          localStorage.removeItem("ACCESS_TOKEN_KEY");
+        }
+
+        console.error("Query Error:", error, query);
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError: (error, query) => {
+        if (error?.response?.status === 401) {
+          navigate("/login");
+          localStorage.removeItem("ACCESS_TOKEN_KEY");
+        }
+        console.error("Mutation Error:", error, query);
+      },
+    }),
+  });
+
   return (
     <ThemeSwitcherSafeHTML lang="en">
       <head>

@@ -70,6 +70,35 @@ export const AuthenticationControllerApiAxiosParamCreator = function (configurat
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEmail: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/v1/auth/email`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -162,6 +191,17 @@ export const AuthenticationControllerApiFp = function(configuration?: Configurat
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getEmail(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getEmail(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthenticationControllerApi.getEmail']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {string} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -205,6 +245,14 @@ export const AuthenticationControllerApiFactory = function (configuration?: Conf
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEmail(options?: RawAxiosRequestConfig): AxiosPromise<string> {
+            return localVarFp.getEmail(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -240,6 +288,16 @@ export class AuthenticationControllerApi extends BaseAPI {
      */
     public authenticate(authenticationRequest: AuthenticationRequest, options?: RawAxiosRequestConfig) {
         return AuthenticationControllerApiFp(this.configuration).authenticate(authenticationRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthenticationControllerApi
+     */
+    public getEmail(options?: RawAxiosRequestConfig) {
+        return AuthenticationControllerApiFp(this.configuration).getEmail(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

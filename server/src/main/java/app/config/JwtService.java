@@ -18,7 +18,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     private final long ACCESS_TOKEN_VALIDITY = 60 * 60 * 1000;
-    private final long REFRESH_TOKEN_VALIDITY = 30L * 24 * 60 * 60 * 1000;
+    private final long REFRESH_TOKEN_VALIDITY = 10L * 24 * 60 * 60 * 1000;
     @Value("${jwt.secret.key}")
     private String SECRET_KEY;
 
@@ -39,23 +39,19 @@ public class JwtService {
         return generateToken(new HashMap<>(), userDetails, REFRESH_TOKEN_VALIDITY);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails, ACCESS_TOKEN_VALIDITY);
-    }
-
     public String generateToken(
-            Map<String, Object> extraClaims,
-            UserDetails userDetails,
-            long validity
+        Map<String, Object> extraClaims,
+        UserDetails userDetails,
+        long validity
     ) {
         return Jwts
-                .builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + validity))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
+            .builder()
+            .setClaims(extraClaims)
+            .setSubject(userDetails.getUsername())
+            .setIssuedAt(new Date(System.currentTimeMillis()))
+            .setExpiration(new Date(System.currentTimeMillis() + validity))
+            .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+            .compact();
     }
 
     public boolean isTokenValid(String token) {
@@ -72,11 +68,11 @@ public class JwtService {
 
     private Claims extractAllClaims(String token) {
         return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+            .parserBuilder()
+            .setSigningKey(getSignInKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
     }
 
     private Key getSignInKey() {
