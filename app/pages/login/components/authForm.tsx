@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Form } from "@remix-run/react";
 import { Eye, EyeOff, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +24,7 @@ export function AuthForm({ isSignUp, error, onSubmit }: AuthFormProps) {
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   return (
-    <div method="post" className="space-y-4">
+    <div className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <div className="relative">

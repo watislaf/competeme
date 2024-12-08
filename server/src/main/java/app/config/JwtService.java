@@ -17,6 +17,8 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
+    private final long ACCESS_TOKEN_VALIDITY = 60 * 60 * 1000;
+    private final long REFRESH_TOKEN_VALIDITY = 10L * 24 * 60 * 60 * 1000;
     @Value("${jwt.secret.key}")
     private String SECRET_KEY;
 
@@ -29,27 +31,31 @@ public class JwtService {
         return claimResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateAccessToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails, ACCESS_TOKEN_VALIDITY);
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails, REFRESH_TOKEN_VALIDITY);
     }
 
     public String generateToken(
         Map<String, Object> extraClaims,
-        UserDetails userDetails
+        UserDetails userDetails,
+        long validity
     ) {
         return Jwts
             .builder()
             .setClaims(extraClaims)
             .setSubject(userDetails.getUsername())
             .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + 30 * 1000))
+            .setExpiration(new Date(System.currentTimeMillis() + validity))
             .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact();
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String userEmail = extractUserEmail(token);
-        return userEmail.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    public boolean isTokenValid(String token) {
+        return !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
