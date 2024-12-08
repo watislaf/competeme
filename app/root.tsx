@@ -28,8 +28,8 @@ function App({ children }: { children: React.ReactNode }) {
 
   const queryClient = new QueryClient({
     defaultOptions: {
-      mutations: {
-        throwOnError: false,
+      queries: {
+        retry: false,
       },
     },
     queryCache: new QueryCache({

@@ -13,19 +13,20 @@ const isTokenAboutToExpire = (
 };
 
 const getAccessToken = (): Promise<string> =>
-  new Promise(async () => {
+  new Promise(async (resolve, reject) => {
     console.log("fwefwe");
+
     const accessToken = localStorage.getItem("ACCESS_TOKEN_KEY");
     if (!accessToken) {
-      return Promise.resolve("");
+      return resolve("");
     }
 
     if (!isTokenAboutToExpire(accessToken)) {
-      return Promise.resolve(accessToken);
+      return resolve(accessToken);
     }
     const refreshToken = localStorage.getItem("REFRESH_TOKEN_KEY");
     if (!refreshToken) {
-      return Promise.resolve("");
+      return resolve("");
     }
     const refreshedData = await apis().auth.refresh(refreshToken);
     if (refreshedData.status === 200) {
@@ -34,9 +35,9 @@ const getAccessToken = (): Promise<string> =>
         "REFRESH_TOKEN_KEY",
         refreshedData.data.refreshToken
       );
-      return Promise.resolve(refreshedData.data.accessToken);
+      return resolve(refreshedData.data.accessToken);
     }
-    return Promise.resolve("");
+    return resolve("");
   });
 
 const Api = () => {

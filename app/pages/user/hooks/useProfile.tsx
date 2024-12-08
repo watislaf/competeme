@@ -3,7 +3,10 @@ import { apis } from "@/api/initializeApi";
 
 export const useProfile = () => {
   return useQuery({
-    queryKey: ["profile", Math.random()], // use user profile ud as additional key instead
-    queryFn: apis().auth.getEmail,
+    queryKey: ["profile"], // use user profile ud as additional key instead
+    queryFn: async () => {
+      const result = await apis().auth.getEmail();
+      return result.data;
+    },
   });
 };

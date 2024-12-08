@@ -3,19 +3,11 @@ import { Bell, Edit, Lock, Settings, User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { apis } from "@/api/initializeApi";
+import { useProfile } from "@/pages/user/hooks/useProfile";
 
 export default function ProfilePage() {
-  apis()
-    .auth.getEmail()
-    .then((e) => {
-      console.log(e);
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-  //  const { data, isLoading } = useProfile();
-  //  console.log(data, isLoading);
+  const { data, isLoading } = useProfile();
+  console.log(data, isLoading);
   const user = {
     name: "Jane Doe",
     username: "jane_tracker",
