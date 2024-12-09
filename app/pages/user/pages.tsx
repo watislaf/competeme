@@ -7,7 +7,6 @@ import { useProfile } from "@/pages/user/hooks/useProfile";
 
 export default function ProfilePage() {
   const { data, isLoading } = useProfile();
-  console.log(data, isLoading);
   const user = {
     name: "Jane Doe",
     username: "jane_tracker",

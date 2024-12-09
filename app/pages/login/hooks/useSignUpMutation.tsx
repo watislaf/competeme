@@ -17,7 +17,6 @@ export const useSignUpMutation = () => {
   const mutation = useMutation({
     mutationFn: apis().auth.register,
     onSuccess: (response) => {
-      console.log(response);
       localStorage.setItem("ACCESS_TOKEN_KEY", response.data.accessToken);
       localStorage.setItem("REFRESH_TOKEN_KEY", response.data.refreshToken);
       navigation("/user");

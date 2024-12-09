@@ -37,7 +37,6 @@ public class AuthenticationController {
     @GetMapping("/email")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
     public String getEmail(@AuthenticationPrincipal UserDetails userDetails) {
-        System.out.println(userDetails);
         return userDetails.getUsername();
     }
 }

@@ -1,6 +1,7 @@
 package app.auth;
 
 import app.config.JwtService;
+import app.excpetions.Unauthorized;
 import app.user.Role;
 import app.user.User;
 import app.user.UserRepository;
@@ -69,7 +70,7 @@ public class AuthenticationService {
 
         String username = jwtService.extractUserEmail(refreshToken);
         var user = repository.findByEmail(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            .orElseThrow(Unauthorized::new);
 
         String newAccessToken = jwtService.generateAccessToken(user);
         String newRefreshToken = jwtService.generateRefreshToken(user);

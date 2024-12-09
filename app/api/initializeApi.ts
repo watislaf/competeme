@@ -18,26 +18,30 @@ const getAccessToken = (): Promise<string> =>
     if (!accessToken) {
       return resolve("");
     }
-    // powinno zadziałać beztej linijki . Proszę się upewnić że useProfile się pobiera.
-    // Proszę przetestować przyapdek kiedy token nie działa (ani access ani refresh) wtedy
-    //  work/competeme/app/root.tsx tutaj w queryClient należy przechwycić ten błąd że token nie działa
-    // i przekeirować na stronę logowania
-    // if (!isTokenAboutToExpire(accessToken)) {
-    //   return resolve(accessToken);
-    // }
+
+    if (!isTokenAboutToExpire(accessToken)) {
+      return resolve(accessToken);
+    }
 
     const refreshToken = localStorage.getItem("REFRESH_TOKEN_KEY");
     if (!refreshToken) {
       return resolve("");
     }
-    const refreshedData = await apis().auth.refresh(refreshToken);
-    if (refreshedData.status === 200) {
-      localStorage.setItem("ACCESS_TOKEN_KEY", refreshedData.data.accessToken);
-      localStorage.setItem(
-        "REFRESH_TOKEN_KEY",
-        refreshedData.data.refreshToken
-      );
-      return resolve(refreshedData.data.accessToken);
+    try {
+      const refreshedData = await apis().auth.refresh(refreshToken + "42");
+      if (refreshedData.status === 200) {
+        localStorage.setItem(
+          "ACCESS_TOKEN_KEY",
+          refreshedData.data.accessToken
+        );
+        localStorage.setItem(
+          "REFRESH_TOKEN_KEY",
+          refreshedData.data.refreshToken
+        );
+        return resolve(refreshedData.data.accessToken);
+      }
+    } catch (error) {
+      return resolve("");
     }
     return resolve("");
   });

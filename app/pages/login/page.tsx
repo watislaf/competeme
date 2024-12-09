@@ -30,7 +30,6 @@ export default function AuthPage() {
     type: SubmitAction;
   }) => {
     if (type === SubmitAction.Login) {
-      console.log("login");
       login({ email, password });
     }
     if (type === SubmitAction.Signup) {
