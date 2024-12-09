@@ -1,28 +1,28 @@
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import { apis } from "@/api/initializeApi";
 import { useNavigate } from "react-router-dom";
-import { Api } from "@/api/initializeApi";
+
+const transformationError = (error: any) => {
+  if (error === null) {
+    return undefined;
+  }
+  if (error?.response?.status === 404) {
+    return "Invalid credentials";
+  }
+  return "An error occurred";
+};
 
 export const useSignUpMutation = () => {
-  const navigate = useNavigate();
-
+  const navigation = useNavigate();
   const mutation = useMutation({
-    mutationFn: Api().auth.authenticate,
+    mutationFn: apis().auth.register,
     onSuccess: (response) => {
-      console.log(response);
+      localStorage.setItem("ACCESS_TOKEN_KEY", response.data.accessToken);
+      localStorage.setItem("REFRESH_TOKEN_KEY", response.data.refreshToken);
+      navigation("/user");
     },
     throwOnError: false,
   });
-
-  const transformationError = (error: any) => {
-    if (error === null) {
-      return null;
-    }
-    if (error.response.status === 404) {
-      return "Invalid credentials";
-    }
-    return "An error occurred";
-  };
 
   return {
     ...mutation,

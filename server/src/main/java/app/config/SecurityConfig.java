@@ -29,7 +29,12 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/**", "/swagger-ui/**", "/api/auth/register", "/api/auth/authenticate").permitAll()
+                .requestMatchers(
+                    "/swagger-ui/**",
+                    "/api/v1/auth/register",
+                    "/api/v1/auth/authenticate",
+                    "/api/v1/auth/refresh-token"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session

@@ -1,4 +1,3 @@
-import { Link } from "@remix-run/react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -38,6 +37,8 @@ export default function AuthPage() {
     }
   };
 
+  const errorMessage = signUpError || loginError;
+
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center"
@@ -58,7 +59,7 @@ export default function AuthPage() {
           <AuthForm
             isSignUp={isSignUp}
             onSubmit={onSubmit}
-            error={signUpError || loginError}
+            error={errorMessage}
           />
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
@@ -68,11 +69,6 @@ export default function AuthPage() {
             <Button variant="link" className="p-0" onClick={toggleAuthMode}>
               {isSignUp ? "Log In" : "Sign Up"}
             </Button>
-          </div>
-          <div className="text-center text-sm">
-            <Link to="/demo" className="text-primary hover:underline">
-              Try the demo
-            </Link>
           </div>
         </CardFooter>
       </Card>

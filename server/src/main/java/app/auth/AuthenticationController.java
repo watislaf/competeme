@@ -1,19 +1,11 @@
 package app.auth;
 
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
-
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -35,16 +27,15 @@ public class AuthenticationController {
         return service.authenticate(request);
     }
 
+    @PostMapping("/refresh-token")
+    public AuthenticationResponse refresh(
+        @RequestBody String refreshToken
+    ) {
+        return service.refresh(refreshToken);
+    }
+
     @GetMapping("/email")
-    @Parameter(
-        name = "userDetails",
-        required = true,
-        description = "Details of the authenticated user",
-        content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(implementation = UserDetails.class)
-        )
-    )
+    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
     public String getEmail(@AuthenticationPrincipal UserDetails userDetails) {
         return userDetails.getUsername();
     }

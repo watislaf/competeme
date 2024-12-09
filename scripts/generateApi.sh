@@ -8,7 +8,6 @@ if wget http://localhost:8080/api -O "$SPEC_FILE"; then
     -g typescript-axios \
     -i "$SPEC_FILE" \
     -c "$API/.openapi-generator-configuration.json" \
-    -t "$API/custom-templates" \
     -o "$API" \
     --api-package apis \
     --model-package models \
