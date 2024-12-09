@@ -1,12 +1,14 @@
 package app.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@Data
-@AllArgsConstructor
-public class UserSearchResponse {
-    private Integer id;
-    private String username;
-    private String imageUrl;
-}
+public record UserSearchResponse (
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+        Integer id,
+
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+        String username,
+
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+        String imageUrl
+) {}
