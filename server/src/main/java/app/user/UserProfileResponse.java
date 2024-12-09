@@ -1,21 +1,25 @@
 package app.user;
 
-import lombok.AllArgsConstructor;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserProfileResponse {
-    private Integer id;
-    private String name;
-    private String email;
-    private String imageUrl;
-    private LocalDateTime dateJoined;
-}
+public record UserProfileResponse(
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+        Integer id,
+
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+        String name,
+
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+        String email,
+
+        @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+        String imageUrl,
+
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+        LocalDateTime dateJoined
+) {}
 
