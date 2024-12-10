@@ -21,7 +21,7 @@ public class UserController {
 
     @GetMapping("/{userId}/idprofile")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
-    public ResponseEntity<UserProfileResponse> getUserProfile(@PathVariable Integer userId, @AuthenticationPrincipal UserDetails userDetails) throws AccessDeniedException {
+    public UserProfileResponse getUserProfile(@PathVariable Integer userId, @AuthenticationPrincipal UserDetails userDetails) throws AccessDeniedException {
         return userService.getUserProfile(userId, userDetails);
     }
 

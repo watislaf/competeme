@@ -24,12 +24,7 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
     }
 
-    public ResponseEntity<UserProfileResponse> getUserProfile(Integer userId, UserDetails userDetails) {
-        if (!userDetails.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ADMIN") || auth.getAuthority().equals("USER"))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-
+    public UserProfileResponse getUserProfile(Integer userId, UserDetails userDetails) {
         User user = getUserById(userId);
         UserProfileResponse response = UserProfileResponse.builder()
                 .id(user.getId())
@@ -38,7 +33,8 @@ public class UserService {
                 .imageUrl(user.getImageUrl())
                 .dateJoined(user.getDateJoined())
                 .build();
-        return ResponseEntity.ok(response);
+
+        return response;
     }
 
     public List<UserSearchResponse> searchUsersSorted(String keyword) {
