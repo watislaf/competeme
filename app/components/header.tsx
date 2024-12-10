@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/styles";
+import { useState, useEffect } from "react";
 
 export function Header() {
   const hydrated = useHydrated();
@@ -26,11 +27,23 @@ export function Header() {
   }, []);
   const theme = getTheme();
   const location = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("ACCESS_TOKEN_KEY");
+    const storedUserId = localStorage.getItem("USER_ID");
+
+    if (token && storedUserId) {
+      setIsLoggedIn(true);
+      setUserId(storedUserId);
+    }
+  }, []);
 
   const navItems = [
     { name: "Home", path: "/" },
     { name: "User Stats", path: "/stats" },
-    { name: "Login", path: "/login" },
+    // { name: "Login", path: "/login" },
     { name: "Friends", path: "/friends" },
     { name: "Challenges", path: "/challenges" },
     { name: "Activity", path: "/activity" },
@@ -61,7 +74,31 @@ export function Header() {
             </li>
           ))}
         </ul>
-        <DropdownMenu>
+        <div className="flex items-center space-x-4">
+          {isLoggedIn ? (
+            <div>
+            <Link to={`/users/${userId}/profile`}>
+            <img
+              src="/path" // TODO: Add user avatar
+              alt="user avatar"
+            className="w-10 h-10 rounded-full"
+            />
+          </Link>
+          </div>
+    ) : (
+      <Link
+      to="/login"
+      className={cn(
+        "px-4 py-2 rounded-md  ",
+        location.pathname === "/login"
+          ? "bg-gray-300"
+          : "bg-gray-200"
+      )}
+      >
+        Login
+      </Link>
+    )}
+    <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               className="w-10 h-10 rounded-full border"
@@ -113,6 +150,7 @@ export function Header() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        </div>
       </div>
     </header>
   );
