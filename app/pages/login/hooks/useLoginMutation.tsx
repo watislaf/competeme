@@ -18,9 +18,11 @@ export const useLoginMutation = () => {
   const mutation = useMutation({
     mutationFn: apis().auth.authenticate,
     onSuccess: (response) => {
+      const { accessToken, refreshToken, userId } = response.data;
       localStorage.setItem("ACCESS_TOKEN_KEY", response.data.accessToken);
       localStorage.setItem("REFRESH_TOKEN_KEY", response.data.refreshToken);
-      navigation("/user");
+      localStorage.setItem("USER_ID", response.data.userId);
+      navigation(`/users/${response.data.userId}/profile`);
     },
 
     throwOnError: false,

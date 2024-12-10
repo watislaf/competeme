@@ -29,10 +29,10 @@ public class AuthenticationService {
         }
 
         var user = User.builder()
-            .email(request.email())
-            .password(passwordEncoder.encode(request.password()))
-            .role(Role.USER)
-            .build();
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .role(Role.USER)
+                .build();
 
         repository.save(user);
 
@@ -41,18 +41,18 @@ public class AuthenticationService {
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
-        return new AuthenticationResponse(accessToken, refreshToken);
+        return new AuthenticationResponse(accessToken, refreshToken, user.getId());
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var user = repository.findByEmail(request.email())
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                request.email(),
-                request.password()
-            )
+                new UsernamePasswordAuthenticationToken(
+                        request.email(),
+                        request.password()
+                )
         );
 
         log.info("Authenticating user: {}", user.getEmail());
@@ -60,7 +60,7 @@ public class AuthenticationService {
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
-        return new AuthenticationResponse(accessToken, refreshToken);
+        return new AuthenticationResponse(accessToken, refreshToken, user.getId());
     }
 
     public AuthenticationResponse refresh(String refreshToken) {
@@ -70,10 +70,10 @@ public class AuthenticationService {
 
         String username = jwtService.extractUserEmail(refreshToken);
         var user = repository.findByEmail(username)
-            .orElseThrow(Unauthorized::new);
+                .orElseThrow(Unauthorized::new);
 
         String newAccessToken = jwtService.generateAccessToken(user);
         String newRefreshToken = jwtService.generateRefreshToken(user);
-        return new AuthenticationResponse(newAccessToken, newRefreshToken);
+        return new AuthenticationResponse(newAccessToken, newRefreshToken, user.getId());
     }
 }

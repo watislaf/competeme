@@ -17,9 +17,10 @@ export const useSignUpMutation = () => {
   const mutation = useMutation({
     mutationFn: apis().auth.register,
     onSuccess: (response) => {
+      const { accessToken, refreshToken, userId } = response.data;
       localStorage.setItem("ACCESS_TOKEN_KEY", response.data.accessToken);
       localStorage.setItem("REFRESH_TOKEN_KEY", response.data.refreshToken);
-      navigation("/user");
+      navigation(`/users/${response.data.userId}/profile`);
     },
     throwOnError: false,
   });

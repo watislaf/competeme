@@ -4,9 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useProfile } from "@/pages/user/hooks/useProfile";
+import { useParams } from "@remix-run/react";
 
 export default function ProfilePage() {
-  const { data, isLoading } = useProfile();
+  const { userId } = useParams();
+  const { data, isLoading } = useProfile(userId);
+
   const user = {
     name: "Jane Doe",
     username: "jane_tracker",
@@ -15,6 +18,11 @@ export default function ProfilePage() {
     topActivity: "Running",
     topActivityTime: "40h 15m",
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-start mb-8">
@@ -24,8 +32,8 @@ export default function ProfilePage() {
             <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="text-2xl font-bold">{user.name}</h1>
-            <p className="text-muted-foreground">@{user.username}</p>
+            <h1 className="text-2xl font-bold">{data}</h1>
+            {/* <p className="text-muted-foreground">@{user.username}</p> */}
           </div>
         </div>
         <Link to="/settings">

@@ -32,5 +32,11 @@ export interface AuthenticationResponse {
      * @memberof AuthenticationResponse
      */
     'refreshToken': string;
+    /**
+     * 
+     * @type {}
+     * @memberof AuthenticationResponse
+     */
+    'userId': ;
 }
 
