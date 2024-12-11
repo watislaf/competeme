@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/styles";
 import { useProfile } from "@/pages/user/hooks/useProfile";
-import { useState } from "react";
 
 export function Header() {
   const hydrated = useHydrated();
