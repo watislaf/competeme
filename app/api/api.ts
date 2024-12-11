@@ -15,4 +15,5 @@
 
 
 export * from './apis/authentication-controller-api';
+export * from './apis/user-controller-api';
 

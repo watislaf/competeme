@@ -34,6 +34,7 @@ public class AuthenticationController {
         return service.refresh(refreshToken);
     }
 
+    // TODO delete
     @GetMapping("/email")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
     public String getEmail(@AuthenticationPrincipal UserDetails userDetails) {
