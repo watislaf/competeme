@@ -23,10 +23,10 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final List<String> PERMIT_ALL_ENDPOINTS = List.of(
-        "/swagger-ui/**",
         "/api/v1/auth/register",
         "/api/v1/auth/authenticate",
-        "/api/v1/auth/refresh-token"
+        "/api/v1/auth/refresh-token",
+        "/api/spec"
     );
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;

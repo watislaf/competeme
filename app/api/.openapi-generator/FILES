@@ -2,6 +2,7 @@
 .npmignore
 api.ts
 apis/authentication-controller-api.ts
+apis/user-controller-api.ts
 base.ts
 common.ts
 configuration.ts
@@ -11,3 +12,5 @@ models/authentication-request.ts
 models/authentication-response.ts
 models/index.ts
 models/registration-request.ts
+models/user-profile-response.ts
+models/user-search-response.ts
