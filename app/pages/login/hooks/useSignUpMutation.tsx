@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apis } from "@/api/initializeApi";
 import { useNavigate } from "react-router-dom";
 
@@ -14,12 +14,13 @@ const transformationError = (error: any) => {
 
 export const useSignUpMutation = () => {
   const navigation = useNavigate();
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: apis().auth.register,
     onSuccess: (response) => {
-      const { accessToken, refreshToken, userId } = response.data;
       localStorage.setItem("ACCESS_TOKEN_KEY", response.data.accessToken);
       localStorage.setItem("REFRESH_TOKEN_KEY", response.data.refreshToken);
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
       navigation(`/users/${response.data.userId}/profile`);
     },
     throwOnError: false,

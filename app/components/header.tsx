@@ -16,7 +16,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/styles";
-import { useState, useEffect } from "react";
+import { useProfile } from "@/pages/user/hooks/useProfile";
+import { useState } from "react";
 
 export function Header() {
   const hydrated = useHydrated();
@@ -27,23 +28,11 @@ export function Header() {
   }, []);
   const theme = getTheme();
   const location = useLocation();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userId, setUserId] = useState("");
-
-  useEffect(() => {
-    const token = localStorage.getItem("ACCESS_TOKEN_KEY");
-    const storedUserId = localStorage.getItem("USER_ID");
-
-    if (token && storedUserId) {
-      setIsLoggedIn(true);
-      setUserId(storedUserId);
-    }
-  }, []);
+  const { data, isLoading } = useProfile();
 
   const navItems = [
     { name: "Home", path: "/" },
     { name: "User Stats", path: "/stats" },
-    // { name: "Login", path: "/login" },
     { name: "Friends", path: "/friends" },
     { name: "Challenges", path: "/challenges" },
     { name: "Activity", path: "/activity" },
@@ -75,15 +64,15 @@ export function Header() {
           ))}
         </ul>
         <div className="flex items-center space-x-4">
-          {isLoggedIn ? (
+          {!isLoading && data ? (
             <div>
-            <Link to={`/users/${userId}/profile`}>
+            {/* <Link to={`/users/${userId}/profile`}> */} 
             <img
-              src="/path" // TODO: Add user avatar
+              src="https://picsum.photos/100/100" // TODO: Add user avatar
               alt="user avatar"
             className="w-10 h-10 rounded-full"
             />
-          </Link>
+          {/* </Link> */}
           </div>
     ) : (
       <Link
