@@ -68,8 +68,8 @@ public class AuthenticationService {
             throw new JwtException("Invalid refresh token");
         }
 
-        String username = jwtService.extractUserEmail(refreshToken);
-        var user = repository.findByEmail(username)
+        String userId = jwtService.extractUserId(refreshToken);
+        var user = repository.findById(Integer.valueOf(userId))
                 .orElseThrow(Unauthorized::new);
 
         String newAccessToken = jwtService.generateAccessToken(user);
