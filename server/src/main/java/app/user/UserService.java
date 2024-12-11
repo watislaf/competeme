@@ -2,17 +2,11 @@ package app.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 
-import java.util.stream.Collectors;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,27 +15,25 @@ public class UserService {
 
     public User getUserById(Integer userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+            .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
     }
 
-    public UserProfileResponse getUserProfile(Integer userId, UserDetails userDetails) {
+    public UserProfileResponse getUserProfile(Integer userId) {
         User user = getUserById(userId);
-        UserProfileResponse response = UserProfileResponse.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .imageUrl(user.getImageUrl())
-                .dateJoined(user.getDateJoined())
-                .build();
 
-        return response;
+        return UserProfileResponse.builder()
+            .id(user.getId())
+            .name(user.getName())
+            .email(user.getEmail())
+            .imageUrl(user.getImageUrl())
+            .dateJoined(user.getDateJoined())
+            .build();
     }
 
     public List<UserSearchResponse> searchUsersSorted(String keyword) {
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
         return userRepository.findByNameContainingIgnoreCase(keyword, sort).stream()
-                .map(user -> new UserSearchResponse(user.getId(), user.getName(), user.getImageUrl()))
-                .collect(Collectors.toList());
+            .map(user -> new UserSearchResponse(user.getId(), user.getName(), user.getImageUrl()))
+            .collect(Collectors.toList());
     }
 }
-

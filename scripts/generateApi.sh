@@ -2,7 +2,7 @@ API="app/api"
 SPEC_FILE="app/api/api.json"
 rm -f "$SPEC_FILE"
 
-if wget http://localhost:8080/api -O "$SPEC_FILE"; then
+if wget http://localhost:8080/api/spec -O "$SPEC_FILE"; then
   cd "$ADMIN_PANEL" || exit
   npx openapi-generator-cli generate \
     -g typescript-axios \
@@ -16,5 +16,5 @@ if wget http://localhost:8080/api -O "$SPEC_FILE"; then
   cd || exit
   rm -f "$SPEC_FILE"
 else
- echo run server
+ echo run server first
 fi
