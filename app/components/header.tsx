@@ -7,6 +7,7 @@ import {
   setTheme as setSystemTheme,
 } from "@/components/theme-switcher";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -65,13 +66,12 @@ export function Header() {
         <div className="flex items-center space-x-4">
           {!isLoading && data ? (
             <div>
-            {/* <Link to={`/users/${userId}/profile`}> */} 
-            <img
-              src="https://picsum.photos/100/100" // TODO: Add user avatar
-              alt="user avatar"
-            className="w-10 h-10 rounded-full"
-            />
-          {/* </Link> */}
+              <Link to={`/users/${data.id}/profile`}>
+            <Avatar className="w-10 h-10">
+            <AvatarImage src={data.imageUrl} alt={data.name} />
+            <AvatarFallback>{data.name ? data.name.charAt(0) : "A"}</AvatarFallback> {/* TODO: add a fallback to the avatar */}
+          </Avatar>
+          </Link>
           </div>
     ) : (
       <Link
