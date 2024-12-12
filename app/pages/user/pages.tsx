@@ -23,17 +23,20 @@ export default function ProfilePage() {
     return <div>Loading...</div>;
   }
 
+  console.log(data);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-start mb-8">
         <div className="flex items-center gap-4">
           <Avatar className="w-24 h-24">
-            <AvatarImage src={user.avatar} alt={user.name} />
-            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+            <AvatarImage src={data?.imageUrl} alt={data?.name} />
+            <AvatarFallback>A</AvatarFallback> {/* TODO: add a fallback to the avatar */}
           </Avatar>
           <div>
-            <h1 className="text-2xl font-bold">{data}</h1>
-            {/* <p className="text-muted-foreground">@{user.username}</p> */}
+            {/*will change it if needed*/}
+            <h1 className="text-2xl font-bold">{data?.name}</h1>
+             <p className="text-muted-foreground">{`Joined: ${data?.dateJoined}`}</p>
           </div>
         </div>
         <Link to="/settings">
