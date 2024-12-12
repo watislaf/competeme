@@ -69,7 +69,7 @@ export function Header() {
               <Link to={`/users/${data.id}/profile`}>
             <Avatar className="w-10 h-10">
             <AvatarImage src={data.imageUrl} alt={data.name} />
-            <AvatarFallback>{data.name ? data.name.charAt(0) : "A"}</AvatarFallback> {/* TODO: add a fallback to the avatar */}
+              <AvatarFallback>{data?.name.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           </Link>
           </div>

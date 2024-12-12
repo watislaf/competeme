@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -24,6 +26,10 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegistrationRequest request) {
+        if (repository.findByName(request.username()).isPresent()) {
+            throw new IllegalArgumentException("Username is already in use");
+        }
+
         if (repository.findByEmail(request.email()).isPresent()) {
             throw new IllegalArgumentException("User with this email already exists");
         }
@@ -31,6 +37,8 @@ public class AuthenticationService {
         var user = User.builder()
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
+                .name(request.username())
+                .dateJoined(new Date())
                 .role(Role.USER)
                 .build();
 

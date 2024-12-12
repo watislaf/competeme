@@ -23,7 +23,14 @@ export default function ProfilePage() {
     return <div>Loading...</div>;
   }
 
-  console.log(data);
+  const formatDate = (dateJoined: string) => {
+    const date = new Date(dateJoined);
+    return new Intl.DateTimeFormat("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }).format(date);
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -31,12 +38,12 @@ export default function ProfilePage() {
         <div className="flex items-center gap-4">
           <Avatar className="w-24 h-24">
             <AvatarImage src={data?.imageUrl} alt={data?.name} />
-            <AvatarFallback>A</AvatarFallback> {/* TODO: add a fallback to the avatar */}
+            <AvatarFallback>{data?.name.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div>
             {/*will change it if needed*/}
             <h1 className="text-2xl font-bold">{data?.name}</h1>
-             <p className="text-muted-foreground">{`Joined: ${data?.dateJoined}`}</p>
+             <p className="text-muted-foreground">{`Joined: ${formatDate(data?.dateJoined)}`}</p>
           </div>
         </div>
         <Link to="/settings">

@@ -21,10 +21,12 @@ export default function AuthPage() {
   const { mutate: signUp, error: signUpError } = useSignUpMutation();
   const { mutate: login, error: loginError } = useLoginMutation();
   const onSubmit = ({
+    username,
     email,
     password,
     type,
   }: {
+    username: string;
     email: string;
     password: string;
     type: SubmitAction;
@@ -33,7 +35,7 @@ export default function AuthPage() {
       login({ email, password });
     }
     if (type === SubmitAction.Signup) {
-      signUp({ email, password });
+      signUp({ username,email, password });
     }
   };
 
