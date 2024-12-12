@@ -7,6 +7,7 @@ import {
   setTheme as setSystemTheme,
 } from "@/components/theme-switcher";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/styles";
+import { useProfile } from "@/pages/user/hooks/useProfile";
 
 export function Header() {
   const hydrated = useHydrated();
@@ -26,11 +28,11 @@ export function Header() {
   }, []);
   const theme = getTheme();
   const location = useLocation();
+  const { data, isLoading } = useProfile();
 
   const navItems = [
     { name: "Home", path: "/" },
     { name: "User Stats", path: "/stats" },
-    { name: "Login", path: "/login" },
     { name: "Friends", path: "/friends" },
     { name: "Challenges", path: "/challenges" },
     { name: "Activity", path: "/activity" },
@@ -61,7 +63,30 @@ export function Header() {
             </li>
           ))}
         </ul>
-        <DropdownMenu>
+        <div className="flex items-center space-x-4">
+          {!isLoading && data ? (
+            <div>
+              <Link to={`/users/${data.id}/profile`}>
+            <Avatar className="w-10 h-10">
+            <AvatarImage src={data.imageUrl} alt={data.name} />
+              <AvatarFallback>{data?.name.charAt(0).toUpperCase()}</AvatarFallback>
+          </Avatar>
+          </Link>
+          </div>
+    ) : (
+      <Link
+      to="/login"
+      className={cn(
+        "px-4 py-2 rounded-md  ",
+        location.pathname === "/login"
+          ? "bg-gray-300"
+          : "bg-gray-200"
+      )}
+      >
+        Login
+      </Link>
+    )}
+    <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               className="w-10 h-10 rounded-full border"
@@ -113,6 +138,7 @@ export function Header() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        </div>
       </div>
     </header>
   );

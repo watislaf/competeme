@@ -1,4 +1,4 @@
 package app.auth;
 
-public record RegistrationRequest(String email, String password) {
+public record RegistrationRequest(String username, String email, String password) {
 }

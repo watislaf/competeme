@@ -15,21 +15,21 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public AuthenticationResponse register(
-        @RequestBody RegistrationRequest request
+            @RequestBody RegistrationRequest request
     ) {
         return service.register(request);
     }
 
     @PostMapping("/authenticate")
     public AuthenticationResponse authenticate(
-        @RequestBody AuthenticationRequest request
+            @RequestBody AuthenticationRequest request
     ) {
         return service.authenticate(request);
     }
 
     @PostMapping("/refresh-token")
     public AuthenticationResponse refresh(
-        @RequestBody String refreshToken
+            @RequestBody String refreshToken
     ) {
         return service.refresh(refreshToken);
     }

@@ -4,9 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useProfile } from "@/pages/user/hooks/useProfile";
+import { useParams } from "@remix-run/react";
 
 export default function ProfilePage() {
-  const { data, isLoading } = useProfile();
+  const { userId } = useParams();
+  const { data, isLoading } = useProfile(userId);
+
   const user = {
     name: "Jane Doe",
     username: "jane_tracker",
@@ -15,17 +18,32 @@ export default function ProfilePage() {
     topActivity: "Running",
     topActivityTime: "40h 15m",
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  const formatDate = (dateJoined: string) => {
+    const date = new Date(dateJoined);
+    return new Intl.DateTimeFormat("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }).format(date);
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-start mb-8">
         <div className="flex items-center gap-4">
           <Avatar className="w-24 h-24">
-            <AvatarImage src={user.avatar} alt={user.name} />
-            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+            <AvatarImage src={data?.imageUrl} alt={data?.name} />
+            <AvatarFallback>{data?.name.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="text-2xl font-bold">{user.name}</h1>
-            <p className="text-muted-foreground">@{user.username}</p>
+            {/*will change it if needed*/}
+            <h1 className="text-2xl font-bold">{data?.name}</h1>
+             <p className="text-muted-foreground">{`Joined: ${formatDate(data?.dateJoined)}`}</p>
           </div>
         </div>
         <Link to="/settings">
