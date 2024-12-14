@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -35,12 +35,12 @@ public class AuthenticationService {
         }
 
         var user = User.builder()
-                .email(request.email())
-                .password(passwordEncoder.encode(request.password()))
-                .name(request.username())
-                .dateJoined(new Date())
-                .role(Role.USER)
-                .build();
+            .email(request.email())
+            .password(passwordEncoder.encode(request.password()))
+            .name(request.username())
+            .dateJoined(ZonedDateTime.now())
+            .role(Role.USER)
+            .build();
 
         repository.save(user);
 
@@ -54,13 +54,13 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var user = repository.findByEmail(request.email())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.email(),
-                        request.password()
-                )
+            new UsernamePasswordAuthenticationToken(
+                request.email(),
+                request.password()
+            )
         );
 
         log.info("Authenticating user: {}", user.getEmail());
@@ -78,7 +78,7 @@ public class AuthenticationService {
 
         String userId = jwtService.extractUserId(refreshToken);
         var user = repository.findById(Integer.valueOf(userId))
-                .orElseThrow(Unauthorized::new);
+            .orElseThrow(Unauthorized::new);
 
         String newAccessToken = jwtService.generateAccessToken(user);
         String newRefreshToken = jwtService.generateRefreshToken(user);
