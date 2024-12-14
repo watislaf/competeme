@@ -34,9 +34,9 @@ export interface AuthenticationResponse {
     'refreshToken': string;
     /**
      * 
-     * @type {}
+     * @type {number}
      * @memberof AuthenticationResponse
      */
-    'userId': ;
+    'userId': number;
 }
 
