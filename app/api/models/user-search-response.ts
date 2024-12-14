@@ -22,10 +22,10 @@
 export interface UserSearchResponse {
     /**
      * 
-     * @type {}
+     * @type {number}
      * @memberof UserSearchResponse
      */
-    'id': ;
+    'id': number;
     /**
      * 
      * @type {string}

@@ -33,11 +33,11 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
     return {
         /**
          * 
-         * @param {} userId 
+         * @param {number} userId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserProfile: async (userId: , options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getUserProfile: async (userId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'userId' is not null or undefined
             assertParamExists('getUserProfile', 'userId', userId)
             const localVarPath = `/api/v1/users/{userId}/profile`
@@ -120,11 +120,11 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {} userId 
+         * @param {number} userId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUserProfile(userId: , options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserProfileResponse>> {
+        async getUserProfile(userId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserProfileResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getUserProfile(userId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserControllerApi.getUserProfile']?.[localVarOperationServerIndex]?.url;
@@ -154,11 +154,11 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
     return {
         /**
          * 
-         * @param {} userId 
+         * @param {number} userId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserProfile(userId: , options?: RawAxiosRequestConfig): AxiosPromise<UserProfileResponse> {
+        getUserProfile(userId: number, options?: RawAxiosRequestConfig): AxiosPromise<UserProfileResponse> {
             return localVarFp.getUserProfile(userId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -182,12 +182,12 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
 export class UserControllerApi extends BaseAPI {
     /**
      * 
-     * @param {} userId 
+     * @param {number} userId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserControllerApi
      */
-    public getUserProfile(userId: , options?: RawAxiosRequestConfig) {
+    public getUserProfile(userId: number, options?: RawAxiosRequestConfig) {
         return UserControllerApiFp(this.configuration).getUserProfile(userId, options).then((request) => request(this.axios, this.basePath));
     }
 

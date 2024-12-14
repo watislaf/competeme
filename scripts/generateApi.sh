@@ -11,7 +11,7 @@ if wget http://localhost:8080/api/spec -O "$SPEC_FILE"; then
     -o "$API" \
     --api-package apis \
     --model-package models \
-    --type-mappings json="string,number" \
+    --type-mappings integer=number \
     --language-specific-primitives "string,number"
   cd || exit
   rm -f "$SPEC_FILE"
