@@ -1,14 +1,14 @@
-import { Link } from "@remix-run/react";
+import { Link, useParams } from "@remix-run/react";
 import { Bell, Edit, Lock, Settings, User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useProfile } from "@/pages/user/hooks/useProfile";
-import { useParams } from "@remix-run/react";
+import { useProfile } from "@/hooks/user/useProfile";
+import moment from "moment";
 
 export default function ProfilePage() {
   const { userId } = useParams();
-  const { data, isLoading } = useProfile(userId);
+  const { profile, isLoading } = useProfile(Number(userId));
 
   const user = {
     name: "Jane Doe",
@@ -23,27 +23,25 @@ export default function ProfilePage() {
     return <div>Loading...</div>;
   }
 
-  const formatDate = (dateJoined: string) => {
-    const date = new Date(dateJoined);
-    return new Intl.DateTimeFormat("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }).format(date);
+  if (!profile) {
+    return <div>User not found</div>;
   }
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-start mb-8">
         <div className="flex items-center gap-4">
           <Avatar className="w-24 h-24">
-            <AvatarImage src={data?.imageUrl} alt={data?.name} />
-            <AvatarFallback>{data?.name.charAt(0).toUpperCase()}</AvatarFallback>
+            <AvatarImage src={profile.imageUrl} alt={profile.name} />
+            <AvatarFallback>
+              {profile.name.charAt(0).toUpperCase()}
+            </AvatarFallback>
           </Avatar>
           <div>
             {/*will change it if needed*/}
-            <h1 className="text-2xl font-bold">{data?.name}</h1>
-             <p className="text-muted-foreground">{`Joined: ${formatDate(data?.dateJoined)}`}</p>
+            <h1 className="text-2xl font-bold">{profile.name}</h1>
+            <p className="text-muted-foreground">{`Joined: ${moment(
+              profile.dateJoined
+            ).format("DD MMM YYYY")}`}</p>
           </div>
         </div>
         <Link to="/settings">

@@ -18,10 +18,10 @@ export const useLoginMutation = () => {
 
   const mutation = useMutation({
     mutationFn: apis().auth.authenticate,
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       localStorage.setItem("ACCESS_TOKEN_KEY", response.data.accessToken);
       localStorage.setItem("REFRESH_TOKEN_KEY", response.data.refreshToken);
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      await queryClient.refetchQueries({ queryKey: ["profile"] });
       navigation(`/users/${response.data.userId}/profile`);
     },
 

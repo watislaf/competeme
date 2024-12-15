@@ -35,12 +35,11 @@ export default function AuthPage() {
       login({ email, password });
     }
     if (type === SubmitAction.Signup) {
-      signUp({ username,email, password });
+      signUp({ username, email, password });
     }
   };
 
   const errorMessage = signUpError || loginError;
-
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center"

@@ -1,18 +1,18 @@
 import { useState } from "react";
 import {
-  json,
-  redirect,
   type ActionFunction,
+  json,
   type LoaderFunction,
+  redirect,
 } from "@remix-run/node";
-import { useLoaderData, useActionData, Form } from "@remix-run/react";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import {
   Book,
+  Clock,
   Code,
   Dumbbell,
-  Clock,
-  Plus,
   Pencil,
+  Plus,
   Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -92,11 +91,9 @@ export const action: ActionFunction = async ({ request }) => {
     const activity = formData.get("activity");
     const duration = formData.get("duration");
     // In a real app, you would save this to your database
-    console.log("Logging activity:", { activity, duration });
   } else if (action === "deleteLog") {
     const logId = formData.get("logId");
     // In a real app, you would delete this from your database
-    console.log("Deleting log:", logId);
   }
 
   return redirect("/log-activity");

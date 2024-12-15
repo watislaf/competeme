@@ -22,36 +22,44 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { isUnauthorized } from "@/errors/Unauthorized";
+import { useMemo } from "react";
 
 function App({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
 
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-    queryCache: new QueryCache({
-      onError: (error, query) => {
-        if (error?.response?.status === 401) {
-          navigate("/login");
-          localStorage.removeItem("ACCESS_TOKEN_KEY");
-        }
+  const queryClient = useMemo(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: false,
+          },
+        },
+        queryCache: new QueryCache({
+          onError: (error, query) => {
+            if (isUnauthorized(error)) {
+              navigate("/login");
+              localStorage.removeItem("ACCESS_TOKEN_KEY");
+              localStorage.removeItem("REFRESH_TOKEN");
+            }
 
-        console.error("Query Error:", error, query);
-      },
-    }),
-    mutationCache: new MutationCache({
-      onError: (error, query) => {
-        if (error?.response?.status === 401) {
-          navigate("/login");
-          localStorage.removeItem("ACCESS_TOKEN_KEY");
-        }
-        console.error("Mutation Error:", error, query);
-      },
-    }),
-  });
+            console.error("Query Error:", error, query);
+          },
+        }),
+        mutationCache: new MutationCache({
+          onError: (error, query) => {
+            if (isUnauthorized(error)) {
+              navigate("/login");
+              localStorage.removeItem("ACCESS_TOKEN_KEY");
+              localStorage.removeItem("REFRESH_TOKEN");
+            }
+            console.error("Mutation Error:", error, query);
+          },
+        }),
+      }),
+    []
+  );
 
   return (
     <ThemeSwitcherSafeHTML lang="en">

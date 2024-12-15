@@ -17,7 +17,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/styles";
-import { useProfile } from "@/pages/user/hooks/useProfile";
+import { useProfile } from "@/hooks/user/useProfile";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function Header() {
   const hydrated = useHydrated();
@@ -28,8 +29,9 @@ export function Header() {
   }, []);
   const theme = getTheme();
   const location = useLocation();
-  const { data, isLoading } = useProfile();
+  const { profile } = useProfile();
 
+  const queryClient = useQueryClient();
   const navItems = [
     { name: "Home", path: "/" },
     { name: "User Stats", path: "/stats" },
@@ -63,81 +65,98 @@ export function Header() {
             </li>
           ))}
         </ul>
-        <div className="flex items-center space-x-4">
-          {!isLoading && data ? (
-            <div>
-              <Link to={`/users/${data.id}/profile`}>
-            <Avatar className="w-10 h-10">
-            <AvatarImage src={data.imageUrl} alt={data.name} />
-              <AvatarFallback>{data?.name.charAt(0).toUpperCase()}</AvatarFallback>
-          </Avatar>
-          </Link>
-          </div>
-    ) : (
-      <Link
-      to="/login"
-      className={cn(
-        "px-4 py-2 rounded-md  ",
-        location.pathname === "/login"
-          ? "bg-gray-300"
-          : "bg-gray-200"
-      )}
-      >
-        Login
-      </Link>
-    )}
-    <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              className="w-10 h-10 rounded-full border"
-              size="icon"
-              variant="ghost"
-            >
-              <span className="sr-only">Theme selector</span>
-              {!hydrated ? null : theme === "dark" ? (
-                <MoonIcon />
-              ) : theme === "light" ? (
-                <SunIcon />
-              ) : (
-                <LaptopIcon />
+        <div className="flex flex-row items-center space-x-4">
+          {profile ? (
+            <>
+              <Link to={`/users/${profile.id}/profile`}>
+                <Avatar className="w-10 h-10">
+                  <AvatarImage src={profile.imageUrl} alt={profile.name} />
+                  <AvatarFallback>
+                    {profile.name.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </Link>
+
+              <Link
+                to="/login"
+                onClick={() => {
+                  localStorage.removeItem("ACCESS_TOKEN_KEY");
+                  localStorage.removeItem("REFRESH_TOKEN_KEY");
+                  queryClient.refetchQueries({
+                    queryKey: ["profile"],
+                  });
+                }}
+                className={cn(
+                  "px-4 py-2 rounded-md  ",
+                  location.pathname === "/login" ? "bg-gray-300" : "bg-gray-200"
+                )}
+              >
+                Logout
+              </Link>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              className={cn(
+                "px-4 py-2 rounded-md  ",
+                location.pathname === "/login" ? "bg-gray-300" : "bg-gray-200"
               )}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="mt-2">
-            <DropdownMenuLabel>Theme</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <button
-                type="button"
-                className="w-full"
-                onClick={() => setTheme("light")}
-                aria-selected={theme === "light"}
+            >
+              Login
+            </Link>
+          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                className="w-10 h-10 rounded-full border"
+                size="icon"
+                variant="ghost"
               >
-                Light
-              </button>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <button
-                type="button"
-                className="w-full"
-                onClick={() => setTheme("dark")}
-                aria-selected={theme === "dark"}
-              >
-                Dark
-              </button>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <button
-                type="button"
-                className="w-full"
-                onClick={() => setTheme("system")}
-                aria-selected={theme === "system"}
-              >
-                System
-              </button>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+                <span className="sr-only">Theme selector</span>
+                {!hydrated ? null : theme === "dark" ? (
+                  <MoonIcon />
+                ) : theme === "light" ? (
+                  <SunIcon />
+                ) : (
+                  <LaptopIcon />
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="mt-2">
+              <DropdownMenuLabel>Theme</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <button
+                  type="button"
+                  className="w-full"
+                  onClick={() => setTheme("light")}
+                  aria-selected={theme === "light"}
+                >
+                  Light
+                </button>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <button
+                  type="button"
+                  className="w-full"
+                  onClick={() => setTheme("dark")}
+                  aria-selected={theme === "dark"}
+                >
+                  Dark
+                </button>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <button
+                  type="button"
+                  className="w-full"
+                  onClick={() => setTheme("system")}
+                  aria-selected={theme === "system"}
+                >
+                  System
+                </button>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
