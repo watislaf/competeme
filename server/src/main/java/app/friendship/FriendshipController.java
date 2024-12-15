@@ -4,35 +4,30 @@ import app.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/users/{userId}/friends")
+@RequestMapping("/api/v1/users/{userId}/friends")
 @RequiredArgsConstructor
 public class FriendshipController {
     private final FriendshipService friendshipService;
 
     @PostMapping("/sendRequest")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
-    public Void sendFriendRequest(@PathVariable Integer userId, @RequestBody FriendshipRequest request) {
-        friendshipService.sendFriendRequest(userId, request);
-        return null;
+    public void sendFriendRequest(@PathVariable Integer userId, @RequestBody FriendshipRequest request) {
+        friendshipService.sendFriendRequest(userId, request.receiverId());
     }
 
     @PostMapping("/accept")
-    public Void acceptFriendRequest(@PathVariable Integer userId, @RequestBody FriendshipRequest request) {
-        friendshipService.acceptFriendRequest(userId, request);
-        return null;
+    public void acceptFriendRequest(@PathVariable Integer userId, @RequestBody FriendshipRequest request) {
+        friendshipService.acceptFriendRequest(userId, request.receiverId());
     }
 
     @PostMapping("/remove")
-    public Void removeFriend(@PathVariable Integer userId, @RequestBody FriendshipRequest request) {
-        friendshipService.removeFriend(userId, request);
-        return null;
+    public void removeFriend(@PathVariable Integer userId, @RequestBody FriendshipRequest request) {
+        friendshipService.removeFriend(userId, request.receiverId());
     }
 
     @GetMapping("/request")
@@ -41,9 +36,7 @@ public class FriendshipController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Integer>> getFriends(@PathVariable Integer userId, Authentication authentication) {
-        Integer requesterId = ((User) authentication.getPrincipal()).getId();
-        List<Integer> friends = friendshipService.getFriends(requesterId, userId);
-        return ResponseEntity.ok(friends);
+    public List<Integer> getFriends(@PathVariable Integer userId, User sender) {
+        return friendshipService.getFriends(sender.getId(), userId);
     }
 }

@@ -4,24 +4,22 @@ package app.user;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/{userId}/idprofile")
+    @GetMapping("/{userId}/profile")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
     public UserProfileResponse getUserProfile(@PathVariable Integer userId, @AuthenticationPrincipal UserDetails userDetails) {
+        System.out.println("userId: " + userId);
         return userService.getUserProfile(userId, userDetails);
     }
 

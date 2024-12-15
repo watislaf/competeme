@@ -1,8 +1,10 @@
 package app.friendship;
 
-import app.user.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
@@ -20,7 +22,6 @@ public class Friendship {
 
     @Column(name = "receiver_id", nullable = false)
     private Integer receiverId;
-
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
