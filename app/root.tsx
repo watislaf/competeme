@@ -7,7 +7,7 @@ import {
   ScrollRestoration,
   useRouteError,
 } from "@remix-run/react";
-import { Header } from "@/components/header";
+import { Header } from "@/components/header/header";
 import {
   ThemeSwitcherSafeHTML,
   ThemeSwitcherScript,

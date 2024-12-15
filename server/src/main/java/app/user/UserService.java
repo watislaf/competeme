@@ -23,9 +23,8 @@ public class UserService {
     }
 
     public boolean isFriend(Integer userId, Integer requesterId) {
-        return friendshipRepository.findByStatusAndSenderIdOrStatusAndReceiverId(
-                FriendshipStatus.ACCEPTED, requesterId, FriendshipStatus.ACCEPTED, requesterId).stream()
-            .anyMatch(friendship -> friendship.getSenderId().equals(userId) || friendship.getReceiverId().equals(userId));
+        return friendshipRepository.existsBySenderIdAndReceiverIdAndStatus(requesterId, userId, FriendshipStatus.ACCEPTED)
+            || friendshipRepository.existsBySenderIdAndReceiverIdAndStatus(userId, requesterId, FriendshipStatus.ACCEPTED);
     }
 
     public UserProfileResponse getUserProfile(Integer userId, UserDetails userDetails) {
