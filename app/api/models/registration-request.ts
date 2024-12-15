@@ -25,6 +25,12 @@ export interface RegistrationRequest {
      * @type {string}
      * @memberof RegistrationRequest
      */
+    'username'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RegistrationRequest
+     */
     'email'?: string;
     /**
      * 

@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class User implements UserDetails {
     private String password;
     private String name;
     private String imageUrl;
-    private LocalDateTime dateJoined;
+    private ZonedDateTime dateJoined;
     @Enumerated(EnumType.STRING)
     private Role role;
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, EyeOff, Mail } from "lucide-react";
+import { Eye, EyeOff, Mail, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +9,7 @@ interface AuthFormProps {
   isSignUp: boolean;
   error?: string;
   onSubmit: (data: {
+    username: string;
     email: string;
     password: string;
     type: SubmitAction;
@@ -17,6 +18,7 @@ interface AuthFormProps {
 
 export function AuthForm({ isSignUp, error, onSubmit }: AuthFormProps) {
   const [showPassword, setShowPassword] = useState(false);
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -25,6 +27,24 @@ export function AuthForm({ isSignUp, error, onSubmit }: AuthFormProps) {
 
   return (
     <div className="space-y-4">
+      <div className="space-y-2">
+        {isSignUp && (
+          <div className="space-y-2">
+            <Label htmlFor="username">Username</Label>
+            <div className="relative">
+              <Input
+                id="username"
+                name="username"
+                type="username"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <User className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
+            </div>
+          </div>
+        )}
+      </div>
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <div className="relative">
@@ -81,6 +101,7 @@ export function AuthForm({ isSignUp, error, onSubmit }: AuthFormProps) {
       <Button
         onClick={() =>
           onSubmit({
+            username,
             email,
             password,
             type: isSignUp ? SubmitAction.Signup : SubmitAction.Login,

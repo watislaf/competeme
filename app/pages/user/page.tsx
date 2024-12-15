@@ -1,12 +1,15 @@
-import { Link } from "@remix-run/react";
+import { Link, useParams } from "@remix-run/react";
 import { Bell, Edit, Lock, Settings, User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useProfile } from "@/pages/user/hooks/useProfile";
+import { useProfile } from "@/hooks/user/useProfile";
+import moment from "moment";
 
 export default function ProfilePage() {
-  const { data, isLoading } = useProfile();
+  const { userId } = useParams();
+  const { profile, isLoading } = useProfile(Number(userId));
+
   const user = {
     name: "Jane Doe",
     username: "jane_tracker",
@@ -15,17 +18,30 @@ export default function ProfilePage() {
     topActivity: "Running",
     topActivityTime: "40h 15m",
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!profile) {
+    return <div>User not found</div>;
+  }
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-start mb-8">
         <div className="flex items-center gap-4">
           <Avatar className="w-24 h-24">
-            <AvatarImage src={user.avatar} alt={user.name} />
-            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+            <AvatarImage src={profile.imageUrl} alt={profile.name} />
+            <AvatarFallback>
+              {profile.name.charAt(0).toUpperCase()}
+            </AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="text-2xl font-bold">{user.name}</h1>
-            <p className="text-muted-foreground">@{user.username}</p>
+            {/*will change it if needed*/}
+            <h1 className="text-2xl font-bold">{profile.name}</h1>
+            <p className="text-muted-foreground">{`Joined: ${moment(
+              profile.dateJoined
+            ).format("DD MMM YYYY")}`}</p>
           </div>
         </div>
         <Link to="/settings">
