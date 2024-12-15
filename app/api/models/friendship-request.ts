@@ -14,7 +14,17 @@
 
 
 
-export * from './apis/authentication-controller-api';
-export * from './apis/friendship-controller-api';
-export * from './apis/user-controller-api';
+/**
+ * 
+ * @export
+ * @interface FriendshipRequest
+ */
+export interface FriendshipRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof FriendshipRequest
+     */
+    'id'?: number;
+}
 
