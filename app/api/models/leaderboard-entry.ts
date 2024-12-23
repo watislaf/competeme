@@ -14,8 +14,23 @@
 
 
 
-export * from './apis/authentication-controller-api';
-export * from './apis/challenge-controller-api';
-export * from './apis/friendship-controller-api';
-export * from './apis/user-controller-api';
+/**
+ * 
+ * @export
+ * @interface LeaderboardEntry
+ */
+export interface LeaderboardEntry {
+    /**
+     * 
+     * @type {string}
+     * @memberof LeaderboardEntry
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof LeaderboardEntry
+     */
+    'score'?: number;
+}
 
