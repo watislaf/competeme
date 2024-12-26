@@ -25,12 +25,12 @@ export interface LeaderboardEntry {
      * @type {string}
      * @memberof LeaderboardEntry
      */
-    'name'?: string;
+    'name': string;
     /**
      * 
      * @type {number}
      * @memberof LeaderboardEntry
      */
-    'score'?: number;
+    'score': number;
 }
 

@@ -79,18 +79,6 @@ export interface User {
     'credentialsNonExpired'?: boolean;
     /**
      * 
-     * @type {string}
-     * @memberof User
-     */
-    'username'?: string;
-    /**
-     * 
-     * @type {Array<GrantedAuthority>}
-     * @memberof User
-     */
-    'authorities'?: Array<GrantedAuthority>;
-    /**
-     * 
      * @type {boolean}
      * @memberof User
      */
@@ -101,6 +89,18 @@ export interface User {
      * @memberof User
      */
     'accountNonLocked'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    'username'?: string;
+    /**
+     * 
+     * @type {Array<GrantedAuthority>}
+     * @memberof User
+     */
+    'authorities'?: Array<GrantedAuthority>;
 }
 
 export const UserRoleEnum = {

@@ -25,12 +25,12 @@ export interface ParticipantResponse {
      * @type {string}
      * @memberof ParticipantResponse
      */
-    'username'?: string;
+    'username': string;
     /**
      * 
      * @type {number}
      * @memberof ParticipantResponse
      */
-    'progress'?: number;
+    'progres': number;
 }
 

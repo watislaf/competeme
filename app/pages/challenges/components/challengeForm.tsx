@@ -9,15 +9,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
+import { ChallengeRequest } from "@/api";
 
 interface ChallengeFormProps {
-  onSubmit: (data: {
-    title: string;
-    description: string;
-    goal: number;
-    unit: string;
-    participants?: number[];
-  }) => void;
+  onSubmit: (data: ChallengeRequest) => void;
   addError?: Error | null;
 }
 
