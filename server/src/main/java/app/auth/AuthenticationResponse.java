@@ -2,9 +2,11 @@ package app.auth;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
+
 public record AuthenticationResponse(
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED) String accessToken,
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED) String refreshToken,
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED) Integer userId
+    @Schema(requiredMode = REQUIRED) String accessToken,
+    @Schema(requiredMode = REQUIRED) String refreshToken,
+    @Schema(requiredMode = REQUIRED) Integer userId
 ) {
 }

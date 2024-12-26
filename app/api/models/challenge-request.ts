@@ -25,30 +25,30 @@ export interface ChallengeRequest {
      * @type {string}
      * @memberof ChallengeRequest
      */
-    'title'?: string;
+    'title': string;
     /**
      * 
      * @type {string}
      * @memberof ChallengeRequest
      */
-    'description'?: string;
+    'description': string;
     /**
      * 
      * @type {number}
      * @memberof ChallengeRequest
      */
-    'goal'?: number;
+    'goal': number;
     /**
      * 
      * @type {string}
      * @memberof ChallengeRequest
      */
-    'unit'?: string;
+    'unit': string;
     /**
      * 
      * @type {Array<number>}
      * @memberof ChallengeRequest
      */
-    'participants'?: Array<number>;
+    'participants': Array<number>;
 }
 

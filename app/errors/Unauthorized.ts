@@ -10,6 +10,7 @@ export class Unauthorized extends Error {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isUnauthorized = (error: any): error is Unauthorized => {
   return error?.response?.status === 401;
 };

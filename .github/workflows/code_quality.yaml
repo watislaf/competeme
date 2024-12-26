@@ -11,4 +11,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Run lint
-        run: npm run tsc
+        run: npm run lintcheck && npm run typecheck

@@ -1,11 +1,6 @@
 import { useState } from "react";
-import {
-  type ActionFunction,
-  json,
-  type LoaderFunction,
-  redirect,
-} from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import { json, type LoaderFunction } from "@remix-run/node";
+import { Form, useLoaderData } from "@remix-run/react";
 import {
   Book,
   Clock,
@@ -83,26 +78,9 @@ export const loader: LoaderFunction = async () => {
   return json({ activities, recentLogs });
 };
 
-export const action: ActionFunction = async ({ request }) => {
-  const formData = await request.formData();
-  const action = formData.get("_action");
-
-  if (action === "logActivity") {
-    const activity = formData.get("activity");
-    const duration = formData.get("duration");
-    // In a real app, you would save this to your database
-  } else if (action === "deleteLog") {
-    const logId = formData.get("logId");
-    // In a real app, you would delete this from your database
-  }
-
-  return redirect("/log-activity");
-};
-
 export default function LogActivityPage() {
   const { activities, recentLogs } = useLoaderData<LoaderData>();
-  const actionData = useActionData();
-  const [customActivity, setCustomActivity] = useState("");
+  const [customActivity] = useState("");
 
   const getIconComponent = (iconName: string) => {
     switch (iconName) {
@@ -197,7 +175,7 @@ export default function LogActivityPage() {
               <li key={log.id} className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   {getIconComponent(
-                    activities.find((a) => a.name === log.activity)?.icon || ""
+                    activities.find((a) => a.name === log.activity)?.icon || "",
                   )}
                   <span>{log.activity}</span>
                   <span className="text-muted-foreground">{log.duration}</span>

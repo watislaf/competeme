@@ -99,8 +99,8 @@ export default function HomePage() {
         </CardHeader>
         <CardContent>
           <p className="text-2xl font-bold">
-            You've spent {data.weeklyProgress} hours on productive activities
-            this week!
+            You&apos;ve spent {data.weeklyProgress} hours on productive
+            activities this week!
           </p>
         </CardContent>
       </Card>

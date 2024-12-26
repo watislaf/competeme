@@ -25,12 +25,12 @@ export interface AuthenticationRequest {
      * @type {string}
      * @memberof AuthenticationRequest
      */
-    'email'?: string;
+    'email': string;
     /**
      * 
      * @type {string}
      * @memberof AuthenticationRequest
      */
-    'password'?: string;
+    'password': string;
 }
 

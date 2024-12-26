@@ -73,6 +73,12 @@ export interface User {
     'enabled'?: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof User
+     */
+    'credentialsNonExpired'?: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof User
      */
@@ -95,12 +101,6 @@ export interface User {
      * @memberof User
      */
     'accountNonLocked'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof User
-     */
-    'credentialsNonExpired'?: boolean;
 }
 
 export const UserRoleEnum = {

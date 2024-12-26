@@ -31,48 +31,48 @@ export interface ChallengeResponse {
      * @type {number}
      * @memberof ChallengeResponse
      */
-    'id'?: number;
+    'id': number;
     /**
      * 
      * @type {string}
      * @memberof ChallengeResponse
      */
-    'title'?: string;
+    'title': string;
     /**
      * 
      * @type {string}
      * @memberof ChallengeResponse
      */
-    'description'?: string;
+    'description': string;
     /**
      * 
      * @type {number}
      * @memberof ChallengeResponse
      */
-    'goal'?: number;
+    'goal': number;
     /**
      * 
      * @type {string}
      * @memberof ChallengeResponse
      */
-    'unit'?: string;
+    'unit': string;
     /**
      * 
      * @type {Array<ParticipantResponse>}
      * @memberof ChallengeResponse
      */
-    'participants'?: Array<ParticipantResponse>;
+    'participants': Array<ParticipantResponse>;
     /**
      * 
      * @type {number}
      * @memberof ChallengeResponse
      */
-    'totalProgress'?: number;
+    'totalProgress': number;
     /**
      * 
      * @type {Array<LeaderboardEntry>}
      * @memberof ChallengeResponse
      */
-    'leaderboard'?: Array<LeaderboardEntry>;
+    'leaderboard': Array<LeaderboardEntry>;
 }
 

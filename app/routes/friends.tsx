@@ -1,12 +1,12 @@
 import { useState } from "react";
 import {
-  json,
-  redirect,
-  type LoaderFunction,
   type ActionFunction,
+  json,
+  type LoaderFunction,
+  redirect,
 } from "@remix-run/node";
-import { useLoaderData, useActionData, Form } from "@remix-run/react";
-import { UserPlus, Search, Trophy, Users, Clock } from "lucide-react";
+import { Form, useLoaderData } from "@remix-run/react";
+import { UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -105,7 +105,6 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function FriendsPage() {
   const { friends, globalRankings } = useLoaderData<LoaderData>();
-  const actionData = useActionData();
   const [selectedFriend, setSelectedFriend] = useState<string | null>(null);
 
   return (

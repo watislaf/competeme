@@ -1,7 +1,7 @@
 import AuthPage from "@/pages/login/page";
 
 export const loader = async () => {
-    return null;
+  return null;
 };
 
 const Page = AuthPage;
