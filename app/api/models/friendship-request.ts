@@ -25,6 +25,6 @@ export interface FriendshipRequest {
      * @type {number}
      * @memberof FriendshipRequest
      */
-    'id'?: number;
+    'receiverId'?: number;
 }
 

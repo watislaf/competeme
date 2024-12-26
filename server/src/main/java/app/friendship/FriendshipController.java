@@ -1,6 +1,6 @@
 package app.friendship;
 
-import app.user.User;
+import app.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;

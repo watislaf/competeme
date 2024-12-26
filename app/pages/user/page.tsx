@@ -40,7 +40,7 @@ export default function ProfilePage() {
             {/*will change it if needed*/}
             <h1 className="text-2xl font-bold">{profile.name}</h1>
             <p className="text-muted-foreground">{`Joined: ${moment(
-              profile.dateJoined
+              profile.dateJoined,
             ).format("DD MMM YYYY")}`}</p>
           </div>
         </div>

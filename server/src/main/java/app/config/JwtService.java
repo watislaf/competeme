@@ -1,6 +1,6 @@
 package app.config;
 
-import app.user.User;
+import app.user.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -40,18 +40,18 @@ public class JwtService {
     }
 
     public String generateToken(
-            Map<String, Object> extraClaims,
-            User user,
-            long validity
+        Map<String, Object> extraClaims,
+        User user,
+        long validity
     ) {
         return Jwts
-                .builder()
-                .setClaims(extraClaims)
-                .setSubject(String.valueOf(user.getId()))
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + validity))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
+            .builder()
+            .setClaims(extraClaims)
+            .setSubject(String.valueOf(user.getId()))
+            .setIssuedAt(new Date(System.currentTimeMillis()))
+            .setExpiration(new Date(System.currentTimeMillis() + validity))
+            .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+            .compact();
     }
 
     public boolean isTokenValid(String token) {
@@ -68,11 +68,11 @@ public class JwtService {
 
     private Claims extractAllClaims(String token) {
         return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+            .parserBuilder()
+            .setSigningKey(getSignInKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
     }
 
     private Key getSignInKey() {

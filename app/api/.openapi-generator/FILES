@@ -2,6 +2,7 @@
 .npmignore
 api.ts
 apis/authentication-controller-api.ts
+apis/challenge-controller-api.ts
 apis/friendship-controller-api.ts
 apis/user-controller-api.ts
 base.ts
@@ -11,10 +12,14 @@ git_push.sh
 index.ts
 models/authentication-request.ts
 models/authentication-response.ts
+models/challenge-request.ts
+models/challenge-response.ts
 models/friendship-request.ts
 models/granted-authority.ts
 models/index.ts
+models/leaderboard-entry.ts
+models/participant-response.ts
 models/registration-request.ts
-models/user-details.ts
 models/user-profile-response.ts
 models/user-search-response.ts
+models/user.ts

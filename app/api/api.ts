@@ -15,6 +15,7 @@
 
 
 export * from './apis/authentication-controller-api';
+export * from './apis/challenge-controller-api';
 export * from './apis/friendship-controller-api';
 export * from './apis/user-controller-api';
 

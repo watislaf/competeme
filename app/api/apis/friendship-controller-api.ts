@@ -24,7 +24,7 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 // @ts-ignore
 import type { FriendshipRequest } from '../models';
 // @ts-ignore
-import type { UserDetails } from '../models';
+import type { User } from '../models';
 /**
  * FriendshipControllerApi - axios parameter creator
  * @export
@@ -106,15 +106,15 @@ export const FriendshipControllerApiAxiosParamCreator = function (configuration?
         /**
          * 
          * @param {number} userId 
-         * @param {UserDetails} details 
+         * @param {User} sender 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getFriends: async (userId: number, details: UserDetails, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getFriends: async (userId: number, sender: User, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'userId' is not null or undefined
             assertParamExists('getFriends', 'userId', userId)
-            // verify required parameter 'details' is not null or undefined
-            assertParamExists('getFriends', 'details', details)
+            // verify required parameter 'sender' is not null or undefined
+            assertParamExists('getFriends', 'sender', sender)
             const localVarPath = `/api/v1/users/{userId}/friends/`
                 .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -128,8 +128,8 @@ export const FriendshipControllerApiAxiosParamCreator = function (configuration?
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            if (details !== undefined) {
-                for (const [key, value] of Object.entries(details)) {
+            if (sender !== undefined) {
+                for (const [key, value] of Object.entries(sender)) {
                     localVarQueryParameter[key] = value;
                 }
             }
@@ -265,12 +265,12 @@ export const FriendshipControllerApiFp = function(configuration?: Configuration)
         /**
          * 
          * @param {number} userId 
-         * @param {UserDetails} details 
+         * @param {User} sender 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getFriends(userId: number, details: UserDetails, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<number>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getFriends(userId, details, options);
+        async getFriends(userId: number, sender: User, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<number>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getFriends(userId, sender, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['FriendshipControllerApi.getFriends']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -333,12 +333,12 @@ export const FriendshipControllerApiFactory = function (configuration?: Configur
         /**
          * 
          * @param {number} userId 
-         * @param {UserDetails} details 
+         * @param {User} sender 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getFriends(userId: number, details: UserDetails, options?: RawAxiosRequestConfig): AxiosPromise<Array<number>> {
-            return localVarFp.getFriends(userId, details, options).then((request) => request(axios, basePath));
+        getFriends(userId: number, sender: User, options?: RawAxiosRequestConfig): AxiosPromise<Array<number>> {
+            return localVarFp.getFriends(userId, sender, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -396,13 +396,13 @@ export class FriendshipControllerApi extends BaseAPI {
     /**
      * 
      * @param {number} userId 
-     * @param {UserDetails} details 
+     * @param {User} sender 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FriendshipControllerApi
      */
-    public getFriends(userId: number, details: UserDetails, options?: RawAxiosRequestConfig) {
-        return FriendshipControllerApiFp(this.configuration).getFriends(userId, details, options).then((request) => request(this.axios, this.basePath));
+    public getFriends(userId: number, sender: User, options?: RawAxiosRequestConfig) {
+        return FriendshipControllerApiFp(this.configuration).getFriends(userId, sender, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

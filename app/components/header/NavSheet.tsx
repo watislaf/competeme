@@ -1,12 +1,10 @@
-// NavSheet.tsx
 import * as React from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Link, useLocation } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import { navLinks } from "./nav-links";
 
 export const NavSheet = () => {
-  const location = useLocation();
   const [open, setOpen] = React.useState(false);
   const closeSheet = () => setOpen(false);
   return (
