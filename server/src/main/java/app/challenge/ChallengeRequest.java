@@ -7,6 +7,5 @@ public record ChallengeRequest(
     String description,
     Integer goal,
     String unit,
-    List<Integer> participants
-) {
+    List<Integer> participants) {
 }
