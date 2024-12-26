@@ -11,7 +11,7 @@ interface ChallengeFormProps {
         description: string;
         goal: number;
         unit: string;
-        participants?: string[];
+        participants?: number[];
     }) => void;
     addError?: Error | null;
 }
@@ -48,7 +48,7 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({onSubmit, addError,
         onSubmit({
             ...formData,
             goal: Number(formData.goal),
-            participants: invitedFriends,
+            participants: invitedFriends.map(Number),
         });
         setFormData({ title: "", description: "", goal: "", unit: "" });
         setInvitedFriends([]);
