@@ -4,7 +4,7 @@ import { Unauthorized } from "@/errors/Unauthorized";
 import { extractIdFromToken } from "@/utils/jwt";
 
 export const useChallenges = (userId: number) => {
-    const queryKey = ["challenges", {userId}];
+    const queryKey = ["challenges", userId];
 
     const {isLoading, data, error} = useQuery({
         queryKey,
