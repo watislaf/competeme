@@ -1,4 +1,4 @@
-package app.challenge;
+package app.challenge.entity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

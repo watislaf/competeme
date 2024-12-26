@@ -1,10 +1,10 @@
-package app.auth;
+package app.auth.service;
 
 import app.config.JwtService;
 import app.excpetions.Unauthorized;
-import app.user.Role;
-import app.user.User;
-import app.user.UserRepository;
+import app.user.entity.Role;
+import app.user.entity.User;
+import app.user.entity.UserRepository;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

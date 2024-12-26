@@ -1,4 +1,4 @@
-package app.user;
+package app.user.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

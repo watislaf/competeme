@@ -1,7 +1,7 @@
 package app.config;
 
-import app.user.User;
-import app.user.UserService;
+import app.user.entity.User;
+import app.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

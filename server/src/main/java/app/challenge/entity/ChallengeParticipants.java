@@ -1,6 +1,6 @@
-package app.challenge;
+package app.challenge.entity;
 
-import app.user.User;
+import app.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,7 +1,11 @@
-package app.challenge;
+package app.challenge.service;
 
-import app.user.User;
-import app.user.UserRepository;
+import app.challenge.entity.Challenge;
+import app.challenge.entity.ChallengeParticipants;
+import app.challenge.entity.ChallengeParticipantsRepository;
+import app.challenge.entity.ChallengeRepository;
+import app.user.entity.User;
+import app.user.entity.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

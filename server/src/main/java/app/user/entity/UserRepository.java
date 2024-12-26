@@ -1,4 +1,4 @@
-package app.user;
+package app.user.entity;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
