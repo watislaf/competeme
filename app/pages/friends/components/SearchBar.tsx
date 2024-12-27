@@ -39,7 +39,7 @@ export function SearchBar({ userId }: SearchBarProps) {
                 >
                   <div className="flex items-center gap-3">
                     <Avatar>
-                      <AvatarImage src={user.imageUrl} alt={user.name} />
+                      <AvatarImage src={user.imageUrl} alt={user.username} />
                       <AvatarFallback>
                         {user.username.charAt(0).toUpperCase()}
                       </AvatarFallback>

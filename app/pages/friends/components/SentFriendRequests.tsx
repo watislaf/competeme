@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, X } from "lucide-react";
 import { useFriendRequests } from "../hooks/useFriendRequests"; // Importujemy odpowiedni hook
-import { useUsers } from "../hooks/useUsers"; // Hook do pobrania użytkowników
+import { useProfiles } from "../hooks/useProfiles"; // Hook do pobrania użytkowników
 import type { User } from "../types/user";
 import { Link } from "@remix-run/react";
 
@@ -14,7 +14,7 @@ interface SentFriendRequestsProps {
 export function SentFriendRequests({ userId }: SentFriendRequestsProps) {
   const { sentRequestIds, isLoading, removeFriend } = useFriendRequests(userId);
 
-  const { users, isLoading: isLoadingUsers } = useUsers(sentRequestIds);
+  const { users, isLoading: isLoadingUsers } = useProfiles(sentRequestIds);
 
   if (isLoading || isLoadingUsers) {
     return (

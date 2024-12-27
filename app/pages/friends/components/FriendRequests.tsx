@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Check, Loader2, X } from "lucide-react";
 import { Link } from "@remix-run/react";
 import { useFriendRequests } from "../hooks/useFriendRequests";
-import { useUsers } from "../hooks/useUsers";
+import { useProfiles } from "../hooks/useProfiles";
 import type { User } from "../types/user";
 
 interface FriendRequestsProps {
@@ -14,7 +14,7 @@ interface FriendRequestsProps {
 export function FriendRequests({ userId }: FriendRequestsProps) {
   const { requestIds, isLoading, acceptRequest, removeFriend } =
     useFriendRequests(userId);
-  const { users, isLoading: isLoadingUsers } = useUsers(requestIds);
+  const { users, isLoading: isLoadingUsers } = useProfiles(requestIds);
   if (isLoading || isLoadingUsers) {
     return (
       <div className="flex items-center gap-2 text-muted-foreground">

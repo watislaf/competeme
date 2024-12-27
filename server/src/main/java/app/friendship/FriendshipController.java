@@ -1,6 +1,8 @@
 package app.friendship;
 
-import app.user.entity.User;
+import app.friendship.entity.Friendship;
+import app.friendship.service.FriendshipRequest;
+import app.friendship.service.FriendshipService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -46,8 +48,8 @@ public class FriendshipController {
 
     @GetMapping("/")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
-    public List<Integer> getFriends(@PathVariable Integer userId, User sender) {
-        return friendshipService.getFriends(sender.getId(), userId);
+    public List<Integer> getFriends(@PathVariable Integer userId) {
+        return friendshipService.getFriends(userId);
     }
 
     @PostMapping("/cancel")
@@ -56,16 +58,10 @@ public class FriendshipController {
         friendshipService.cancelFriendRequest(userId, request.receiverId());
     }
 
-    @GetMapping("/status/{receiverId}")
+    @GetMapping("/statuses")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
-    public boolean isFriend(@PathVariable Integer userId, @PathVariable Integer receiverId) {
-        return friendshipService.isFriend(userId, receiverId);
-    }
-
-    @GetMapping("/pending/{receiverId}")
-    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
-    public boolean hasPendingRequest(@PathVariable Integer userId, @PathVariable Integer receiverId) {
-        return friendshipService.hasPendingRequest(userId, receiverId);
+    public List<Friendship> getStatuses(@PathVariable Integer userId, @RequestBody List<Integer> receiverIds) {
+        return friendshipService.getStatuses(userId, receiverIds);
     }
 
 }

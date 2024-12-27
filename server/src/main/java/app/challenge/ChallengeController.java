@@ -1,5 +1,8 @@
-package app.challenge.service;
+package app.challenge;
 
+import app.challenge.service.ChallengeRequest;
+import app.challenge.service.ChallengeResponse;
+import app.challenge.service.ChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
