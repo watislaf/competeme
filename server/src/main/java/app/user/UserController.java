@@ -1,11 +1,12 @@
-package app.user.service;
+package app.user;
 
 
+import app.user.service.UserProfileResponse;
+import app.user.service.UserSearchResponse;
+import app.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +19,9 @@ public class UserController {
 
     @GetMapping("/{userId}/profile")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
-    public UserProfileResponse getUserProfile(@PathVariable Integer userId, @AuthenticationPrincipal UserDetails userDetails) {
+    public UserProfileResponse getUserProfile(@PathVariable Integer userId) {
         System.out.println("userId: " + userId);
-        return userService.getUserProfile(userId, userDetails);
+        return userService.getUserProfile(userId);
     }
 
     @GetMapping("/search")
