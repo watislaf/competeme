@@ -11,21 +11,23 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
 
 
     List<Friendship> findByStatusAndSenderId(
-        FriendshipStatus status1,
-        Integer senderId
+            FriendshipStatus status1,
+            Integer senderId
     );
 
     List<Friendship> findByStatusAndReceiverId(
-        FriendshipStatus status,
-        Integer receiverId
+            FriendshipStatus status,
+            Integer receiverId
     );
+
+    List<Friendship> findByStatusAndSenderIdAndReceiverId(FriendshipStatus status, Integer senderId, Integer receiverId);
 
 
     boolean existsBySenderIdAndReceiverId(Integer senderId, Integer receiverId);
 
     boolean existsBySenderIdAndReceiverIdAndStatus(
-        Integer senderId,
-        Integer receiverId,
-        FriendshipStatus status
+            Integer senderId,
+            Integer receiverId,
+            FriendshipStatus status
     );
 }
