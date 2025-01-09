@@ -3,7 +3,8 @@ import { Configuration } from "./configuration";
 import { API_URL } from "@/config/vars";
 import { jwtDecode } from "jwt-decode";
 import { UserControllerApi } from "@/api/apis/user-controller-api";
-import {ChallengeControllerApi} from "@/api/apis/challenge-controller-api";
+import { ChallengeControllerApi } from "@/api/apis/challenge-controller-api";
+import { ActivityControllerApi } from "@/api/apis/activity-controller-api";
 
 const isTokenAboutToExpire = (
   token: string,
@@ -60,7 +61,8 @@ const Api = () => {
   return {
     auth: new AuthenticationControllerApi(configuration),
     user: new UserControllerApi(configuration),
-      challenge: new ChallengeControllerApi(configuration),
+    challenge: new ChallengeControllerApi(configuration),
+    activity: new ActivityControllerApi(configuration)
   };
 };
 
