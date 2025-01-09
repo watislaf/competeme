@@ -17,13 +17,19 @@
 /**
  * 
  * @export
- * @interface FriendshipRequest
+ * @interface FriendshipKey
  */
-export interface FriendshipRequest {
+export interface FriendshipKey {
     /**
      * 
      * @type {number}
-     * @memberof FriendshipRequest
+     * @memberof FriendshipKey
+     */
+    'senderId': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof FriendshipKey
      */
     'receiverId': number;
 }
