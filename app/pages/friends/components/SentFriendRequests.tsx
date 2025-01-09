@@ -2,9 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, X } from "lucide-react";
-import { useFriendRequests } from "../hooks/useFriendRequests"; // Importujemy odpowiedni hook
-import { useProfiles } from "../hooks/useProfiles"; // Hook do pobrania użytkowników
-import type { User } from "../types/user";
+import { useFriendRequests } from "../hooks/useFriendRequests";
+import { useProfiles } from "../hooks/useProfiles";
 import { Link } from "@remix-run/react";
 
 interface SentFriendRequestsProps {
@@ -14,7 +13,7 @@ interface SentFriendRequestsProps {
 export function SentFriendRequests({ userId }: SentFriendRequestsProps) {
   const { sentRequestIds, isLoading, removeFriend } = useFriendRequests(userId);
 
-  const { users, isLoading: isLoadingUsers } = useProfiles(sentRequestIds);
+  const { profiles, isLoading: isLoadingUsers } = useProfiles(sentRequestIds);
 
   if (isLoading || isLoadingUsers) {
     return (
@@ -25,7 +24,7 @@ export function SentFriendRequests({ userId }: SentFriendRequestsProps) {
     );
   }
 
-  if (sentRequestIds.length === 0) {
+  if (sentRequestIds.length === 0 || !profiles) {
     return <p>No sent friend requests found.</p>;
   }
 
@@ -35,7 +34,7 @@ export function SentFriendRequests({ userId }: SentFriendRequestsProps) {
         <CardTitle>Sent Friend Requests</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {users.map((user: User) => {
+        {profiles.map((user) => {
           const initials = user.name
             ? user.name
                 .split(" ")

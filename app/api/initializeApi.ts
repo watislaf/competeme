@@ -3,7 +3,8 @@ import { Configuration } from "./configuration";
 import { API_URL } from "@/config/vars";
 import { jwtDecode } from "jwt-decode";
 import { UserControllerApi } from "@/api/apis/user-controller-api";
-import {ChallengeControllerApi} from "@/api/apis/challenge-controller-api";
+import { ChallengeControllerApi } from "@/api/apis/challenge-controller-api";
+import { FriendshipControllerApi } from "@/api";
 
 const isTokenAboutToExpire = (
   token: string,
@@ -15,7 +16,7 @@ const isTokenAboutToExpire = (
 };
 
 const getAccessToken = (): Promise<string> =>
-  new Promise(async (resolve, reject) => {
+  new Promise(async (resolve) => {
     const accessToken = localStorage.getItem("ACCESS_TOKEN_KEY");
     if (!accessToken) {
       return resolve("");
@@ -53,14 +54,15 @@ const Api = () => {
     basePath: API_URL,
     accessToken: getAccessToken,
     baseOptions: {
-      timeout: 5000,
-    },
+      timeout: 5000
+    }
   });
 
   return {
     auth: new AuthenticationControllerApi(configuration),
     user: new UserControllerApi(configuration),
-      challenge: new ChallengeControllerApi(configuration),
+    challenge: new ChallengeControllerApi(configuration),
+    friends: new FriendshipControllerApi(configuration)
   };
 };
 

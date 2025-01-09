@@ -5,7 +5,6 @@ import { Check, Loader2, X } from "lucide-react";
 import { Link } from "@remix-run/react";
 import { useFriendRequests } from "../hooks/useFriendRequests";
 import { useProfiles } from "../hooks/useProfiles";
-import type { User } from "../types/user";
 
 interface FriendRequestsProps {
   userId: number;
@@ -14,7 +13,7 @@ interface FriendRequestsProps {
 export function FriendRequests({ userId }: FriendRequestsProps) {
   const { requestIds, isLoading, acceptRequest, removeFriend } =
     useFriendRequests(userId);
-  const { users, isLoading: isLoadingUsers } = useProfiles(requestIds);
+  const { profiles, isLoading: isLoadingUsers } = useProfiles(requestIds);
   if (isLoading || isLoadingUsers) {
     return (
       <div className="flex items-center gap-2 text-muted-foreground">
@@ -24,7 +23,7 @@ export function FriendRequests({ userId }: FriendRequestsProps) {
     );
   }
 
-  if (requestIds.length === 0) {
+  if (requestIds.length === 0 || !profiles) {
     return null;
   }
 
@@ -34,9 +33,9 @@ export function FriendRequests({ userId }: FriendRequestsProps) {
         <CardTitle>Friend Requests</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {users.map((user: User) => {
-          const initials = user.name
-            ? user.name
+        {profiles.map((profile) => {
+          const initials = profile.name
+            ? profile.name
                 .split(" ")
                 .map((n) => n[0])
                 .join("")
@@ -44,23 +43,23 @@ export function FriendRequests({ userId }: FriendRequestsProps) {
             : "U";
 
           return (
-            <div key={user.id} className="flex items-center justify-between">
+            <div key={profile.id} className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Avatar>
-                  {user.imageUrl ? (
+                  {profile.imageUrl ? (
                     <AvatarImage
-                      src={user.imageUrl}
-                      alt={user.name || "User avatar"}
+                      src={profile.imageUrl}
+                      alt={profile.name || "User avatar"}
                     />
                   ) : null}
                   <AvatarFallback>{initials}</AvatarFallback>
                 </Avatar>
                 <div>
                   <Link
-                    to={`/users/${user.id}/profile`}
+                    to={`/users/${profile.id}/profile`}
                     className="font-medium hover:underline"
                   >
-                    {user.name || "Unknown User"}
+                    {profile.name || "Unknown User"}
                   </Link>
                 </div>
               </div>
@@ -68,7 +67,7 @@ export function FriendRequests({ userId }: FriendRequestsProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => acceptRequest.mutate(user.id)}
+                  onClick={() => acceptRequest.mutate(profile.id)}
                   disabled={acceptRequest.isPending}
                 >
                   <Check className="mr-2 h-4 w-4" />
@@ -77,7 +76,7 @@ export function FriendRequests({ userId }: FriendRequestsProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => removeFriend.mutate(user.id)}
+                  onClick={() => removeFriend.mutate(profile.id)}
                   disabled={removeFriend.isPending}
                 >
                   <X className="mr-2 h-4 w-4" />
