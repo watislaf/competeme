@@ -1,6 +1,8 @@
 package app.friendship;
 
-import app.user.entity.User;
+import app.friendship.entity.Friendship;
+import app.friendship.service.FriendshipRequest;
+import app.friendship.service.FriendshipService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -21,22 +23,45 @@ public class FriendshipController {
     }
 
     @PostMapping("/accept")
+    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
     public void acceptFriendRequest(@PathVariable Integer userId, @RequestBody FriendshipRequest request) {
         friendshipService.acceptFriendRequest(userId, request.receiverId());
     }
 
     @PostMapping("/remove")
+    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
     public void removeFriend(@PathVariable Integer userId, @RequestBody FriendshipRequest request) {
         friendshipService.removeFriend(userId, request.receiverId());
     }
 
     @GetMapping("/request")
+    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
     public List<Integer> getFriendRequests(@PathVariable Integer userId) {
         return friendshipService.getPendingFriendRequests(userId);
     }
 
-    @GetMapping("/")
-    public List<Integer> getFriends(@PathVariable Integer userId, User sender) {
-        return friendshipService.getFriends(sender.getId(), userId);
+    @GetMapping("/sent")
+    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    public List<Integer> getSentFriendRequests(@PathVariable Integer userId) {
+        return friendshipService.getSentFriendRequests(userId);
     }
+
+    @GetMapping("/")
+    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    public List<Integer> getFriends(@PathVariable Integer userId) {
+        return friendshipService.getFriends(userId);
+    }
+
+    @PostMapping("/cancel")
+    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    public void cancelFriendRequest(@PathVariable Integer userId, @RequestBody FriendshipRequest request) {
+        friendshipService.cancelFriendRequest(userId, request.receiverId());
+    }
+
+    @GetMapping("/statuses")
+    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    public List<Friendship> getStatuses(@PathVariable Integer userId, @RequestBody List<Integer> receiverIds) {
+        return friendshipService.getStatuses(userId, receiverIds);
+    }
+
 }
