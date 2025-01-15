@@ -25,7 +25,7 @@ export function SentFriendRequests({ userId }: SentFriendRequestsProps) {
   }
 
   if (sentRequestIds.length === 0 || !profiles) {
-    return <p>No sent friend requests found.</p>;
+    return <p></p>;
   }
 
   return (

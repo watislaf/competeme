@@ -58,7 +58,7 @@ export function useFriendRequests(userId: number) {
 
   const removeFriend = useMutation({
     mutationFn: async (friendId: number) => {
-      const response = await apis().friends.removeFriend(userId, {
+      const response = await apis().friends.cancelFriendRequest(userId, {
         receiverId: friendId,
       });
       if (response.status !== 200) {
