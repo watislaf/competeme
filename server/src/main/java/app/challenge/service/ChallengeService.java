@@ -72,7 +72,7 @@ public class ChallengeService {
         ChallengeParticipants participant = challengeParticipantsRepository.findByUserIdAndChallengeId(userId, challengeId)
             .orElseThrow(() -> new RuntimeException("User " + userId + "isnt participating in challenge " + challengeId));
 
-        participant.setProgress(participant.getProgress() + progress);
+        participant.setProgress(progress);
         challengeParticipantsRepository.save(participant);
     }
 }
