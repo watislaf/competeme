@@ -17,7 +17,9 @@ interface EmoticonPickerProps {
 }
 
 const EmoticonPicker: React.FC<EmoticonPickerProps> = ({ onSelect }) => {
-  const [selectedEmoticon, setSelectedEmoticon] = useState<string | null>(null);
+  const [selectedEmoticon, setSelectedEmoticon] = useState<string | undefined>(
+    undefined,
+  );
   const [isOpen, setIsOpen] = useState(false);
 
   const handleEmoticonClick = (name: string) => {

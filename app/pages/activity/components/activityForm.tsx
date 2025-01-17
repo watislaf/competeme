@@ -23,13 +23,15 @@ interface ActivityFormProps {
 }
 
 const ActivityForm: React.FC<ActivityFormProps> = ({ activities, userId }) => {
-  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
+  const [selectedActivity, setSelectedActivity] = useState<string | undefined>(
+    undefined,
+  );
   const [customActivityName, setCustomActivityName] = useState("");
   const [customActivityType, setCustomActivityType] =
     useState<ActivityRequestTypeEnum>("CLOCK");
   const [duration, setDuration] = useState<number | null>(null);
-
-  const { mutate: addActivity, error: addError } = useAddActivityMutation();
+  const { mutate: addActivity, error: addActivityError } =
+    useAddActivityMutation();
 
   const handleSelectChange = (value: string) => {
     setSelectedActivity(value);
@@ -138,9 +140,9 @@ const ActivityForm: React.FC<ActivityFormProps> = ({ activities, userId }) => {
       <Button onClick={handleLogActivity} className="w-full">
         Save Activity
       </Button>
-      {addError && (
+      {addActivityError && (
         <p className="text-red-500">
-          Error adding activity: {addError.message}
+          Error adding activity: {addActivityError.message}
         </p>
       )}
     </div>
