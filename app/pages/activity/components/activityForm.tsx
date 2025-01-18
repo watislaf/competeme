@@ -16,6 +16,13 @@ import { useAddActivityMutation } from "../hooks/useAddActivityMutation";
 import EmoticonPicker from "./emoticonPicker";
 import { getIconComponent } from "../utils/iconsHelper";
 import React from "react";
+import { z } from "zod";
+
+const activitySchema = z.object({
+  selectedActivity: z.string().nonempty("Please select an activity."),
+  customActivityName: z.string().min(1, "Activity name is required").optional(),
+  duration: z.number().positive("Goal must be a positive number"),
+});
 
 interface ActivityFormProps {
   activities?: UserActivityResponse;
@@ -23,40 +30,62 @@ interface ActivityFormProps {
 }
 
 const ActivityForm: React.FC<ActivityFormProps> = ({ activities, userId }) => {
-  const [selectedActivity, setSelectedActivity] = useState<string | undefined>(
-    undefined,
-  );
-  const [customActivityName, setCustomActivityName] = useState("");
+  const [formData, setFormData] = useState({
+    selectedActivity: "",
+    customActivityName: "",
+    duration: "",
+  });
   const [customActivityType, setCustomActivityType] =
     useState<ActivityRequestTypeEnum>("CLOCK");
-  const [duration, setDuration] = useState<number | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const { mutate: addActivity, error: addActivityError } =
     useAddActivityMutation();
 
   const handleSelectChange = (value: string) => {
-    setSelectedActivity(value);
-    if (value !== "custom") {
-      setCustomActivityName("");
-    }
+    setFormData((prev) => ({
+      ...prev,
+      selectedActivity: value,
+      customActivityName: value === "custom" ? "" : prev.customActivityName,
+    }));
+    setErrors((prev) => ({ ...prev, selectedActivity: "" }));
   };
 
   const handleLogActivity = () => {
-    if (selectedActivity === "custom" && customActivityName && duration) {
+    const parsedDuration = Number(formData.duration);
+    const validationData = {
+      selectedActivity: formData.selectedActivity,
+      customActivityName:
+        formData.selectedActivity === "custom"
+          ? formData.customActivityName
+          : undefined,
+      duration: parsedDuration,
+    };
+
+    const result = activitySchema.safeParse(validationData);
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.errors.forEach((error) => {
+        if (error.path[0]) {
+          fieldErrors[error.path[0].toString()] = error.message;
+        }
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
+    setErrors({});
+    if (formData.selectedActivity === "custom") {
       addActivity({
         userId,
         activityRequest: {
-          title: customActivityName,
+          title: formData.customActivityName,
           type: customActivityType,
-          duration,
+          duration: parsedDuration,
         },
       });
-
-      setSelectedActivity("custom");
-      setCustomActivityName("");
-      setDuration(null);
-    } else if (selectedActivity && duration) {
+    } else {
       const selectedActivityData = activities?.available.find(
-        (activity) => activity.title === selectedActivity,
+        (activity) => activity.title === formData.selectedActivity,
       );
 
       if (selectedActivityData) {
@@ -65,14 +94,12 @@ const ActivityForm: React.FC<ActivityFormProps> = ({ activities, userId }) => {
           activityRequest: {
             title: selectedActivityData.title,
             type: selectedActivityData.type,
-            duration,
+            duration: parsedDuration,
           },
         });
       }
-
-      setSelectedActivity("custom");
-      setDuration(null);
     }
+    setFormData({ selectedActivity: "", customActivityName: "", duration: "" });
   };
 
   const handleIconSelect = (activityType: ActivityRequestTypeEnum) => {
@@ -83,7 +110,12 @@ const ActivityForm: React.FC<ActivityFormProps> = ({ activities, userId }) => {
     <div className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="activity">Activity</Label>
-        <Select name="activity" required onValueChange={handleSelectChange}>
+        <Select
+          name="activity"
+          required
+          onValueChange={handleSelectChange}
+          value={formData.selectedActivity}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Select an activity" />
           </SelectTrigger>
@@ -104,9 +136,12 @@ const ActivityForm: React.FC<ActivityFormProps> = ({ activities, userId }) => {
             </SelectItem>
           </SelectContent>
         </Select>
+        {errors.selectedActivity && (
+          <p className="text-red-500">{errors.selectedActivity}</p>
+        )}
       </div>
 
-      {selectedActivity === "custom" && (
+      {formData.selectedActivity === "custom" && (
         <div className="space-y-2">
           <Label htmlFor="customActivityName">Activity Name</Label>
           <div className="flex items-center space-x-2">
@@ -114,13 +149,22 @@ const ActivityForm: React.FC<ActivityFormProps> = ({ activities, userId }) => {
               id="customActivityName"
               name="customActivityName"
               placeholder="Enter activity name"
-              value={customActivityName}
-              onChange={(e) => setCustomActivityName(e.target.value)}
+              value={formData.customActivityName}
+              onChange={(e) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  customActivityName: e.target.value,
+                }));
+                setErrors((prev) => ({ ...prev, customActivityName: "" }));
+              }}
               required
               className="flex-1"
             />
             <EmoticonPicker onSelect={handleIconSelect} />
           </div>
+          {errors.customActivityName && (
+            <p className="text-red-500">{errors.customActivityName}</p>
+          )}
         </div>
       )}
 
@@ -131,10 +175,17 @@ const ActivityForm: React.FC<ActivityFormProps> = ({ activities, userId }) => {
           name="duration"
           type="number"
           placeholder="Enter duration in minutes"
-          value={duration || ""}
-          onChange={(e) => setDuration(Number(e.target.value))}
+          value={formData.duration}
+          onChange={(e) => {
+            setFormData((prev) => ({
+              ...prev,
+              duration: e.target.value,
+            }));
+            setErrors((prev) => ({ ...prev, duration: "" }));
+          }}
           required
         />
+        {errors.duration && <p className="text-red-500">{errors.duration}</p>}
       </div>
 
       <Button onClick={handleLogActivity} className="w-full">
