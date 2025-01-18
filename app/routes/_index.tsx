@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useUserId } from "@/hooks/user/useUserId";
 
 type LoaderData = {
   user: {
@@ -61,6 +62,7 @@ export const loader: LoaderFunction = async () => {
 
 export default function HomePage() {
   const data = useLoaderData<LoaderData>();
+  const userId = useUserId();
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -152,17 +154,17 @@ export default function HomePage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-8">
-        <Link to="/activity" className="block">
+        <Link to={`/users/${userId}/activity`} className="block">
           <Button className="w-full h-full py-8" size="lg">
             <Clock className="mr-2 h-5 w-5" /> Log Activity
           </Button>
         </Link>
-        <Link to="/stats" className="block">
+        <Link to={`/users/${userId}/stats`} className="block">
           <Button className="w-full h-full py-8" size="lg">
             <BarChart2 className="mr-2 h-5 w-5" /> View Stats
           </Button>
         </Link>
-        <Link to="/friends" className="block">
+        <Link to={`/users/${userId}/friends`} className="block">
           <Button className="w-full h-full py-8" size="lg">
             <Users className="mr-2 h-5 w-5" /> Friends
           </Button>

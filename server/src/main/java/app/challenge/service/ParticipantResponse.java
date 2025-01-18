@@ -6,6 +6,7 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 public record ParticipantResponse(
     @Schema(requiredMode = REQUIRED) String username,
+    @Schema(requiredMode = REQUIRED) Integer userId,
     @Schema(requiredMode = REQUIRED) Integer progres
 ) {
 }

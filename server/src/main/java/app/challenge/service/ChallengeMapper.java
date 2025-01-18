@@ -46,6 +46,7 @@ public class ChallengeMapper {
     private ParticipantResponse mapToParticipantResponse(ChallengeParticipants participant) {
         return new ParticipantResponse(
             participant.getUser().getName(),
+            participant.getUser().getId(),
             participant.getProgress()
         );
     }

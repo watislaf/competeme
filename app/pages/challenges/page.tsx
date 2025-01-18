@@ -9,6 +9,7 @@ import { ChallengeRequest } from "@/api/models/challenge-request";
 
 const ChallengesPage: React.FC = () => {
   const { userId } = useParams();
+  const numericUserId = userId ? Number(userId) : null;
   const { challenges, isLoading } = useChallenges(Number(userId));
   const { mutate: addChallenge, error: addError } = useAddChallengeMutation();
   const { mutate: updateProgress, error: updateError } =
@@ -28,7 +29,6 @@ const ChallengesPage: React.FC = () => {
         challengeId,
         progress: progressValues[challengeId],
       });
-      setProgressValues((prev) => ({ ...prev, [challengeId]: 0 }));
     }
   };
 
@@ -39,29 +39,38 @@ const ChallengesPage: React.FC = () => {
     });
   };
 
+  if (numericUserId === null) {
+    return <p>Error: Invalid user ID</p>;
+  }
+
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8">Challenges</h1>
       <ChallengeForm onSubmit={handleAddChallenge} addError={addError} />
-      {challenges?.map((challenge) => {
-        if (!challenge.id) {
-          return null;
-        }
 
-        return (
-          <ChallengeCard
-            key={challenge.id}
-            challenge={challenge}
-            onProgressChange={handleProgressChange}
-            onUpdateProgress={handleUpdateProgress}
-            progressValue={progressValues[challenge.id] || ""}
-            updateError={
-              updateError ? { message: updateError.message } : undefined
-            }
-          />
-        );
-      })}
+      <h2 className="text-xl font-bold mt-8 mb-4">Your Challenges</h2>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {challenges?.map((challenge) => {
+          if (!challenge.id) {
+            return null;
+          }
+
+          return (
+            <ChallengeCard
+              key={challenge.id}
+              challenge={challenge}
+              onProgressChange={handleProgressChange}
+              onUpdateProgress={handleUpdateProgress}
+              updateError={
+                updateError ? { message: updateError.message } : undefined
+              }
+              userId={numericUserId}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };
