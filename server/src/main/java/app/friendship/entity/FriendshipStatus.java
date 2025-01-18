@@ -1,7 +1,6 @@
-package app.friendship;
+package app.friendship.entity;
 
 public enum FriendshipStatus {
     PENDING,
     ACCEPTED,
-    REJECTED
 }

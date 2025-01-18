@@ -1,10 +1,13 @@
-package app.friendship;
+package app.friendship.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Entity
 @Data
@@ -13,17 +16,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "friendships")
 public class Friendship {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Column(name = "sender_id", nullable = false)
-    private Integer senderId;
-
-    @Column(name = "receiver_id", nullable = false)
-    private Integer receiverId;
+    @EmbeddedId
+    @Schema(requiredMode = REQUIRED)
+    private FriendshipKey id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Schema(requiredMode = REQUIRED)
     private FriendshipStatus status;
 }

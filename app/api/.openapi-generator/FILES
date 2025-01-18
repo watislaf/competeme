@@ -17,8 +17,9 @@ models/authentication-request.ts
 models/authentication-response.ts
 models/challenge-request.ts
 models/challenge-response.ts
+models/friendship-key.ts
 models/friendship-request.ts
-models/granted-authority.ts
+models/friendship.ts
 models/index.ts
 models/leaderboard-entry.ts
 models/participant-response.ts
@@ -27,4 +28,3 @@ models/registration-request.ts
 models/user-activity-response.ts
 models/user-profile-response.ts
 models/user-search-response.ts
-models/user.ts

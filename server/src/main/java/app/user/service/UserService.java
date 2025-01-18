@@ -1,12 +1,9 @@
 package app.user.service;
 
-import app.friendship.FriendshipRepository;
-import app.friendship.FriendshipStatus;
 import app.user.entity.User;
 import app.user.entity.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -17,23 +14,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final FriendshipRepository friendshipRepository;
 
     public User getUserById(Integer userId) {
         return userRepository.findById(userId)
             .orElseThrow(() -> new UsernameNotFoundException("User not found with receiverId: " + userId));
     }
 
-    public boolean isFriend(Integer userId, Integer requesterId) {
-        return friendshipRepository.existsBySenderIdAndReceiverIdAndStatus(requesterId, userId, FriendshipStatus.ACCEPTED)
-            || friendshipRepository.existsBySenderIdAndReceiverIdAndStatus(userId, requesterId, FriendshipStatus.ACCEPTED);
-    }
-
-    public UserProfileResponse getUserProfile(Integer userId, UserDetails userDetails) {
-        System.out.println("userId: " + userId);
-        Integer requesterId = ((User) userDetails).getId();
-        if (!userId.equals(requesterId) && !isFriend(userId, requesterId)) return null;
-
+    public UserProfileResponse getUserProfile(Integer userId) {
         User user = getUserById(userId);
 
         return UserProfileResponse.builder()
