@@ -9,7 +9,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
+import { z } from "zod";
 import { ChallengeRequest } from "@/api";
+
+const challengeSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "Description is required"),
+  goal: z.number().positive("Goal must be a positive number"),
+  unit: z.string().min(1, "Unit is required"),
+  participants: z.array(z.number()).optional(),
+});
 
 interface ChallengeFormProps {
   onSubmit: (data: ChallengeRequest) => void;
@@ -28,6 +37,7 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
   });
   const [friendIds, setFriendIds] = useState<string>("");
   const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -48,11 +58,27 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
   };
 
   const handleSubmit = () => {
-    onSubmit({
+    const parsedGoal = Number(formData.goal);
+    const validationData = {
       ...formData,
-      goal: Number(formData.goal),
+      goal: parsedGoal,
       participants: invitedFriends.map(Number),
-    });
+    };
+
+    const result = challengeSchema.safeParse(validationData);
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.errors.forEach((error) => {
+        if (error.path[0]) {
+          fieldErrors[error.path[0].toString()] = error.message;
+        }
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
+    setErrors({});
+    onSubmit(validationData);
     setFormData({ title: "", description: "", goal: "", unit: "" });
     setInvitedFriends([]);
   };
@@ -76,6 +102,7 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
               onChange={handleChange}
               required
             />
+            {errors.title && <p className="text-red-500">{errors.title}</p>}
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
@@ -86,6 +113,9 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
               onChange={handleChange}
               required
             />
+            {errors.description && (
+              <p className="text-red-500">{errors.description}</p>
+            )}
           </div>
           <div className="flex space-x-4">
             <div className="space-y-2 flex-1">
@@ -98,6 +128,7 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
                 onChange={handleChange}
                 required
               />
+              {errors.goal && <p className="text-red-500">{errors.goal}</p>}
             </div>
             <div className="space-y-2 flex-1">
               <Label htmlFor="unit">Unit</Label>
@@ -109,11 +140,11 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
                 onChange={handleChange}
                 required
               />
+              {errors.unit && <p className="text-red-500">{errors.unit}</p>}
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="friendIds">Invite Friends (Enter Friend ID)</Label>{" "}
-            {/*will change it to username later*/}
+            <Label htmlFor="friendIds">Invite Friends (Enter Friend ID)</Label>
             <div className="flex space-x-2">
               <Input
                 id="friendIds"
