@@ -81,8 +81,11 @@ public class FriendshipService {
         friendshipRepository.deleteAll(findFriendshipRequests(senderId, receiverId, FriendshipStatus.PENDING));
     }
 
-    public List<Friendship> getStatuses(Integer userId1, List<Integer> userId2) {
-        return friendshipRepository.findBySenderAndReceiversOrReceiverAndSenders(userId1, userId2);
+    public List<Friendship> getStatuses(Integer userId1, List<FriendshipRequest> userId2) {
+        List<Integer> userIds = userId2.stream()
+                .map(FriendshipRequest::receiverId)
+                .toList();
+        return friendshipRepository.findBySenderAndReceiversOrReceiverAndSenders(userId1, userIds);
     }
 
     private Friendship requestFriendship(Integer senderId, Integer receiverId) {

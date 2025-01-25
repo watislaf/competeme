@@ -60,7 +60,7 @@ public class FriendshipController {
 
     @GetMapping("/statuses")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
-    public List<Friendship> getStatuses(@PathVariable Integer userId, @RequestBody List<Integer> receiverIds) {
+    public List<Friendship> getStatuses(@PathVariable Integer userId, @RequestBody List<FriendshipRequest> receiverIds) {
         return friendshipService.getStatuses(userId, receiverIds);
     }
 
