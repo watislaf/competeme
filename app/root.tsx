@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useNavigate,
   useRouteError,
 } from "@remix-run/react";
 import { Header } from "@/components/header/header";
@@ -21,7 +22,6 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { isUnauthorized } from "@/errors/Unauthorized";
 import { useMemo } from "react";
 

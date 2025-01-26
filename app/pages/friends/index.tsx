@@ -14,6 +14,7 @@ export default function FriendsPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="space-y-8">
+        <h1 className="text-2xl font-bold">Friends</h1>
         <SearchBar userId={Number(userId)} />
         <FriendRequests userId={Number(userId)} />
         <SentFriendRequests userId={Number(userId)} />

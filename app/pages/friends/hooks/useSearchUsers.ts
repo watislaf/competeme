@@ -18,30 +18,9 @@ export function useSearchUsers(userId: number) {
       if (users.status !== 200) {
         throw new Error("Failed to fetch users");
       }
-      // const statuses = await apis().friends.getStatuses(
-      //   userId,
-      //   users.data.map((u) => u.id),
-      // );
-
-      // const statuses = await Promise.all(
-      //   users.data.map((u) => apis().friends.getStatus(userId, u.id))
-      // );
-
-      const statuses = await Promise.all(
-        users.data.map(async (u) => {
-          try {
-            const response = await fetch(`/api/v1/users/${userId}/friends/${u.id}`);
-
-            if (!response.ok) {
-              throw new Error(`Błąd pobierania statusu dla użytkownika ${u.id}: ${response.statusText}`);
-            }
-
-            return await response.json(); // Zakładamy, że odpowiedź jest w formacie JSON
-          } catch (error) {
-            console.error(error);
-            return null; // Możesz zwrócić null lub inną wartość domyślną w przypadku błędu
-          }
-        })
+      const statuses = await apis().friends.getStatuses(
+        userId,
+        users.data.map((u) => ({receiverId:u.id})),
       );
 
       if (statuses.status !== 200) {

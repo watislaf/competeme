@@ -31,6 +31,12 @@ export interface ParticipantResponse {
      * @type {number}
      * @memberof ParticipantResponse
      */
+    'userId': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ParticipantResponse
+     */
     'progres': number;
 }
 

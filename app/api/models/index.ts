@@ -1,3 +1,5 @@
+export * from './activity-request';
+export * from './activity-response';
 export * from './authentication-request';
 export * from './authentication-response';
 export * from './challenge-request';
@@ -7,6 +9,8 @@ export * from './friendship-key';
 export * from './friendship-request';
 export * from './leaderboard-entry';
 export * from './participant-response';
+export * from './recent-activity-response';
 export * from './registration-request';
+export * from './user-activity-response';
 export * from './user-profile-response';
 export * from './user-search-response';
