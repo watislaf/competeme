@@ -68,7 +68,7 @@ export default function ProfilePage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Your Top Activity</CardTitle>
+            <CardTitle>Top Activity</CardTitle>
           </CardHeader>
           <CardContent>
             <h3 className="text-lg font-semibold">{user.topActivity}</h3>

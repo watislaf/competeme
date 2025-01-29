@@ -106,4 +106,14 @@ public class FriendshipService {
         return friendshipRepository.existsById_SenderIdAndId_ReceiverId(senderId, receiverId);
     }
 
+    public boolean isFriend(Integer senderId, Integer receiverId) {
+        return friendshipRepository.existsById_SenderIdAndId_ReceiverIdAndStatus(senderId, receiverId, FriendshipStatus.ACCEPTED) ||
+                friendshipRepository.existsById_SenderIdAndId_ReceiverIdAndStatus(receiverId, senderId, FriendshipStatus.ACCEPTED);
+    }
+
+    public boolean hasPendingRequest(Integer senderId, Integer receiverId) {
+        return friendshipRepository.existsById_SenderIdAndId_ReceiverIdAndStatus(senderId, receiverId, FriendshipStatus.PENDING) ||
+                friendshipRepository.existsById_SenderIdAndId_ReceiverIdAndStatus(receiverId, senderId, FriendshipStatus.PENDING);
+    }
+
 }

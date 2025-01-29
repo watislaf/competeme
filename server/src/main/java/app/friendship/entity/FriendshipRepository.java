@@ -32,10 +32,6 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Friendsh
 
     boolean existsById_SenderIdAndId_ReceiverId(Integer senderId, Integer receiverId);
 
-    default boolean isFriendRequestExists(Integer senderId, Integer receiverId) {
-        return existsById_SenderIdAndId_ReceiverId(senderId, receiverId);
-    }
-
     @Query("""
             SELECT f FROM Friendship f 
             WHERE (f.id.senderId = :user1 AND f.id.receiverId IN :user2) 
@@ -44,6 +40,12 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Friendsh
     List<Friendship> findBySenderAndReceiversOrReceiverAndSenders(
         @Param("user1") Integer user1,
         @Param("user2") List<Integer> user2
+    );
+
+    boolean existsById_SenderIdAndId_ReceiverIdAndStatus(
+            Integer senderId,
+            Integer receiverId,
+            FriendshipStatus status
     );
 
 }
