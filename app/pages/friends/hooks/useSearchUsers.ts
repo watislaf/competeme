@@ -1,42 +1,64 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import debounce from "lodash/debounce";
-import { apis } from "@/api/initializeApi";
-import { FriendshipStatusEnum } from "@/api";
+import { UserSearchResponse } from "../types";
+import { useAuth } from "./useAuth";
 
 export function useSearchUsers(userId: number) {
   const [searchTerm, setSearchTerm] = useState("");
+  const { getAuthHeader } = useAuth();
 
   const { data: users, isLoading } = useQuery({
-    queryKey: ["users-search-as-friends", searchTerm],
+    queryKey: ["users", "search", searchTerm],
     queryFn: async () => {
-      if (searchTerm === "") return [];
       if (!searchTerm) return [];
-      const users = await apis().user.searchUsers(searchTerm);
-      if (users.status !== 200) {
-        throw new Error("Failed to fetch users");
-      }
-      const statuses = await apis().friends.getStatuses(
-        userId,
-        users.data.map((u) => u.id),
+      const response = await fetch(
+        `http://localhost:8080/api/v1/users/search?query=${searchTerm}`,
+        {
+          headers: getAuthHeader(),
+        }
       );
-      if (statuses.status !== 200) {
-        throw new Error("Failed to fetch statuses");
-      }
-      return users.data.map((user) => {
-        const status = statuses.data.find(
-          (s) => s.id.receiverId === user.id || s.id.senderId === user.id,
-        );
-        return {
-          ...user,
-          isFriend: status?.status === FriendshipStatusEnum.Accepted,
-          hasPendingRequest: status?.status === FriendshipStatusEnum.Pending,
-        };
-      });
+      if (!response.ok) throw new Error("Failed to search users");
+      const results = (await response.json()) as UserSearchResponse[];
+
+      const filteredResults = results.filter((user) => user.id !== userId);
+
+      const usersWithStatus = await Promise.all(
+        filteredResults.map(async (user) => {
+          const [isFriendResponse, hasPendingResponse] = await Promise.all([
+            fetch(
+              `http://localhost:8080/api/v1/users/${userId}/friends/status/${user.id}`,
+              { headers: getAuthHeader() }
+            ),
+            fetch(
+              `http://localhost:8080/api/v1/users/${userId}/friends/pending/${user.id}`,
+              { headers: getAuthHeader() }
+            ),
+          ]);
+
+          const isFriend = await isFriendResponse.json();
+          const hasPendingRequest = await hasPendingResponse.json();
+
+          return {
+            ...user,
+            isFriend,
+            hasPendingRequest,
+          };
+        })
+      );
+
+      return usersWithStatus;
     },
+    enabled: searchTerm.length > 0,
+    refetchInterval: 1000,
   });
 
-  const debouncedSearch = useCallback(debounce(setSearchTerm, 1000), []);
+  const debouncedSearch = useCallback(
+    debounce((term: string) => {
+      setSearchTerm(term);
+    }, 1000),
+    []
+  );
 
   return {
     users: users || [],

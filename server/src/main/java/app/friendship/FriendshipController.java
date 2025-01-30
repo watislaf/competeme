@@ -60,8 +60,20 @@ public class FriendshipController {
 
     @GetMapping("/statuses")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
-    public List<Friendship> getStatuses(@PathVariable Integer userId, @RequestBody List<Integer> receiverIds) {
+    public List<Friendship> getStatuses(@PathVariable Integer userId, @RequestBody List<FriendshipRequest> receiverIds) {
         return friendshipService.getStatuses(userId, receiverIds);
+    }
+
+    @GetMapping("/status/{receiverId}")
+    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    public boolean isFriend(@PathVariable Integer userId, @PathVariable Integer receiverId) {
+        return friendshipService.isFriend(userId, receiverId);
+    }
+
+    @GetMapping("/pending/{receiverId}")
+    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    public boolean hasPendingRequest(@PathVariable Integer userId, @PathVariable Integer receiverId) {
+        return friendshipService.hasPendingRequest(userId, receiverId);
     }
 
 }

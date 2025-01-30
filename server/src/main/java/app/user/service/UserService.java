@@ -1,5 +1,7 @@
 package app.user.service;
 
+import app.friendship.entity.FriendshipRepository;
+import app.friendship.entity.FriendshipStatus;
 import app.user.entity.User;
 import app.user.entity.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final FriendshipRepository friendshipRepository;
 
     public User getUserById(Integer userId) {
         return userRepository.findById(userId)
@@ -38,4 +41,6 @@ public class UserService {
             .map(user -> new UserSearchResponse(user.getId(), user.getName(), user.getImageUrl()))
             .collect(Collectors.toList());
     }
+
+
 }
