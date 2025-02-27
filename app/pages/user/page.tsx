@@ -53,8 +53,10 @@ export default function ProfilePage() {
           <CardContent>
             <p>Total Time Logged: {stats?.totalTimeLogged}</p>
             <p>
-              Most Frequent Activity: {stats?.mostFrequentActivity.activity} (
-              {stats?.mostFrequentActivity.totalTime})
+              Most Frequent Activity:{" "}
+              {stats?.mostFrequentActivity
+                ? `${stats.mostFrequentActivity.activity} (${stats.mostFrequentActivity.totalTime})`
+                : "No data"}
             </p>
           </CardContent>
         </Card>
@@ -64,10 +66,16 @@ export default function ProfilePage() {
             <CardTitle>Top Activity</CardTitle>
           </CardHeader>
           <CardContent>
-            <h3 className="text-lg font-semibold">
-              {stats?.topActivity.activity}
-            </h3>
-            <p>{stats?.topActivity.totalTime}</p>
+            {stats?.topActivity ? (
+              <>
+                <h3 className="text-lg font-semibold">
+                  {stats.topActivity.activity}
+                </h3>
+                <p>{stats.topActivity.totalTime}</p>
+              </>
+            ) : (
+              <p>No data</p>
+            )}
           </CardContent>
         </Card>
 
