@@ -34,11 +34,31 @@ export const Header = () => {
   }
 
   const navLinks = [
-    { name: "Home", path: "/", icon: Home },
-    { name: "User Stats", path: "/stats", icon: BarChart3 },
-    { name: "Friends", path: `/users/${profile.id}/friends`, icon: Users },
-    { name: "Challenges", path: `/users/${profile.id}/challenges`, icon: Trophy },
-    { name: "Activity", path: "/activity", icon: Activity },
+    {
+      name: "Home",
+      path: "/",
+      icon: Home,
+    },
+    {
+      name: "User Stats",
+      path: `/users/${profile.id}/stats`,
+      icon: BarChart3,
+    },
+    {
+      name: "Friends",
+      path: `/users/${profile.id}/friends`,
+      icon: Users,
+    },
+    {
+      name: "Challenges",
+      path: `/users/${profile.id}/challenges`,
+      icon: Trophy,
+    },
+    {
+      name: "Activity",
+      path: `/users/${profile.id}/activity`,
+      icon: Activity,
+    },
   ];
 
   return (
