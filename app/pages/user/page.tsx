@@ -5,19 +5,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useProfile } from "@/hooks/user/useProfile";
 import moment from "moment";
+import { useStats } from "@/hooks/stats/useStats";
 
 export default function ProfilePage() {
   const { userId } = useParams();
   const { profile, isLoading } = useProfile(Number(userId));
-
-  const user = {
-    name: "Jane Doe",
-    username: "jane_tracker",
-    avatar: "https://picsum.photos/100/100",
-    totalTimeLogged: "120h 30m",
-    topActivity: "Running",
-    topActivityTime: "40h 15m",
-  };
+  const { stats } = useStats(Number(userId));
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -58,10 +51,10 @@ export default function ProfilePage() {
             <CardTitle>Personal Stats</CardTitle>
           </CardHeader>
           <CardContent>
-            <p>Total Time Logged: {user.totalTimeLogged}</p>
+            <p>Total Time Logged: {stats?.totalTimeLogged}</p>
             <p>
-              Most Frequent Activity: {user.topActivity} ({user.topActivityTime}
-              )
+              Most Frequent Activity: {stats?.mostFrequentActivity.activity} (
+              {stats?.mostFrequentActivity.totalTime})
             </p>
           </CardContent>
         </Card>
@@ -71,8 +64,10 @@ export default function ProfilePage() {
             <CardTitle>Top Activity</CardTitle>
           </CardHeader>
           <CardContent>
-            <h3 className="text-lg font-semibold">{user.topActivity}</h3>
-            <p>{user.topActivityTime}</p>
+            <h3 className="text-lg font-semibold">
+              {stats?.topActivity.activity}
+            </h3>
+            <p>{stats?.topActivity.totalTime}</p>
           </CardContent>
         </Card>
 

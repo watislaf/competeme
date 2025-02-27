@@ -5,7 +5,7 @@ import React from "react";
 import { StatsResponse } from "@/api/models";
 
 type TabsComponentProps = {
-  stats: StatsResponse;
+  stats?: StatsResponse;
 };
 
 const TabsComponent: React.FC<TabsComponentProps> = ({ stats }) => {

@@ -10,7 +10,7 @@ import React from "react";
 import { StatsResponse } from "@/api/models";
 
 type LineChartCardProps = {
-  stats: StatsResponse;
+  stats?: StatsResponse;
 };
 
 export const LineChartCard: React.FC<LineChartCardProps> = ({ stats }) => {

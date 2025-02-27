@@ -10,7 +10,7 @@ import React from "react";
 import { StatsResponse } from "@/api/models";
 
 type ActivityBreakdownProps = {
-  stats: StatsResponse;
+  stats?: StatsResponse;
 };
 
 const ActivityBreakdown: React.FC<ActivityBreakdownProps> = ({ stats }) => {

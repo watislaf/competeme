@@ -23,7 +23,11 @@ export default function FriendsPage() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Friends</h1>
 
-      <Tabs value={currentTab} onValueChange={handleTabChange} className="w-full">
+      <Tabs
+        value={currentTab}
+        onValueChange={handleTabChange}
+        className="w-full"
+      >
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="friends">Friends</TabsTrigger>
           <TabsTrigger value="challenges">Challenges</TabsTrigger>
@@ -31,7 +35,7 @@ export default function FriendsPage() {
         </TabsList>
 
         <TabsContent value="friends">
-         <FriendsManagement />
+          <FriendsManagement />
         </TabsContent>
 
         <TabsContent value="challenges">
@@ -46,7 +50,9 @@ export default function FriendsPage() {
               <CardDescription>See how you rank among friends</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">Rankings will be displayed here.</p>
+              <p className="text-muted-foreground">
+                Rankings will be displayed here.
+              </p>
             </CardContent>
           </Card>
         </TabsContent>
