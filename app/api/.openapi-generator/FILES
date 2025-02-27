@@ -5,12 +5,14 @@ apis/activity-controller-api.ts
 apis/authentication-controller-api.ts
 apis/challenge-controller-api.ts
 apis/friendship-controller-api.ts
+apis/stats-controller-api.ts
 apis/user-controller-api.ts
 base.ts
 common.ts
 configuration.ts
 git_push.sh
 index.ts
+models/activity-breakdown.ts
 models/activity-request.ts
 models/activity-response.ts
 models/authentication-request.ts
@@ -25,6 +27,7 @@ models/leaderboard-entry.ts
 models/participant-response.ts
 models/recent-activity-response.ts
 models/registration-request.ts
+models/stats-response.ts
 models/user-activity-response.ts
 models/user-profile-response.ts
 models/user-search-response.ts
