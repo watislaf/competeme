@@ -11,9 +11,13 @@ import { StatsResponse } from "@/api/models";
 
 type LineChartCardProps = {
   stats?: StatsResponse;
+  color: string;
 };
 
-export const LineChartCard: React.FC<LineChartCardProps> = ({ stats }) => {
+export const LineChartCard: React.FC<LineChartCardProps> = ({
+  stats,
+  color,
+}) => {
   return (
     <Card>
       <CardHeader>
@@ -32,7 +36,7 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({ stats }) => {
           }
           index="week"
           categories={["time"]}
-          colors={["black"]}
+          colors={[color]}
           valueFormatter={(value: number) => `${value.toFixed(1)}h`}
           yAxisWidth={48}
         />

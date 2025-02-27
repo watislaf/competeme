@@ -11,9 +11,13 @@ import { StatsResponse } from "@/api/models";
 
 type ActivityBreakdownProps = {
   stats?: StatsResponse;
+  colors: string[];
 };
 
-const ActivityBreakdown: React.FC<ActivityBreakdownProps> = ({ stats }) => {
+const ActivityBreakdown: React.FC<ActivityBreakdownProps> = ({
+  stats,
+  colors,
+}) => {
   return (
     <Card>
       <CardHeader>
@@ -27,7 +31,7 @@ const ActivityBreakdown: React.FC<ActivityBreakdownProps> = ({ stats }) => {
             index="activityName"
             category="duration"
             valueFormatter={(value: number) => `${value.toFixed(1)}h`}
-            colors={["black"]}
+            colors={colors}
           />
         </div>
       </CardContent>

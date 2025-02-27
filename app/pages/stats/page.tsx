@@ -4,6 +4,7 @@ import { Award, CalendarDays, Clock, TrendingUp } from "lucide-react";
 import TabsComponent from "./components/tabsComponent";
 import StatCard from "./components/statCard";
 import ActivityBreakdown from "./components/activityBreakdown";
+import chroma from "chroma-js";
 
 const StatsPage: React.FC = () => {
   const { userId } = useParams();
@@ -20,13 +21,20 @@ const StatsPage: React.FC = () => {
     return hours + minutes / 60;
   };
 
+  const generateColors = (length: number) => {
+    const scale = chroma.scale("Set3").mode("lab").colors(length);
+    return scale;
+  };
+
+  const colors = generateColors((stats?.activityBreakdown?.length ?? 0) + 1);
+
   if (isLoading) return <p>Loading...</p>;
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Statistics</h1>
 
-      <TabsComponent stats={stats} />
+      <TabsComponent stats={stats} chartColor={colors[0]} />
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
         <StatCard
@@ -58,7 +66,7 @@ const StatsPage: React.FC = () => {
         />
       </div>
 
-      <ActivityBreakdown stats={stats} />
+      <ActivityBreakdown stats={stats} colors={colors.slice(1)} />
     </div>
   );
 };

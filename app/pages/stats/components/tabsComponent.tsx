@@ -6,9 +6,10 @@ import { StatsResponse } from "@/api/models";
 
 type TabsComponentProps = {
   stats?: StatsResponse;
+  chartColor: string;
 };
 
-const TabsComponent: React.FC<TabsComponentProps> = ({ stats }) => {
+const TabsComponent: React.FC<TabsComponentProps> = ({ stats, chartColor }) => {
   return (
     <Tabs defaultValue="weekly" className="w-full mb-8">
       <TabsList>
@@ -17,11 +18,11 @@ const TabsComponent: React.FC<TabsComponentProps> = ({ stats }) => {
       </TabsList>
 
       <TabsContent value="weekly">
-        <BarChartCard stats={stats} />
+        <BarChartCard stats={stats} color={chartColor} />
       </TabsContent>
 
       <TabsContent value="monthly">
-        <LineChartCard stats={stats} />
+        <LineChartCard stats={stats} color={chartColor} />
       </TabsContent>
     </Tabs>
   );

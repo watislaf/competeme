@@ -11,9 +11,10 @@ import { StatsResponse } from "@/api/models";
 
 type BarChartCardProps = {
   stats?: StatsResponse;
+  color: string;
 };
 
-export const BarChartCard: React.FC<BarChartCardProps> = ({ stats }) => {
+export const BarChartCard: React.FC<BarChartCardProps> = ({ stats, color }) => {
   return (
     <Card>
       <CardHeader>
@@ -32,7 +33,7 @@ export const BarChartCard: React.FC<BarChartCardProps> = ({ stats }) => {
           }
           index="day"
           categories={["time"]}
-          colors={["hsl(var(--chart-1))"]}
+          colors={[color]}
           valueFormatter={(value: number) => `${value.toFixed(1)}h`}
           yAxisWidth={48}
         />
