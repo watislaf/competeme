@@ -140,12 +140,47 @@ public class StatsService {
             .orElse(null);
     }
 
-    private Period getLongestStreak(List<Activity> activities) {
-        return calculateStreak(activities, false);
+    private Period getCurrentStreak(List<Activity> activities) {
+        Set<LocalDate> activityDays = extractActivityDays(activities);
+
+        LocalDate today = LocalDate.now();
+        int streakCount = 0;
+
+        while (activityDays.contains(today)) {
+            streakCount++;
+            today = today.minusDays(1);
+        }
+
+        return Period.ofDays(streakCount);
     }
 
-    private Period getCurrentStreak(List<Activity> activities) {
-        return calculateStreak(activities, true);
+    private Period getLongestStreak(List<Activity> activities) {
+        Set<LocalDate> activityDays = extractActivityDays(activities);
+
+        int longestStreak = 0;
+        int currentStreak = 0;
+
+        LocalDate previousDay = null;
+
+        for (LocalDate day : activityDays.stream().sorted().toList()) {
+            if (previousDay == null || day.equals(previousDay.plusDays(1))) {
+                currentStreak++;
+            } else {
+                longestStreak = Math.max(longestStreak, currentStreak);
+                currentStreak = 1;
+            }
+            previousDay = day;
+        }
+
+        longestStreak = Math.max(longestStreak, currentStreak);
+
+        return Period.ofDays(longestStreak);
+    }
+
+    private Set<LocalDate> extractActivityDays(List<Activity> activities) {
+        return activities.stream()
+            .map(activity -> activity.getDate().toLocalDate())
+            .collect(Collectors.toSet());
     }
 
     private Duration getTotalTimeThisWeek(List<Activity> activities) {
@@ -183,21 +218,5 @@ public class StatsService {
             .map(Activity::getDuration)
             .reduce(Duration.ZERO, Duration::plus)
             .toMinutes() / 60.0;
-    }
-
-    private Period calculateStreak(List<Activity> activities, boolean current) {
-        Set<LocalDate> activityDays = activities.stream()
-            .map(activity -> activity.getDate().toLocalDate())
-            .collect(Collectors.toSet());
-
-        LocalDate today = LocalDate.now();
-        int streak = 0;
-
-        while (activityDays.contains(today)) {
-            streak++;
-            today = current ? today.minusDays(1) : today.plusDays(1);
-        }
-
-        return Period.ofDays(streak);
     }
 }
