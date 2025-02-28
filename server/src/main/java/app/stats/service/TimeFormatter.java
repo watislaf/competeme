@@ -9,6 +9,8 @@ import java.time.Period;
 @Component
 public class TimeFormatter {
 
+    private static final double MINUTES_IN_HOUR = 60.0;
+
     public String formatDayOfWeek(DayOfWeek day) {
         return capitalizeFirstLetter(day.toString().toLowerCase());
     }
@@ -42,6 +44,6 @@ public class TimeFormatter {
     }
 
     public Double formatToHours(Duration duration) {
-        return duration.toMinutes() / 60.0;
+        return duration.toMinutes() / MINUTES_IN_HOUR;
     }
 }

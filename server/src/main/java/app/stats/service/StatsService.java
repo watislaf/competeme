@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class StatsService {
+    private static final int DAYS_IN_WEEK = 7;
+    private static final int HOURS_IN_DAY = 24;
+    private static final int FIRST_DAY_OF_WEEK = 1;
     private final ActivityRepository activityRepository;
     private final TimeFormatter timeFormatter;
 
@@ -39,7 +42,7 @@ public class StatsService {
 
     private Duration getTotalTimeLastWeek(List<Activity> activities) {
         LocalDate startOfLastWeek = LocalDate.now().with(DayOfWeek.MONDAY).minusWeeks(1);
-        LocalDate endOfLastWeek = startOfLastWeek.plusDays(6);
+        LocalDate endOfLastWeek = startOfLastWeek.plusDays(DAYS_IN_WEEK - 1);
 
         return calculateTotalDuration(activities, startOfLastWeek, endOfLastWeek);
     }
@@ -80,7 +83,7 @@ public class StatsService {
             .collect(Collectors.groupingBy(Activity::getTitle, Collectors.reducing(Duration.ZERO, Activity::getDuration, Duration::plus)))
             .entrySet()
             .stream()
-            .map(entry -> new ActivityBreakdown(entry.getKey(), entry.getValue().toMinutes() / 60.0))
+            .map(entry -> new ActivityBreakdown(entry.getKey(), timeFormatter.formatToHours(entry.getValue())))
             .toList();
     }
 
@@ -185,7 +188,7 @@ public class StatsService {
 
     private Duration getTotalTimeThisWeek(List<Activity> activities) {
         LocalDate startOfWeek = LocalDate.now().with(DayOfWeek.MONDAY);
-        return calculateTotalDuration(activities, startOfWeek.minusDays(1), LocalDate.now());
+        return calculateTotalDuration(activities, startOfWeek.minusDays(FIRST_DAY_OF_WEEK), LocalDate.now());
     }
 
     private Duration calculateTotalDuration(List<Activity> activities, LocalDate startDate, LocalDate endDate) {
@@ -201,22 +204,23 @@ public class StatsService {
 
     private String getWeekKey(Activity activity) {
         int dayOfMonth = activity.getDate().toLocalDate().getDayOfMonth();
-        return "Week " + ((dayOfMonth - 1) / 7 + 1);
+        return "Week " + ((dayOfMonth - 1) / DAYS_IN_WEEK + 1);
     }
 
     private void fillMissingWeeks(Map<String, Duration> weeklyDurations, LocalDate lastDayOfMonth) {
-        int totalWeeks = (int) Math.ceil(lastDayOfMonth.getDayOfMonth() / 7.0);
+        int totalWeeks = (int) Math.ceil(lastDayOfMonth.getDayOfMonth() / (double) DAYS_IN_WEEK);
         for (int i = 1; i <= totalWeeks; i++) {
             weeklyDurations.putIfAbsent("Week " + i, Duration.ZERO);
         }
     }
 
     private double calculateDailyDuration(List<Activity> activities, LocalDate startOfWeek, DayOfWeek day) {
-        return activities.stream()
-            .filter(activity -> isWithinRange(activity.getDate().toLocalDate(), startOfWeek, startOfWeek.plusDays(6)) &&
+        Duration totalDuration = activities.stream()
+            .filter(activity -> isWithinRange(activity.getDate().toLocalDate(), startOfWeek, startOfWeek.plusDays(DAYS_IN_WEEK - 1)) &&
                 activity.getDate().toLocalDate().getDayOfWeek() == day)
             .map(Activity::getDuration)
-            .reduce(Duration.ZERO, Duration::plus)
-            .toMinutes() / 60.0;
+            .reduce(Duration.ZERO, Duration::plus);
+
+        return timeFormatter.formatToHours(totalDuration);
     }
 }
