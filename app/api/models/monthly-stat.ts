@@ -14,10 +14,23 @@
 
 
 
-export * from './apis/activity-controller-api';
-export * from './apis/authentication-controller-api';
-export * from './apis/challenge-controller-api';
-export * from './apis/friendship-controller-api';
-export * from './apis/stats-controller-api';
-export * from './apis/user-controller-api';
+/**
+ * 
+ * @export
+ * @interface MonthlyStat
+ */
+export interface MonthlyStat {
+    /**
+     * 
+     * @type {string}
+     * @memberof MonthlyStat
+     */
+    'week': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof MonthlyStat
+     */
+    'duration': number;
+}
 

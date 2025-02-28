@@ -275,6 +275,88 @@ export const FriendshipControllerApiAxiosParamCreator = function (configuration?
         /**
          * 
          * @param {number} userId 
+         * @param {number} receiverId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hasPendingRequest: async (userId: number, receiverId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('hasPendingRequest', 'userId', userId)
+            // verify required parameter 'receiverId' is not null or undefined
+            assertParamExists('hasPendingRequest', 'receiverId', receiverId)
+            const localVarPath = `/api/v1/users/{userId}/friends/pending/{receiverId}`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)))
+                .replace(`{${"receiverId"}}`, encodeURIComponent(String(receiverId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} userId 
+         * @param {number} receiverId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        isFriend: async (userId: number, receiverId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('isFriend', 'userId', userId)
+            // verify required parameter 'receiverId' is not null or undefined
+            assertParamExists('isFriend', 'receiverId', receiverId)
+            const localVarPath = `/api/v1/users/{userId}/friends/status/{receiverId}`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)))
+                .replace(`{${"receiverId"}}`, encodeURIComponent(String(receiverId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} userId 
          * @param {FriendshipRequest} friendshipRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -446,6 +528,32 @@ export const FriendshipControllerApiFp = function(configuration?: Configuration)
         /**
          * 
          * @param {number} userId 
+         * @param {number} receiverId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async hasPendingRequest(userId: number, receiverId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hasPendingRequest(userId, receiverId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FriendshipControllerApi.hasPendingRequest']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} userId 
+         * @param {number} receiverId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async isFriend(userId: number, receiverId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.isFriend(userId, receiverId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FriendshipControllerApi.isFriend']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} userId 
          * @param {FriendshipRequest} friendshipRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -535,6 +643,26 @@ export const FriendshipControllerApiFactory = function (configuration?: Configur
          */
         getStatuses(userId: number, receiverIds: Array<FriendshipRequest>, options?: RawAxiosRequestConfig): AxiosPromise<Array<Friendship>> {
             return localVarFp.getStatuses(userId, receiverIds, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} userId 
+         * @param {number} receiverId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hasPendingRequest(userId: number, receiverId: number, options?: RawAxiosRequestConfig): AxiosPromise<boolean> {
+            return localVarFp.hasPendingRequest(userId, receiverId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} userId 
+         * @param {number} receiverId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        isFriend(userId: number, receiverId: number, options?: RawAxiosRequestConfig): AxiosPromise<boolean> {
+            return localVarFp.isFriend(userId, receiverId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -633,6 +761,30 @@ export class FriendshipControllerApi extends BaseAPI {
      */
     public getStatuses(userId: number, receiverIds: Array<FriendshipRequest>, options?: RawAxiosRequestConfig) {
         return FriendshipControllerApiFp(this.configuration).getStatuses(userId, receiverIds, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} userId 
+     * @param {number} receiverId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FriendshipControllerApi
+     */
+    public hasPendingRequest(userId: number, receiverId: number, options?: RawAxiosRequestConfig) {
+        return FriendshipControllerApiFp(this.configuration).hasPendingRequest(userId, receiverId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} userId 
+     * @param {number} receiverId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FriendshipControllerApi
+     */
+    public isFriend(userId: number, receiverId: number, options?: RawAxiosRequestConfig) {
+        return FriendshipControllerApiFp(this.configuration).isFriend(userId, receiverId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
