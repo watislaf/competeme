@@ -60,8 +60,8 @@ const StatsPage: React.FC = () => {
         />
         <StatCard
           title="Most Active Day"
-          value={stats?.mostActiveDay?.day || "No data"}
-          description={`Average of ${stats?.mostActiveDay?.averageTime || "0 min"} per week`}
+          value={stats?.mostActiveDay?.dayOfWeek || "No data"}
+          description={`Average of ${stats?.mostActiveDay?.averageDuration || "0 min"} per week`}
           icon={<CalendarDays className="h-4 w-4 text-muted-foreground" />}
         />
       </div>

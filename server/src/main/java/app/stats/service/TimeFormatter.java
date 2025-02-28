@@ -40,4 +40,8 @@ public class TimeFormatter {
         }
         return minutes + "min";
     }
+
+    public Double formatToHours(Duration duration) {
+        return duration.toMinutes() / 60.0;
+    }
 }

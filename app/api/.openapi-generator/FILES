@@ -15,6 +15,7 @@ index.ts
 models/activity-breakdown.ts
 models/activity-request.ts
 models/activity-response.ts
+models/activity-stat.ts
 models/authentication-request.ts
 models/authentication-response.ts
 models/challenge-request.ts
@@ -24,6 +25,8 @@ models/friendship-request.ts
 models/friendship.ts
 models/index.ts
 models/leaderboard-entry.ts
+models/monthly-stat.ts
+models/most-active-day.ts
 models/participant-response.ts
 models/recent-activity-response.ts
 models/registration-request.ts
@@ -31,3 +34,4 @@ models/stats-response.ts
 models/user-activity-response.ts
 models/user-profile-response.ts
 models/user-search-response.ts
+models/weekly-stat.ts

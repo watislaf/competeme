@@ -55,7 +55,7 @@ export default function ProfilePage() {
             <p>
               Most Frequent Activity:{" "}
               {stats?.mostFrequentActivity
-                ? `${stats.mostFrequentActivity.activity} (${stats.mostFrequentActivity.totalTime})`
+                ? `${stats.mostFrequentActivity.activityName} (${stats.mostFrequentActivity.duration})`
                 : "No data"}
             </p>
           </CardContent>
@@ -69,9 +69,9 @@ export default function ProfilePage() {
             {stats?.topActivity ? (
               <>
                 <h3 className="text-lg font-semibold">
-                  {stats.topActivity.activity}
+                  {stats.topActivity.activityName}
                 </h3>
-                <p>{stats.topActivity.totalTime}</p>
+                <p>{stats.topActivity.duration}</p>
               </>
             ) : (
               <p>No data</p>

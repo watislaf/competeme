@@ -28,9 +28,9 @@ export const LineChartCard: React.FC<LineChartCardProps> = ({
         <LineChart
           data={
             stats?.monthlyStats
-              ? Object.entries(stats.monthlyStats).map(([week, time]) => ({
-                  week,
-                  time,
+              ? stats.monthlyStats.map((stat) => ({
+                  week: stat.week,
+                  time: stat.duration,
                 }))
               : []
           }

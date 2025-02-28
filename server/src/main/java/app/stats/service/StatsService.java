@@ -44,7 +44,7 @@ public class StatsService {
         return calculateTotalDuration(activities, startOfLastWeek, endOfLastWeek);
     }
 
-    private Map<String, Double> getMonthlyStats(List<Activity> activities) {
+    private List<MonthlyStat> getMonthlyStats(List<Activity> activities) {
         LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
         LocalDate lastDayOfMonth = firstDayOfMonth.withDayOfMonth(firstDayOfMonth.lengthOfMonth());
 
@@ -54,18 +54,25 @@ public class StatsService {
 
         fillMissingWeeks(weeklyDurations, lastDayOfMonth);
 
-        return convertToHourlyMap(weeklyDurations);
+        List<MonthlyStat> monthlyStats = new ArrayList<>();
+        weeklyDurations.forEach((weekKey, duration) -> monthlyStats.add(new MonthlyStat(weekKey, timeFormatter.formatToHours(duration))));
+
+        return monthlyStats;
     }
 
-    private Map<String, Double> getWeeklyStats(List<Activity> activities) {
+    private List<WeeklyStat> getWeeklyStats(List<Activity> activities) {
         LocalDate startOfWeek = LocalDate.now().with(DayOfWeek.MONDAY);
-        Map<String, Double> statsMap = new LinkedHashMap<>();
+        List<WeeklyStat> weeklyStats = new ArrayList<>();
 
         Arrays.stream(DayOfWeek.values())
             .sorted(Comparator.comparingInt(DayOfWeek::getValue))
-            .forEach(day -> statsMap.put(timeFormatter.formatDayOfWeek(day), calculateDailyDuration(activities, startOfWeek, day)));
+            .forEach(day -> {
+                String dayName = timeFormatter.formatDayOfWeek(day);
+                Double dailyDuration = calculateDailyDuration(activities, startOfWeek, day);
+                weeklyStats.add(new WeeklyStat(dayName, dailyDuration));
+            });
 
-        return statsMap;
+        return weeklyStats;
     }
 
     private List<ActivityBreakdown> getActivityBreakdown(List<Activity> activities) {
@@ -77,7 +84,7 @@ public class StatsService {
             .toList();
     }
 
-    private Map<String, String> getTopActivity(List<Activity> activities) {
+    private ActivityStat getTopActivity(List<Activity> activities) {
         return activities.stream()
             .collect(Collectors.groupingBy(
                 Activity::getTitle,
@@ -86,16 +93,11 @@ public class StatsService {
             .entrySet()
             .stream()
             .max(Comparator.comparingLong(entry -> entry.getValue().toMinutes()))
-            .map(entry -> {
-                Map<String, String> result = new HashMap<>();
-                result.put("activity", entry.getKey());
-                result.put("totalTime", timeFormatter.formatDuration(entry.getValue()));
-                return result;
-            })
+            .map(entry -> new ActivityStat(entry.getKey(), timeFormatter.formatDuration(entry.getValue())))
             .orElse(null);
     }
 
-    private Map<String, String> getMostFrequentActivity(List<Activity> activities) {
+    private ActivityStat getMostFrequentActivity(List<Activity> activities) {
         return activities.stream()
             .collect(Collectors.groupingBy(Activity::getTitle, Collectors.counting()))
             .entrySet()
@@ -106,14 +108,11 @@ public class StatsService {
                     .filter(activity -> activity.getTitle().equals(entry.getKey()))
                     .map(Activity::getDuration)
                     .reduce(Duration.ZERO, Duration::plus);
-                Map<String, String> result = new HashMap<>();
-                result.put("activity", entry.getKey());
-                result.put("totalTime", timeFormatter.formatDuration(totalTime));
-                return result;
+                return new ActivityStat(entry.getKey(), timeFormatter.formatDuration(totalTime));
             })
             .orElse(null);
     }
-    
+
     private Duration getTotalTimeLogged(List<Activity> activities) {
         return activities.stream()
             .map(Activity::getDuration)
@@ -128,7 +127,7 @@ public class StatsService {
             .reduce(Duration.ZERO, Duration::plus);
     }
 
-    private Map<String, String> getMostActiveDay(List<Activity> activities) {
+    private MostActiveDay getMostActiveDay(List<Activity> activities) {
         Map<DayOfWeek, Duration> totalDurationByDay = activities.stream()
             .collect(Collectors.groupingBy(
                 activity -> activity.getDate().getDayOfWeek(),
@@ -137,8 +136,8 @@ public class StatsService {
 
         return totalDurationByDay.entrySet().stream()
             .max(Map.Entry.comparingByValue())
-            .map(entry -> createMostActiveDayResult(entry.getKey(), entry.getValue(), activities))
-            .orElse(Collections.emptyMap());
+            .map(entry -> new MostActiveDay(timeFormatter.formatDayOfWeek(entry.getKey()), timeFormatter.formatDuration(entry.getValue())))
+            .orElse(null);
     }
 
     private Period getLongestStreak(List<Activity> activities) {
@@ -177,11 +176,6 @@ public class StatsService {
         }
     }
 
-    private Map<String, Double> convertToHourlyMap(Map<String, Duration> weeklyDurations) {
-        return weeklyDurations.entrySet().stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toMinutes() / 60.0));
-    }
-
     private double calculateDailyDuration(List<Activity> activities, LocalDate startOfWeek, DayOfWeek day) {
         return activities.stream()
             .filter(activity -> isWithinRange(activity.getDate().toLocalDate(), startOfWeek, startOfWeek.plusDays(6)) &&
@@ -189,21 +183,6 @@ public class StatsService {
             .map(Activity::getDuration)
             .reduce(Duration.ZERO, Duration::plus)
             .toMinutes() / 60.0;
-    }
-
-    private Map<String, String> createMostActiveDayResult(DayOfWeek mostActiveDay, Duration totalDuration, List<Activity> activities) {
-        Set<LocalDate> uniqueWeeks = activities.stream()
-            .filter(activity -> activity.getDate().getDayOfWeek() == mostActiveDay)
-            .map(activity -> activity.getDate().toLocalDate().with(DayOfWeek.MONDAY))
-            .collect(Collectors.toSet());
-
-        long weeksCount = uniqueWeeks.size();
-        Duration averageDuration = weeksCount > 0 ? totalDuration.dividedBy(weeksCount) : Duration.ZERO;
-
-        Map<String, String> result = new HashMap<>();
-        result.put("day", timeFormatter.formatDayOfWeek(mostActiveDay));
-        result.put("averageTime", timeFormatter.formatDuration(averageDuration));
-        return result;
     }
 
     private Period calculateStreak(List<Activity> activities, boolean current) {

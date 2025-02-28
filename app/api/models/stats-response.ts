@@ -16,6 +16,18 @@
 // May contain unused imports in some cases
 // @ts-ignore
 import type { ActivityBreakdown } from './activity-breakdown';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ActivityStat } from './activity-stat';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { MonthlyStat } from './monthly-stat';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { MostActiveDay } from './most-active-day';
+// May contain unused imports in some cases
+// @ts-ignore
+import type { WeeklyStat } from './weekly-stat';
 
 /**
  * 
@@ -43,10 +55,10 @@ export interface StatsResponse {
     'longestStreak': string;
     /**
      * 
-     * @type {{ [key: string]: string; }}
+     * @type {MostActiveDay}
      * @memberof StatsResponse
      */
-    'mostActiveDay': { [key: string]: string; };
+    'mostActiveDay': MostActiveDay;
     /**
      * 
      * @type {string}
@@ -61,16 +73,16 @@ export interface StatsResponse {
     'totalTimeLogged': string;
     /**
      * 
-     * @type {{ [key: string]: string; }}
+     * @type {ActivityStat}
      * @memberof StatsResponse
      */
-    'mostFrequentActivity': { [key: string]: string; };
+    'mostFrequentActivity': ActivityStat;
     /**
      * 
-     * @type {{ [key: string]: string; }}
+     * @type {ActivityStat}
      * @memberof StatsResponse
      */
-    'topActivity': { [key: string]: string; };
+    'topActivity': ActivityStat;
     /**
      * 
      * @type {Array<ActivityBreakdown>}
@@ -79,16 +91,16 @@ export interface StatsResponse {
     'activityBreakdown': Array<ActivityBreakdown>;
     /**
      * 
-     * @type {{ [key: string]: number; }}
+     * @type {Array<WeeklyStat>}
      * @memberof StatsResponse
      */
-    'weeklyStats': { [key: string]: number; };
+    'weeklyStats': Array<WeeklyStat>;
     /**
      * 
-     * @type {{ [key: string]: number; }}
+     * @type {Array<MonthlyStat>}
      * @memberof StatsResponse
      */
-    'monthlyStats': { [key: string]: number; };
+    'monthlyStats': Array<MonthlyStat>;
     /**
      * 
      * @type {string}

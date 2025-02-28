@@ -25,13 +25,13 @@ export const BarChartCard: React.FC<BarChartCardProps> = ({ stats, color }) => {
         <BarChart
           data={
             stats?.weeklyStats
-              ? Object.entries(stats.weeklyStats).map(([day, time]) => ({
-                  day,
-                  time,
+              ? stats.weeklyStats.map((stat) => ({
+                  dayOfWeek: stat.dayOfWeek,
+                  time: stat.duration,
                 }))
               : []
           }
-          index="day"
+          index="dayOfWeek"
           categories={["time"]}
           colors={[color]}
           valueFormatter={(value: number) => `${value.toFixed(1)}h`}
