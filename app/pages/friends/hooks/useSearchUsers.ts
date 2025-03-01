@@ -16,7 +16,7 @@ export function useSearchUsers(userId: number) {
         `http://localhost:8080/api/v1/users/search?query=${searchTerm}`,
         {
           headers: getAuthHeader(),
-        }
+        },
       );
       if (!response.ok) throw new Error("Failed to search users");
       const results = (await response.json()) as UserSearchResponse[];
@@ -28,11 +28,11 @@ export function useSearchUsers(userId: number) {
           const [isFriendResponse, hasPendingResponse] = await Promise.all([
             fetch(
               `http://localhost:8080/api/v1/users/${userId}/friends/status/${user.id}`,
-              { headers: getAuthHeader() }
+              { headers: getAuthHeader() },
             ),
             fetch(
               `http://localhost:8080/api/v1/users/${userId}/friends/pending/${user.id}`,
-              { headers: getAuthHeader() }
+              { headers: getAuthHeader() },
             ),
           ]);
 
@@ -44,7 +44,7 @@ export function useSearchUsers(userId: number) {
             isFriend,
             hasPendingRequest,
           };
-        })
+        }),
       );
 
       return usersWithStatus;
@@ -57,7 +57,7 @@ export function useSearchUsers(userId: number) {
     debounce((term: string) => {
       setSearchTerm(term);
     }, 1000),
-    []
+    [],
   );
 
   return {

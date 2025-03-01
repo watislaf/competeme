@@ -16,6 +16,8 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { ChallengeResponse } from "@/api/models/challenge-response";
+import { useProfiles } from "@/hooks/user/useProfiles";
+import { Leaderboard } from "./leaderboard";
 
 interface ChallengeCardProps {
   challenge: ChallengeResponse;
@@ -55,6 +57,9 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
     onProgressChange(challenge.id, value);
   };
 
+  const userIds = challenge.leaderboard?.map((entry) => entry.userId) || [];
+  const { isLoading, profiles } = useProfiles(userIds);
+
   return (
     <Card>
       <CardHeader>
@@ -69,7 +74,7 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
             <span>Progress</span>
             <span>
               {challenge.totalProgress} / {challenge.goal || 0}
-              {challenge.unit || ""}
+              {challenge.unit ? ` ${challenge.unit}` : ""}
             </span>
           </div>
           <Progress
@@ -105,21 +110,17 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
           </PopoverContent>
         </Popover>
       </CardContent>
-      <CardFooter>
-        <div className="w-full">
-          <h4 className="font-semibold mb-2">Leaderboard</h4>
-          <ul className="space-y-1">
-            {challenge.leaderboard?.map((entry, index) => (
-              <li key={index} className="flex justify-between items-center">
-                <span>{entry.name || "Unknown"}</span>
-                <span>
-                  {entry.score || 0} {challenge.unit || ""}
-                </span>
-              </li>
-            )) || <p>No leaderboard data available</p>}
-          </ul>
-        </div>
-      </CardFooter>
+      {challenge.leaderboard && challenge.leaderboard.length > 1 && (
+        <CardFooter>
+          <Leaderboard
+            leaderboard={challenge.leaderboard || []}
+            profiles={profiles}
+            userId={userId}
+            isLoading={isLoading}
+            unit={challenge.unit}
+          />
+        </CardFooter>
+      )}
     </Card>
   );
 };

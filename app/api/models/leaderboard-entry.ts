@@ -22,10 +22,10 @@
 export interface LeaderboardEntry {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof LeaderboardEntry
      */
-    'name': string;
+    'userId': number;
     /**
      * 
      * @type {number}
