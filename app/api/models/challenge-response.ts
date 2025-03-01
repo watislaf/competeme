@@ -74,5 +74,11 @@ export interface ChallengeResponse {
      * @memberof ChallengeResponse
      */
     'leaderboard': Array<LeaderboardEntry>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ChallengeResponse
+     */
+    'isCompleted': boolean;
 }
 

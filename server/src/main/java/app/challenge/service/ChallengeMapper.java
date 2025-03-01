@@ -31,6 +31,8 @@ public class ChallengeMapper {
             .map(p -> new LeaderboardEntry(p.getUser().getId(), p.getProgress()))
             .collect(Collectors.toList());
 
+        boolean isCompleted = totalProgress >= challenge.getGoal();
+
         return new ChallengeResponse(
             challenge.getId(),
             challenge.getTitle(),
@@ -39,7 +41,8 @@ public class ChallengeMapper {
             challenge.getUnit(),
             participantResponses,
             totalProgress,
-            leaderboard
+            leaderboard,
+            isCompleted
         );
     }
 
