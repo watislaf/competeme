@@ -1,35 +1,39 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
-import { ChallengeRequest } from "@/api";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Pencil } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { challengeSchema } from "./challengeSchema";
+import { ChallengeModificationRequest, ChallengeResponse } from "@/api/models";
 
-interface ChallengeFormProps {
-  onSubmit: (data: ChallengeRequest) => void;
-  addError?: Error | null;
+interface ModificationPopoverProps {
+  challenge: ChallengeResponse;
+  onSubmit: (data: ChallengeModificationRequest) => void;
 }
 
-export const ChallengeForm: React.FC<ChallengeFormProps> = ({
+export const ModificationPopover: React.FC<ModificationPopoverProps> = ({
+  challenge,
   onSubmit,
-  addError,
 }) => {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    goal: "",
-    unit: "",
-  });
-  const [friendIds, setFriendIds] = useState<string>("");
-  const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
+  const [newParticipant, setNewParticipant] = useState<string>("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
+
+  const [formData, setFormData] = useState({
+    title: challenge.title,
+    description: challenge.description,
+    goal: challenge.goal,
+    unit: challenge.unit,
+  });
+
+  const participants = challenge.participants.map(
+    (participant) => participant.username,
+  );
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -38,15 +42,25 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleAddFriend = () => {
-    if (friendIds.trim()) {
-      setInvitedFriends((prev) => [...prev, friendIds.trim()]);
-      setFriendIds("");
+  const handleAddParticipant = () => {
+    const trimmedParticipant = newParticipant.trim();
+    const isAlreadyParticipating = participants.includes(trimmedParticipant);
+    if (
+      trimmedParticipant &&
+      !isAlreadyParticipating &&
+      !invitedFriends.includes(trimmedParticipant)
+    ) {
+      setInvitedFriends((prev) => [...prev, trimmedParticipant]);
+      setNewParticipant("");
+    } else if (
+      isAlreadyParticipating ||
+      invitedFriends.includes(trimmedParticipant)
+    ) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        participants: "This participant is already on the list.",
+      }));
     }
-  };
-
-  const handleRemoveFriend = (id: string) => {
-    setInvitedFriends((prev) => prev.filter((friend) => friend !== id));
   };
 
   const handleSubmit = () => {
@@ -54,7 +68,7 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
     const validationData = {
       ...formData,
       goal: parsedGoal,
-      participants: invitedFriends.map(Number),
+      participants: invitedFriends,
     };
 
     const result = challengeSchema.safeParse(validationData);
@@ -71,19 +85,21 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
 
     setErrors({});
     onSubmit(validationData);
-    setFormData({ title: "", description: "", goal: "", unit: "" });
     setInvitedFriends([]);
   };
 
+  const handleRemoveFriend = (friend: string) => {
+    setInvitedFriends((prev) => prev.filter((f) => f !== friend));
+  };
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create New Challenge</CardTitle>
-        <CardDescription>
-          Set up a new challenge for yourself and others!
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+    <Popover>
+      <PopoverTrigger>
+        <Button className="p-2 rounded-full">
+          <Pencil size={20} />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent>
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="title">Challenge Title</Label>
@@ -94,7 +110,9 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
               onChange={handleChange}
               required
             />
-            {errors.title && <p className="text-red-500">{errors.title}</p>}
+            {errors.title && (
+              <p className="text-red-500 text-sm">{errors.title}</p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
@@ -106,7 +124,7 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
               required
             />
             {errors.description && (
-              <p className="text-red-500">{errors.description}</p>
+              <p className="text-red-500 text-sm">{errors.description}</p>
             )}
           </div>
           <div className="flex space-x-4">
@@ -120,7 +138,9 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
                 onChange={handleChange}
                 required
               />
-              {errors.goal && <p className="text-red-500">{errors.goal}</p>}
+              {errors.goal && (
+                <p className="text-red-500 text-sm">{errors.goal}</p>
+              )}
             </div>
             <div className="space-y-2 flex-1">
               <Label htmlFor="unit">Unit</Label>
@@ -132,19 +152,20 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
                 onChange={handleChange}
                 required
               />
-              {errors.unit && <p className="text-red-500">{errors.unit}</p>}
+              {errors.unit && (
+                <p className="text-red-500 text-sm">{errors.unit}</p>
+              )}
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="friendIds">Invite Friends (Enter Friend ID)</Label>
+            <Label htmlFor="participants">Participants</Label>
             <div className="flex space-x-2">
               <Input
-                id="friendIds"
-                name="friendIds"
-                value={friendIds}
-                onChange={(e) => setFriendIds(e.target.value)}
+                id="new-participant"
+                value={newParticipant}
+                onChange={(e) => setNewParticipant(e.target.value)}
               />
-              <Button type="button" onClick={handleAddFriend}>
+              <Button type="button" onClick={handleAddParticipant}>
                 Add
               </Button>
             </div>
@@ -168,14 +189,12 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
               </ul>
             )}
           </div>
-          <Button onClick={handleSubmit} className="w-full">
-            Create a challenge
-          </Button>
-          {addError && (
-            <p className="text-red-500">Error: {addError.message}</p>
+          {errors.participants && (
+            <p className="text-red-500 text-sm">{errors.participants}</p>
           )}
+          <Button onClick={handleSubmit}>Save</Button>
         </div>
-      </CardContent>
-    </Card>
+      </PopoverContent>
+    </Popover>
   );
 };

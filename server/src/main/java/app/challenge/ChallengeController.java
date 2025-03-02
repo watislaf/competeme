@@ -1,5 +1,6 @@
 package app.challenge;
 
+import app.challenge.service.ChallengeModificationRequest;
 import app.challenge.service.ChallengeRequest;
 import app.challenge.service.ChallengeResponse;
 import app.challenge.service.ChallengeService;
@@ -32,5 +33,15 @@ public class ChallengeController {
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
     public void updateProgress(@PathVariable Integer userId, @PathVariable Long challengeId, @RequestParam Integer progress) {
         challengeService.updateProgress(userId, challengeId, progress);
+    }
+
+    @PostMapping("/{challengeId}/modify")
+    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    public void modifyChallenge(
+        @PathVariable Integer userId,
+        @PathVariable Long challengeId,
+        @RequestBody ChallengeModificationRequest challengeModificationRequest
+    ) {
+        challengeService.modifyChallenge(challengeId, challengeModificationRequest);
     }
 }

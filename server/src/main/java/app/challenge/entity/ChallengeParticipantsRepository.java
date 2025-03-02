@@ -12,4 +12,6 @@ public interface ChallengeParticipantsRepository extends JpaRepository<Challenge
     Optional<ChallengeParticipants> findByUserIdAndChallengeId(Integer userId, Long challengeId);
 
     List<ChallengeParticipants> findByChallengeId(Long id);
+
+    boolean existsByUserIdAndChallengeId(Integer userId, Long challengeId);
 }

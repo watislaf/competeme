@@ -22,6 +22,8 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
+import type { ChallengeModificationRequest } from '../models';
+// @ts-ignore
 import type { ChallengeRequest } from '../models';
 // @ts-ignore
 import type { ChallengeResponse } from '../models';
@@ -115,6 +117,53 @@ export const ChallengeControllerApiAxiosParamCreator = function (configuration?:
          * 
          * @param {number} userId 
          * @param {number} challengeId 
+         * @param {ChallengeModificationRequest} challengeModificationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        modifyChallenge: async (userId: number, challengeId: number, challengeModificationRequest: ChallengeModificationRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('modifyChallenge', 'userId', userId)
+            // verify required parameter 'challengeId' is not null or undefined
+            assertParamExists('modifyChallenge', 'challengeId', challengeId)
+            // verify required parameter 'challengeModificationRequest' is not null or undefined
+            assertParamExists('modifyChallenge', 'challengeModificationRequest', challengeModificationRequest)
+            const localVarPath = `/api/v1/users/{userId}/challenges/{challengeId}/modify`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)))
+                .replace(`{${"challengeId"}}`, encodeURIComponent(String(challengeId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(challengeModificationRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} userId 
+         * @param {number} challengeId 
          * @param {number} progress 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -198,6 +247,20 @@ export const ChallengeControllerApiFp = function(configuration?: Configuration) 
          * 
          * @param {number} userId 
          * @param {number} challengeId 
+         * @param {ChallengeModificationRequest} challengeModificationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async modifyChallenge(userId: number, challengeId: number, challengeModificationRequest: ChallengeModificationRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.modifyChallenge(userId, challengeId, challengeModificationRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ChallengeControllerApi.modifyChallenge']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} userId 
+         * @param {number} challengeId 
          * @param {number} progress 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -241,6 +304,17 @@ export const ChallengeControllerApiFactory = function (configuration?: Configura
          * 
          * @param {number} userId 
          * @param {number} challengeId 
+         * @param {ChallengeModificationRequest} challengeModificationRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        modifyChallenge(userId: number, challengeId: number, challengeModificationRequest: ChallengeModificationRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.modifyChallenge(userId, challengeId, challengeModificationRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} userId 
+         * @param {number} challengeId 
          * @param {number} progress 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -279,6 +353,19 @@ export class ChallengeControllerApi extends BaseAPI {
      */
     public getChallenges(userId: number, options?: RawAxiosRequestConfig) {
         return ChallengeControllerApiFp(this.configuration).getChallenges(userId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} userId 
+     * @param {number} challengeId 
+     * @param {ChallengeModificationRequest} challengeModificationRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ChallengeControllerApi
+     */
+    public modifyChallenge(userId: number, challengeId: number, challengeModificationRequest: ChallengeModificationRequest, options?: RawAxiosRequestConfig) {
+        return ChallengeControllerApiFp(this.configuration).modifyChallenge(userId, challengeId, challengeModificationRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

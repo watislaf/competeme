@@ -1,5 +1,4 @@
-import type React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -9,7 +8,6 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -20,6 +18,10 @@ import { ChallengeResponse } from "@/api/models/challenge-response";
 import { useProfiles } from "@/hooks/user/useProfiles";
 import { Leaderboard } from "./leaderboard";
 import { Fireworks } from "./fireworks";
+import { useModifyChallengeMutation } from "../hooks/useModifyChallengeMutation";
+import { ModificationPopover } from "./modificationPopover";
+import { Input } from "@/components/ui/input";
+import { ChallengeModificationRequest } from "@/api/models";
 
 interface ChallengeCardProps {
   challenge: ChallengeResponse;
@@ -44,6 +46,8 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
   const [wasCompleted, setWasCompleted] = useState<boolean>(
     challenge.isCompleted,
   );
+
+  const { mutate: modifyChallenge } = useModifyChallengeMutation();
 
   useEffect(() => {
     if (!wasCompleted && challenge.isCompleted) {
@@ -83,14 +87,30 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
     ? "bg-green-100 dark:bg-green-900/30 relative overflow-hidden transition-all duration-300"
     : "relative overflow-hidden";
 
+  const handleModification = (data: ChallengeModificationRequest) => {
+    modifyChallenge({
+      userId: Number(userId),
+      challengeId: challenge.id,
+      challengeModificationRequest: data,
+    });
+  };
+
   return (
     <>
       <Card className={cardClass}>
         <CardHeader>
-          <CardTitle>{challenge.title || "No title available"}</CardTitle>
-          <CardDescription>
-            {challenge.description || "No description available"}
-          </CardDescription>
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle>{challenge.title || "No title available"}</CardTitle>
+              <CardDescription>
+                {challenge.description || "No description available"}
+              </CardDescription>
+            </div>
+            <ModificationPopover
+              challenge={challenge}
+              onSubmit={handleModification}
+            />
+          </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">

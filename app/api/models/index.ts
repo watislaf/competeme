@@ -2,6 +2,7 @@ export * from './activity-request';
 export * from './activity-response';
 export * from './authentication-request';
 export * from './authentication-response';
+export * from './challenge-modification-request';
 export * from './challenge-request';
 export * from './challenge-response';
 export * from './friendship';
