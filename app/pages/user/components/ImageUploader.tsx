@@ -98,16 +98,6 @@ export default function ImageUploader({ onUpload }: ImageUploaderProps) {
       </Button>
 
       {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
-
-      {imagePreview && (
-        <div className="mt-4">
-          <img
-            src={imagePreview || "/placeholder.svg"}
-            alt="Preview"
-            className="h-16 w-16 rounded-full object-cover border border-gray-200"
-          />
-        </div>
-      )}
     </div>
   );
 }

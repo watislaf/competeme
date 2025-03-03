@@ -29,7 +29,7 @@ interface FriendOption {
 interface ChallengeFormProps {
   onSubmit: (data: ChallengeRequest) => void;
   addError?: Error | null;
-  userId: number; // Added userId prop to fetch friends
+  userId: number;
 }
 
 export const ChallengeForm: React.FC<ChallengeFormProps> = ({
@@ -49,12 +49,10 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const searchRef = useRef<HTMLDivElement>(null);
 
-  // State for friends data and loading
   const [friends, setFriends] = useState<FriendOption[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  // Fetch friends from the API
   useEffect(() => {
     const fetchFriends = async () => {
       setIsLoading(true);

@@ -15,12 +15,9 @@ export default function ProfilePage() {
   const { profile, isLoading } = useProfile(Number(userId));
   const { stats } = useStats(Number(userId));
 
-  // State to control showing ImageUploader
-  const [isEditingImage, setIsEditingImage] = useState(false);
+  const [, setIsEditingImage] = useState(false);
 
-  const { updateProfileImage, isUploading } = useUpdateProfileImage(
-    Number(userId),
-  );
+  const { updateProfileImage } = useUpdateProfileImage(Number(userId));
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -30,11 +27,10 @@ export default function ProfilePage() {
     return <div>User not found</div>;
   }
 
-  // Handle the uploaded image and trigger mutation to update the profile image
   const handleImageUpload = async (base64Image: string) => {
     try {
       await updateProfileImage(base64Image);
-      setIsEditingImage(false); // Close the image upload dialog after success
+      setIsEditingImage(false);
     } catch (error) {
       console.error("Failed to upload image:", error);
     }
