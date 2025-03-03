@@ -8,21 +8,24 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Pencil } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { challengeSchema } from "./challengeSchema";
 import { ChallengeModificationRequest, ChallengeResponse } from "@/api/models";
+import { challengeSchema } from "../utils/challengeSchema";
+import { useModifyChallengeMutation } from "../hooks/useModifyChallengeMutation";
 
 interface ModificationPopoverProps {
+  userId: number;
   challenge: ChallengeResponse;
-  onSubmit: (data: ChallengeModificationRequest) => void;
 }
 
-export const ModificationPopover: React.FC<ModificationPopoverProps> = ({
-  challenge,
-  onSubmit,
-}) => {
+export const ChallengeModificationPopover: React.FC<
+  ModificationPopoverProps
+> = ({ userId, challenge }) => {
   const [newParticipant, setNewParticipant] = useState<string>("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
+
+  const { mutate: modifyChallenge, error: modificationError } =
+    useModifyChallengeMutation();
 
   const [formData, setFormData] = useState({
     title: challenge.title,
@@ -63,6 +66,14 @@ export const ModificationPopover: React.FC<ModificationPopoverProps> = ({
     }
   };
 
+  const handleModification = (data: ChallengeModificationRequest) => {
+    modifyChallenge({
+      userId: Number(userId),
+      challengeId: challenge.id,
+      challengeModificationRequest: data,
+    });
+  };
+
   const handleSubmit = () => {
     const parsedGoal = Number(formData.goal);
     const validationData = {
@@ -84,7 +95,7 @@ export const ModificationPopover: React.FC<ModificationPopoverProps> = ({
     }
 
     setErrors({});
-    onSubmit(validationData);
+    handleModification(validationData);
     setInvitedFriends([]);
   };
 
@@ -193,6 +204,11 @@ export const ModificationPopover: React.FC<ModificationPopoverProps> = ({
             <p className="text-red-500 text-sm">{errors.participants}</p>
           )}
           <Button onClick={handleSubmit}>Save</Button>
+          {modificationError && (
+            <p className="text-red-500">
+              Error modifying challenge: {modificationError.message}
+            </p>
+          )}
         </div>
       </PopoverContent>
     </Popover>

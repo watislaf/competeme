@@ -44,4 +44,10 @@ public class ChallengeController {
     ) {
         challengeService.modifyChallenge(challengeId, challengeModificationRequest);
     }
+
+    @DeleteMapping("/{challengeId}")
+    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    public void deleteChallenge(@PathVariable Integer userId, @PathVariable Long challengeId) {
+        challengeService.deleteChallenge(userId, challengeId);
+    }
 }

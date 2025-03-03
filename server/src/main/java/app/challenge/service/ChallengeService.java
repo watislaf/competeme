@@ -114,4 +114,20 @@ public class ChallengeService {
             }
         });
     }
+
+    public void deleteChallenge(Integer userId, Long challengeId) {
+        Challenge challenge = challengeRepository.findById(challengeId)
+            .orElseThrow(() -> new RuntimeException("Challenge not found"));
+
+        ChallengeParticipants participant = challengeParticipantsRepository.findByUserIdAndChallengeId(userId, challengeId)
+            .orElseThrow(() -> new RuntimeException("User is not participating in this challenge"));
+
+        challengeParticipantsRepository.delete(participant);
+
+        boolean hasParticipants = challengeParticipantsRepository.existsByChallengeId(challengeId);
+        if (!hasParticipants) {
+            challengeRepository.delete(challenge);
+        }
+    }
+
 }

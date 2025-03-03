@@ -10,17 +10,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
 import { ChallengeRequest } from "@/api";
-import { challengeSchema } from "./challengeSchema";
+import { challengeSchema } from "../utils/challengeSchema";
+import { useAddChallengeMutation } from "../hooks/useAddChallengeMutation";
 
 interface ChallengeFormProps {
-  onSubmit: (data: ChallengeRequest) => void;
-  addError?: Error | null;
+  userId: number;
 }
 
-export const ChallengeForm: React.FC<ChallengeFormProps> = ({
-  onSubmit,
-  addError,
-}) => {
+export const ChallengeForm: React.FC<ChallengeFormProps> = ({ userId }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -30,6 +27,15 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
   const [friendIds, setFriendIds] = useState<string>("");
   const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const { mutate: addChallenge, error: addError } = useAddChallengeMutation();
+
+  const handleAddChallenge = (data: ChallengeRequest) => {
+    addChallenge({
+      userId: Number(userId),
+      challengeRequest: data,
+    });
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -70,8 +76,8 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
     }
 
     setErrors({});
-    onSubmit(validationData);
-    setFormData({ title: "", description: "", goal: "", unit: "" });
+    handleAddChallenge(validationData);
+    setFormData({ title: "", description: "", goal: "", unit: "" }); // !!!!!!!!
     setInvitedFriends([]);
   };
 

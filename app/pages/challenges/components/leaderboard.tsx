@@ -15,7 +15,6 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
   profiles,
   userId,
   isLoading,
-  unit,
 }) => {
   return (
     <div className="w-full">
@@ -53,9 +52,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
                 ) : (
                   <span>Unknown User</span>
                 )}
-                <span>
-                  {entry.score || 0} {unit || ""}
-                </span>
+                <span> {entry.score || 0} </span>
               </li>
             );
           }) || <p>No leaderboard data available</p>}

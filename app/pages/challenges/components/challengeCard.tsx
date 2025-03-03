@@ -8,46 +8,30 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
 import { ChallengeResponse } from "@/api/models/challenge-response";
 import { useProfiles } from "@/hooks/user/useProfiles";
 import { Leaderboard } from "./leaderboard";
 import { Fireworks } from "./fireworks";
-import { useModifyChallengeMutation } from "../hooks/useModifyChallengeMutation";
-import { ModificationPopover } from "./modificationPopover";
-import { Input } from "@/components/ui/input";
-import { ChallengeModificationRequest } from "@/api/models";
+import { ChallengeModificationPopover } from "./challengeModificationPopover";
+import { ProgressUpdatePopover } from "./progressUpdatePopover";
+import { useDeleteChallengeMutation } from "../hooks/useDeleteChallengeMutation";
 
 interface ChallengeCardProps {
   challenge: ChallengeResponse;
-  onProgressChange: (id: number, value: number) => void;
-  onUpdateProgress: (id: number) => void;
-  updateError?: { message: string };
   userId: number;
 }
 
 export const ChallengeCard: React.FC<ChallengeCardProps> = ({
   challenge,
-  onProgressChange,
-  onUpdateProgress,
-  updateError,
   userId,
 }) => {
-  const userProgress = challenge.participants.find(
-    (participant) => participant.userId === userId,
-  )?.progres;
-  const [newProgress, setNewProgress] = useState<number>(userProgress || 0);
   const [showFireworks, setShowFireworks] = useState<boolean>(false);
   const [wasCompleted, setWasCompleted] = useState<boolean>(
     challenge.isCompleted,
   );
 
-  const { mutate: modifyChallenge } = useModifyChallengeMutation();
+  const { mutate: deleteChallenge, error: deleteError } =
+    useDeleteChallengeMutation();
 
   useEffect(() => {
     if (!wasCompleted && challenge.isCompleted) {
@@ -63,36 +47,15 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
     setWasCompleted(challenge.isCompleted);
   }, [challenge.isCompleted, wasCompleted]);
 
-  const handleAdd = () => {
-    const updatedValue = newProgress + 1;
-    setNewProgress(updatedValue);
-    onProgressChange(challenge.id, updatedValue);
-  };
-
-  const handleSubstract = () => {
-    const updatedValue = Math.max(newProgress - 1, 0);
-    setNewProgress(updatedValue);
-    onProgressChange(challenge.id, updatedValue);
-  };
-
-  const handleInputChange = (value: number) => {
-    setNewProgress(value);
-    onProgressChange(challenge.id, value);
-  };
-
   const userIds = challenge.leaderboard?.map((entry) => entry.userId) || [];
   const { isLoading, profiles } = useProfiles(userIds);
 
   const cardClass = challenge.isCompleted
-    ? "bg-green-100 dark:bg-green-900/30 relative overflow-hidden transition-all duration-300"
+    ? "bg-lime-500/10 relative overflow-hidden transition-all duration-300"
     : "relative overflow-hidden";
 
-  const handleModification = (data: ChallengeModificationRequest) => {
-    modifyChallenge({
-      userId: Number(userId),
-      challengeId: challenge.id,
-      challengeModificationRequest: data,
-    });
+  const handleDelete = () => {
+    deleteChallenge({ userId, challengeId: challenge.id });
   };
 
   return (
@@ -106,9 +69,9 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
                 {challenge.description || "No description available"}
               </CardDescription>
             </div>
-            <ModificationPopover
+            <ChallengeModificationPopover
+              userId={userId}
               challenge={challenge}
-              onSubmit={handleModification}
             />
           </div>
         </CardHeader>
@@ -127,32 +90,18 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
           </div>
         </CardContent>
         <CardContent>
-          <Popover>
-            <PopoverTrigger>
-              <Button>Update Progress</Button>
-            </PopoverTrigger>
-            <PopoverContent>
-              <div className="flex flex-col items-start space-y-2">
-                <Input
-                  type="number"
-                  value={newProgress}
-                  onChange={(e) => handleInputChange(Number(e.target.value))}
-                />
-                <div className="flex space-x-2">
-                  <Button onClick={handleAdd}>Add</Button>
-                  <Button onClick={handleSubstract}>Subtract</Button>
-                  <Button onClick={() => onUpdateProgress(challenge.id!)}>
-                    Update
-                  </Button>
-                </div>
-                {updateError && (
-                  <p className="text-red-500 mt-2">
-                    Error: {updateError.message}
-                  </p>
-                )}
-              </div>
-            </PopoverContent>
-          </Popover>
+          <ProgressUpdatePopover userId={userId} challenge={challenge} />
+          <button
+            onClick={handleDelete}
+            className="border-2 border-red-500 text-red-500 ml-4 px-4 py-1 rounded-lg transition-all duration-200 hover:bg-red-500 hover:text-white"
+          >
+            Delete Challenge
+          </button>
+          {deleteError && (
+            <p className="text-red-500">
+              Error deleting challenge: {deleteError.message}
+            </p>
+          )}
         </CardContent>
         {challenge.leaderboard && challenge.leaderboard.length > 1 && (
           <CardFooter>
@@ -161,7 +110,6 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
               profiles={profiles}
               userId={userId}
               isLoading={isLoading}
-              unit={challenge.unit}
             />
           </CardFooter>
         )}
