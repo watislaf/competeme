@@ -20,7 +20,6 @@ public class UserController {
     @GetMapping("/{userId}/profile")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
     public UserProfileResponse getUserProfile(@PathVariable Integer userId) {
-        System.out.println("userId: " + userId);
         return userService.getUserProfile(userId);
     }
 
