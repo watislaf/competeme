@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { ChallengeModificationRequest, ChallengeResponse } from "@/api/models";
 import { challengeSchema } from "../utils/challengeSchema";
 import { useModifyChallengeMutation } from "../hooks/useModifyChallengeMutation";
+import { DeleteChallengeButton } from "./deleteChallengeButton";
 
 interface ModificationPopoverProps {
   userId: number;
@@ -203,12 +204,15 @@ export const ChallengeModificationPopover: React.FC<
           {errors.participants && (
             <p className="text-red-500 text-sm">{errors.participants}</p>
           )}
-          <Button onClick={handleSubmit}>Save</Button>
-          {modificationError && (
-            <p className="text-red-500">
-              Error modifying challenge: {modificationError.message}
-            </p>
-          )}
+          <div className="flex justify-between">
+            <Button onClick={handleSubmit}>Save</Button>
+            {modificationError && (
+              <p className="text-red-500">
+                Error modifying challenge: {modificationError.message}
+              </p>
+            )}
+            <DeleteChallengeButton userId={userId} challenge={challenge} />
+          </div>
         </div>
       </PopoverContent>
     </Popover>

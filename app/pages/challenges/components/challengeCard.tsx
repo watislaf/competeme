@@ -14,7 +14,6 @@ import { Leaderboard } from "./leaderboard";
 import { Fireworks } from "./fireworks";
 import { ChallengeModificationPopover } from "./challengeModificationPopover";
 import { ProgressUpdatePopover } from "./progressUpdatePopover";
-import { useDeleteChallengeMutation } from "../hooks/useDeleteChallengeMutation";
 
 interface ChallengeCardProps {
   challenge: ChallengeResponse;
@@ -29,9 +28,6 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
   const [wasCompleted, setWasCompleted] = useState<boolean>(
     challenge.isCompleted,
   );
-
-  const { mutate: deleteChallenge, error: deleteError } =
-    useDeleteChallengeMutation();
 
   useEffect(() => {
     if (!wasCompleted && challenge.isCompleted) {
@@ -53,10 +49,6 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
   const cardClass = challenge.isCompleted
     ? "bg-lime-500/10 relative overflow-hidden transition-all duration-300"
     : "relative overflow-hidden";
-
-  const handleDelete = () => {
-    deleteChallenge({ userId, challengeId: challenge.id });
-  };
 
   return (
     <>
@@ -94,17 +86,6 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
         </CardContent>
         <CardContent>
           <ProgressUpdatePopover userId={userId} challenge={challenge} />
-          <button
-            onClick={handleDelete}
-            className="border-2 border-red-500 text-red-500 ml-4 px-4 py-1 rounded-lg transition-all duration-200 hover:bg-red-500 hover:text-white"
-          >
-            Delete Challenge
-          </button>
-          {deleteError && (
-            <p className="text-red-500">
-              Error deleting challenge: {deleteError.message}
-            </p>
-          )}
         </CardContent>
         {challenge.leaderboard && challenge.leaderboard.length > 1 && (
           <CardFooter>
