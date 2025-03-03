@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import { UserControllerApi } from "@/api/apis/user-controller-api";
 import { ActivityControllerApi } from "@/api/apis/activity-controller-api";
 import { ChallengeControllerApi } from "@/api/apis/challenge-controller-api";
-import { FriendshipControllerApi } from "@/api";
+import { FriendshipControllerApi, StatsControllerApi } from "@/api";
 
 const isTokenAboutToExpire = (
   token: string,
@@ -64,7 +64,8 @@ const Api = () => {
     user: new UserControllerApi(configuration),
     challenge: new ChallengeControllerApi(configuration),
     activity: new ActivityControllerApi(configuration),
-    friends: new FriendshipControllerApi(configuration)
+    friends: new FriendshipControllerApi(configuration),
+    stats: new StatsControllerApi(configuration)
   };
 };
 

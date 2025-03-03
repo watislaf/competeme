@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserId } from "@/hooks/user/useUserId";
+import { useStats } from "@/hooks/stats/useStats";
 
 type LoaderData = {
   user: {
@@ -63,6 +64,7 @@ export const loader: LoaderFunction = async () => {
 export default function HomePage() {
   const data = useLoaderData<LoaderData>();
   const userId = useUserId();
+  const { stats } = useStats(Number(userId));
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -101,7 +103,7 @@ export default function HomePage() {
         </CardHeader>
         <CardContent>
           <p className="text-2xl font-bold">
-            You&apos;ve spent {data.weeklyProgress} hours on productive
+            You&apos;ve spent {stats?.totalTimeThisWeek} on productive
             activities this week!
           </p>
         </CardContent>
@@ -116,7 +118,7 @@ export default function HomePage() {
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.todayProgress}h</div>
+            <div className="text-2xl font-bold">{stats?.timeLoggedToday}</div>
           </CardContent>
         </Card>
         <Card>
@@ -127,16 +129,18 @@ export default function HomePage() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.currentStreak} days</div>
+            <div className="text-2xl font-bold">{stats?.currentStreak}</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Best Streak</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Longest Streak
+            </CardTitle>
             <Award className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.bestStreak} days</div>
+            <div className="text-2xl font-bold">{stats?.longestStreak}</div>
           </CardContent>
         </Card>
         <Card>

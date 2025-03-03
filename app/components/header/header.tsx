@@ -41,7 +41,7 @@ export const Header = () => {
     },
     {
       name: "User Stats",
-      path: "/stats",
+      path: `/users/${profile.id}/stats`,
       icon: BarChart3,
     },
     {
@@ -56,7 +56,7 @@ export const Header = () => {
     },
     {
       name: "Activity",
-      path: "/activity",
+      path: `/users/${profile.id}/activity`,
       icon: Activity,
     },
   ];

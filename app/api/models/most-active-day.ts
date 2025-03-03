@@ -14,10 +14,23 @@
 
 
 
-export * from './apis/activity-controller-api';
-export * from './apis/authentication-controller-api';
-export * from './apis/challenge-controller-api';
-export * from './apis/friendship-controller-api';
-export * from './apis/stats-controller-api';
-export * from './apis/user-controller-api';
+/**
+ * 
+ * @export
+ * @interface MostActiveDay
+ */
+export interface MostActiveDay {
+    /**
+     * 
+     * @type {string}
+     * @memberof MostActiveDay
+     */
+    'dayOfWeek': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MostActiveDay
+     */
+    'averageDuration': string;
+}
 
