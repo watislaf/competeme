@@ -14,6 +14,7 @@ public record ChallengeResponse(
     @Schema(requiredMode = REQUIRED) String unit,
     @Schema(requiredMode = REQUIRED) List<ParticipantResponse> participants,
     @Schema(requiredMode = REQUIRED) Integer totalProgress,
-    @Schema(requiredMode = REQUIRED) List<LeaderboardEntry> leaderboard
+    @Schema(requiredMode = REQUIRED) List<LeaderboardEntry> leaderboard,
+    @Schema(requiredMode = REQUIRED) Boolean isCompleted
 ) {
 }

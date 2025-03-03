@@ -9,26 +9,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
-import { z } from "zod";
 import { ChallengeRequest } from "@/api";
-
-const challengeSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  goal: z.number().positive("Goal must be a positive number"),
-  unit: z.string().min(1, "Unit is required"),
-  participants: z.array(z.number()).optional(),
-});
+import { challengeSchema } from "../utils/challengeSchema";
+import { useAddChallengeMutation } from "../hooks/useAddChallengeMutation";
 
 interface ChallengeFormProps {
-  onSubmit: (data: ChallengeRequest) => void;
-  addError?: Error | null;
+  userId: number;
 }
 
-export const ChallengeForm: React.FC<ChallengeFormProps> = ({
-  onSubmit,
-  addError,
-}) => {
+export const ChallengeForm: React.FC<ChallengeFormProps> = ({ userId }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -38,6 +27,15 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
   const [friendIds, setFriendIds] = useState<string>("");
   const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const { mutate: addChallenge, error: addError } = useAddChallengeMutation();
+
+  const handleAddChallenge = (data: ChallengeRequest) => {
+    addChallenge({
+      userId: Number(userId),
+      challengeRequest: data,
+    });
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -78,8 +76,8 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
     }
 
     setErrors({});
-    onSubmit(validationData);
-    setFormData({ title: "", description: "", goal: "", unit: "" });
+    handleAddChallenge(validationData);
+    setFormData({ title: "", description: "", goal: "", unit: "" }); // !!!!!!!!
     setInvitedFriends([]);
   };
 
@@ -135,7 +133,6 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
               <Input
                 id="unit"
                 name="unit"
-                placeholder="e.g., hours, books"
                 value={formData.unit}
                 onChange={handleChange}
                 required
