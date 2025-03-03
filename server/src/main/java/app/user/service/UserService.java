@@ -42,5 +42,11 @@ public class UserService {
             .collect(Collectors.toList());
     }
 
+    public void updateProfileImage(Integer userId, String imageUrl) {
+        User user = getUserById(userId);
+        user.setImageUrl(imageUrl);
+        userRepository.save(user);
+    }
+
 
 }

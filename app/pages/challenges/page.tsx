@@ -48,7 +48,11 @@ const ChallengesPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Challenges</h1>
-      <ChallengeForm onSubmit={handleAddChallenge} addError={addError} />
+      <ChallengeForm
+        onSubmit={handleAddChallenge}
+        addError={addError}
+        userId={numericUserId}
+      />
 
       <h2 className="text-xl font-bold mt-8 mb-4">Your Challenges</h2>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
