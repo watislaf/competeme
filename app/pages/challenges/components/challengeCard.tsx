@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Card,
   CardHeader,
@@ -28,18 +28,16 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
   const [wasCompleted, setWasCompleted] = useState<boolean>(
     challenge.isCompleted,
   );
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!wasCompleted && challenge.isCompleted) {
       setShowFireworks(true);
-
       const timer = setTimeout(() => {
         setShowFireworks(false);
       }, 5000);
-
       return () => clearTimeout(timer);
     }
-
     setWasCompleted(challenge.isCompleted);
   }, [challenge.isCompleted, wasCompleted]);
 
@@ -51,55 +49,40 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
     : "relative overflow-hidden";
 
   return (
-    <>
-      <Card className={cardClass}>
-        <CardHeader>
-          <div className="flex justify-between items-center">
-            <div>
-              <CardTitle>{challenge.title || "No title available"}</CardTitle>
-              <CardDescription>
-                {challenge.description || "No description available"}
-              </CardDescription>
-            </div>
-            <ChallengeModificationPopover
-              userId={userId}
-              challenge={challenge}
-            />
+    <Card className={cardClass} ref={cardRef}>
+      <CardHeader>
+        <div className="flex justify-between items-center">
+          <div>
+            <CardTitle>{challenge.title || "No title available"}</CardTitle>
+            <CardDescription>
+              {challenge.description || "No description available"}
+            </CardDescription>
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span>Progress</span>
-              <span>
-                {challenge.totalProgress} / {challenge.goal || 0}
-                {challenge.unit ? ` ${challenge.unit}` : ""}
-              </span>
-            </div>
-            <Progress
-              value={Math.min(
-                (challenge.totalProgress / (challenge.goal || 1)) * 100,
-                100,
-              )}
-            />
-          </div>
-        </CardContent>
-        <CardContent>
-          <ProgressUpdatePopover userId={userId} challenge={challenge} />
-        </CardContent>
-        {challenge.leaderboard && challenge.leaderboard.length > 1 && (
-          <CardFooter>
-            <Leaderboard
-              leaderboard={challenge.leaderboard || []}
-              profiles={profiles}
-              userId={userId}
-              isLoading={isLoading}
-            />
-          </CardFooter>
-        )}
-      </Card>
-
-      <Fireworks isActive={showFireworks} />
-    </>
+          <ChallengeModificationPopover userId={userId} challenge={challenge} />
+        </div>
+      </CardHeader>
+      <CardContent>
+        <Progress
+          value={Math.min(
+            (challenge.totalProgress / (challenge.goal || 1)) * 100,
+            100,
+          )}
+        />
+      </CardContent>
+      <CardContent>
+        <ProgressUpdatePopover userId={userId} challenge={challenge} />
+      </CardContent>
+      {challenge.leaderboard && challenge.leaderboard.length > 1 && (
+        <CardFooter>
+          <Leaderboard
+            leaderboard={challenge.leaderboard}
+            profiles={profiles}
+            userId={userId}
+            isLoading={isLoading}
+          />
+        </CardFooter>
+      )}
+      <Fireworks isActive={showFireworks} containerRef={cardRef} />
+    </Card>
   );
 };

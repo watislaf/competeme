@@ -1,24 +1,29 @@
 import type React from "react";
-
 import { useEffect, useRef } from "react";
 
 interface FireworksProps {
   isActive: boolean;
+  containerRef: React.RefObject<HTMLDivElement>;
 }
 
-export const Fireworks: React.FC<FireworksProps> = ({ isActive }) => {
+export const Fireworks: React.FC<FireworksProps> = ({
+  isActive,
+  containerRef,
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (!isActive || !canvasRef.current) return;
+    if (!isActive || !canvasRef.current || !containerRef.current) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const updateCanvasSize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      if (!containerRef.current) return;
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      canvas.width = width;
+      canvas.height = height;
     };
 
     updateCanvasSize();
@@ -82,19 +87,14 @@ export const Fireworks: React.FC<FireworksProps> = ({ isActive }) => {
 
       update() {
         this.timer++;
-        this.particles.forEach((particle) => {
-          particle.update();
-        });
-
+        this.particles.forEach((particle) => particle.update());
         this.particles = this.particles.filter(
           (particle) => particle.size > 0.2,
         );
       }
 
       draw() {
-        this.particles.forEach((particle) => {
-          particle.draw();
-        });
+        this.particles.forEach((particle) => particle.draw());
       }
 
       isFinished() {
@@ -105,7 +105,8 @@ export const Fireworks: React.FC<FireworksProps> = ({ isActive }) => {
     const fireworks: Firework[] = [];
 
     const createInitialFireworks = () => {
-      const rect = canvas.getBoundingClientRect();
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
 
@@ -124,7 +125,6 @@ export const Fireworks: React.FC<FireworksProps> = ({ isActive }) => {
     createInitialFireworks();
 
     let animationId: number;
-
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -133,7 +133,8 @@ export const Fireworks: React.FC<FireworksProps> = ({ isActive }) => {
         firework.draw();
 
         if (Math.random() < 0.03 && fireworks.length < 10) {
-          const rect = canvas.getBoundingClientRect();
+          if (!containerRef.current) return;
+          const rect = containerRef.current.getBoundingClientRect();
           const centerX = rect.width / 2;
           const centerY = rect.height / 2;
 
@@ -165,14 +166,14 @@ export const Fireworks: React.FC<FireworksProps> = ({ isActive }) => {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", updateCanvasSize);
     };
-  }, [isActive]);
+  }, [isActive, containerRef]);
 
   if (!isActive) return null;
 
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-50"
+      className="absolute inset-0 pointer-events-none"
       aria-hidden="true"
     />
   );
