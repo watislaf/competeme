@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const challengeSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  goal: z.number().positive("Goal must be a positive number"),
-  unit: z.string().min(1, "Unit is required"),
+  title: z.string().min(1, "Please enter a title."),
+  description: z.string().min(1, "Please provide a description."),
+  goal: z.number().positive("The goal must be a positive number."),
+  unit: z.string().min(1, "Please specify a unit (e.g., km, hours, reps)."),
   participants: z.array(z.string()).optional(),
 });

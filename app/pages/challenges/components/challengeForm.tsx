@@ -133,7 +133,6 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({ userId }) => {
               <Input
                 id="unit"
                 name="unit"
-                placeholder="e.g., hours, books"
                 value={formData.unit}
                 onChange={handleChange}
                 required
