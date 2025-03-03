@@ -28,8 +28,10 @@ public class ChallengeMapper {
         List<LeaderboardEntry> leaderboard = allParticipants.stream()
             .sorted((a, b) -> Integer.compare(b.getProgress(), a.getProgress()))
             .limit(3)
-            .map(p -> new LeaderboardEntry(p.getUser().getName(), p.getProgress()))
+            .map(p -> new LeaderboardEntry(p.getUser().getId(), p.getProgress()))
             .collect(Collectors.toList());
+
+        boolean isCompleted = totalProgress >= challenge.getGoal();
 
         return new ChallengeResponse(
             challenge.getId(),
@@ -39,7 +41,8 @@ public class ChallengeMapper {
             challenge.getUnit(),
             participantResponses,
             totalProgress,
-            leaderboard
+            leaderboard,
+            isCompleted
         );
     }
 
