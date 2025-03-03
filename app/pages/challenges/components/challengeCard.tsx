@@ -85,7 +85,10 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
               </span>
             </div>
             <Progress
-              value={(challenge.totalProgress / (challenge.goal || 1)) * 100}
+              value={Math.min(
+                (challenge.totalProgress / (challenge.goal || 1)) * 100,
+                100,
+              )}
             />
           </div>
         </CardContent>
