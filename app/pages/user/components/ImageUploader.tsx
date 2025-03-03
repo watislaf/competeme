@@ -50,7 +50,6 @@ const resizeImage = (file: File): Promise<string> => {
 };
 
 export default function ImageUploader({ onUpload }: ImageUploaderProps) {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -64,7 +63,6 @@ export default function ImageUploader({ onUpload }: ImageUploaderProps) {
       setIsLoading(true);
 
       const resizedImage = await resizeImage(file);
-      setImagePreview(resizedImage);
       onUpload(resizedImage);
     } catch (err) {
       setError("Failed to process image. Please try again.");
@@ -72,7 +70,7 @@ export default function ImageUploader({ onUpload }: ImageUploaderProps) {
     } finally {
       setIsLoading(false);
       if (e.target) {
-        e.target.value = ""; // Reset input
+        e.target.value = "";
       }
     }
   };
