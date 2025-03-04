@@ -7,23 +7,15 @@ export const useProfile = (userId?: number) => {
     queryKey: ["profile", { userId }],
     queryFn: userId
       ? async () => {
-          try {
-            const result = await apis().user.getUserProfile(userId);
-            return result.data;
-          } catch (err) {
-            if (isAccessDenied(err)) {
-              throw new Error("Access Denied");
-            } else {
-              throw err;
-            }
-          }
+          const result = await apis().user.getUserProfile(userId);
+          return result.data;
         }
       : skipToken,
   });
   return {
     isLoading,
     profile: error ? undefined : data,
-    isForbidden: error?.message === "Access Denied",
+    isForbidden: isAccessDenied(error),
     error,
   };
 };

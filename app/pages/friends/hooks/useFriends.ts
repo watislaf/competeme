@@ -11,16 +11,8 @@ export function useFriends(userId: number) {
   } = useQuery({
     queryKey: ["friends", userId],
     queryFn: async () => {
-      try {
-        const response = await apis().friends.getFriends(userId);
-        return response.data;
-      } catch (err) {
-        if (isAccessDenied(err)) {
-          throw new Error("Access Denied");
-        } else {
-          throw err;
-        }
-      }
+      const response = await apis().friends.getFriends(userId);
+      return response.data;
     },
   });
 
@@ -31,7 +23,7 @@ export function useFriends(userId: number) {
   return {
     friends: profiles || [],
     isLoading: isFriendsLoading || isProfilesLoading,
-    isForbidden: error?.message === "Access Denied",
+    isForbidden: isAccessDenied(error),
     error,
   };
 }

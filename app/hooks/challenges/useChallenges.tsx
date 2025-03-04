@@ -8,23 +8,15 @@ export const useChallenges = (userId: number) => {
   const { isLoading, data, error } = useQuery({
     queryKey,
     queryFn: async () => {
-      try {
-        const result = await apis().challenge.getChallenges(userId);
-        return result.data;
-      } catch (err) {
-        if (isAccessDenied(err)) {
-          throw new Error("Access Denied");
-        } else {
-          throw err;
-        }
-      }
+      const result = await apis().challenge.getChallenges(userId);
+      return result.data;
     },
   });
 
   return {
     isLoading,
     challenges: error ? undefined : data,
-    isForbidden: error?.message === "Access Denied",
+    isForbidden: isAccessDenied(error),
     error,
   };
 };

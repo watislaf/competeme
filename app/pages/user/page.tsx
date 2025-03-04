@@ -39,9 +39,7 @@ export default function ProfilePage() {
             {/*will change it if needed*/}
             <div className="flex items-center">
               <h1 className="text-2xl font-bold">{profile.name}</h1>
-              {profile.role === "ADMIN" && (
-                <ShieldCheck className="ml-2"/>
-              )}
+              {profile.role === "ADMIN" && <ShieldCheck className="ml-2" />}
             </div>
             <p className="text-muted-foreground">{`Joined: ${moment(
               profile.dateJoined,
