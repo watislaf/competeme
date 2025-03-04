@@ -14,15 +14,19 @@ import { Leaderboard } from "./leaderboard";
 import { Fireworks } from "./fireworks";
 import { ChallengeModificationPopover } from "./challengeModificationPopover";
 import { ProgressUpdatePopover } from "./progressUpdatePopover";
+import { UserProfileResponse } from "@/api/models";
+import { hasAccess } from "@/utils/authorization";
 
 interface ChallengeCardProps {
   challenge: ChallengeResponse;
   userId: number;
+  loggedUser?: UserProfileResponse;
 }
 
 export const ChallengeCard: React.FC<ChallengeCardProps> = ({
   challenge,
   userId,
+  loggedUser,
 }) => {
   const [showFireworks, setShowFireworks] = useState<boolean>(false);
   const [wasCompleted, setWasCompleted] = useState<boolean>(
@@ -58,10 +62,16 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
               {challenge.description || "No description available"}
             </CardDescription>
           </div>
-          <ChallengeModificationPopover userId={userId} challenge={challenge} />
+          {hasAccess(userId, loggedUser) && (
+            <ChallengeModificationPopover
+              userId={userId}
+              challenge={challenge}
+            />
+          )}
         </div>
       </CardHeader>
       <CardContent>
+        <p className="mb-2 text-right">{`${challenge.totalProgress} / ${challenge.goal} ${challenge.unit}`}</p>
         <Progress
           value={Math.min(
             (challenge.totalProgress / (challenge.goal || 1)) * 100,
@@ -70,14 +80,16 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
         />
       </CardContent>
       <CardContent>
-        <ProgressUpdatePopover userId={userId} challenge={challenge} />
+        {hasAccess(userId, loggedUser) && (
+          <ProgressUpdatePopover userId={userId} challenge={challenge} />
+        )}
       </CardContent>
       {challenge.leaderboard && challenge.leaderboard.length > 1 && (
         <CardFooter>
           <Leaderboard
             leaderboard={challenge.leaderboard}
             profiles={profiles}
-            userId={userId}
+            loggedUser={loggedUser}
             isLoading={isLoading}
           />
         </CardFooter>

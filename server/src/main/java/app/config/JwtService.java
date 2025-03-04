@@ -1,12 +1,17 @@
 package app.config;
 
+import app.friendship.service.FriendshipService;
+import app.user.entity.Role;
 import app.user.entity.User;
+import app.user.entity.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -16,9 +21,12 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
     private final long ACCESS_TOKEN_VALIDITY = 60 * 60 * 1000;
     private final long REFRESH_TOKEN_VALIDITY = 10L * 24 * 60 * 60 * 1000;
+    private final UserRepository userRepository;
+    private final FriendshipService friendshipService;
     @Value("${jwt.secret.key}")
     private String SECRET_KEY;
 
@@ -78,5 +86,16 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public boolean hasAccess(Authentication authentication, Integer userId) {
+        String email = authentication.getName();
+        User currentUser = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (currentUser.getRole() == Role.ADMIN) {
+            return true;
+        }
+
+        return currentUser.getId().equals(userId) || friendshipService.isFriend(currentUser.getId(), userId);
     }
 }

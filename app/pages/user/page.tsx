@@ -6,15 +6,21 @@ import { Button } from "@/components/ui/button";
 import { useProfile } from "@/hooks/user/useProfile";
 import moment from "moment";
 import { useStats } from "@/hooks/stats/useStats";
+import { useUserId } from "@/hooks/user/useUserId";
+import { hasAccess } from "@/utils/authorization";
 
 export default function ProfilePage() {
   const { userId } = useParams();
-  const { profile, isLoading } = useProfile(Number(userId));
+  const { profile, isLoading, isForbidden } = useProfile(Number(userId));
   const { stats } = useStats(Number(userId));
+  const loggedUserId = useUserId();
+  const { profile: loggedUser } = useProfile(loggedUserId);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  if (isForbidden) return <p>Access Denied</p>;
 
   if (!profile) {
     return <div>User not found</div>;
@@ -79,61 +85,65 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Edit Preferences</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              <li>
-                <Button variant="outline" className="w-full justify-start">
-                  <Edit className="mr-2 h-4 w-4" />
-                  Update Profile Picture
-                </Button>
-              </li>
-              <li>
-                <Button variant="outline" className="w-full justify-start">
-                  <User className="mr-2 h-4 w-4" />
-                  Change Username
-                </Button>
-              </li>
-              <li>
-                <Button variant="outline" className="w-full justify-start">
-                  <Edit className="mr-2 h-4 w-4" />
-                  Manage Activities
-                </Button>
-              </li>
-            </ul>
-          </CardContent>
-        </Card>
+        {hasAccess(Number(userId), loggedUser) && (
+          <>
+            <Card>
+              <CardHeader>
+                <CardTitle>Edit Preferences</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  <li>
+                    <Button variant="outline" className="w-full justify-start">
+                      <Edit className="mr-2 h-4 w-4" />
+                      Update Profile Picture
+                    </Button>
+                  </li>
+                  <li>
+                    <Button variant="outline" className="w-full justify-start">
+                      <User className="mr-2 h-4 w-4" />
+                      Change Username
+                    </Button>
+                  </li>
+                  <li>
+                    <Button variant="outline" className="w-full justify-start">
+                      <Edit className="mr-2 h-4 w-4" />
+                      Manage Activities
+                    </Button>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Settings</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              <li>
-                <Button variant="outline" className="w-full justify-start">
-                  <Bell className="mr-2 h-4 w-4" />
-                  Notification Preferences
-                </Button>
-              </li>
-              <li>
-                <Button variant="outline" className="w-full justify-start">
-                  <Lock className="mr-2 h-4 w-4" />
-                  Privacy Settings
-                </Button>
-              </li>
-              <li>
-                <Button variant="outline" className="w-full justify-start">
-                  <User className="mr-2 h-4 w-4" />
-                  Account Details
-                </Button>
-              </li>
-            </ul>
-          </CardContent>
-        </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Settings</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  <li>
+                    <Button variant="outline" className="w-full justify-start">
+                      <Bell className="mr-2 h-4 w-4" />
+                      Notification Preferences
+                    </Button>
+                  </li>
+                  <li>
+                    <Button variant="outline" className="w-full justify-start">
+                      <Lock className="mr-2 h-4 w-4" />
+                      Privacy Settings
+                    </Button>
+                  </li>
+                  <li>
+                    <Button variant="outline" className="w-full justify-start">
+                      <User className="mr-2 h-4 w-4" />
+                      Account Details
+                    </Button>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
     </div>
   );

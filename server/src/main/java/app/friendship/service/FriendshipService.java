@@ -83,8 +83,8 @@ public class FriendshipService {
 
     public List<Friendship> getStatuses(Integer userId1, List<FriendshipRequest> userId2) {
         List<Integer> userIds = userId2.stream()
-                .map(FriendshipRequest::receiverId)
-                .toList();
+            .map(FriendshipRequest::receiverId)
+            .toList();
         return friendshipRepository.findBySenderAndReceiversOrReceiverAndSenders(userId1, userIds);
     }
 
@@ -108,12 +108,12 @@ public class FriendshipService {
 
     public boolean isFriend(Integer senderId, Integer receiverId) {
         return friendshipRepository.existsById_SenderIdAndId_ReceiverIdAndStatus(senderId, receiverId, FriendshipStatus.ACCEPTED) ||
-                friendshipRepository.existsById_SenderIdAndId_ReceiverIdAndStatus(receiverId, senderId, FriendshipStatus.ACCEPTED);
+            friendshipRepository.existsById_SenderIdAndId_ReceiverIdAndStatus(receiverId, senderId, FriendshipStatus.ACCEPTED);
     }
 
     public boolean hasPendingRequest(Integer senderId, Integer receiverId) {
         return friendshipRepository.existsById_SenderIdAndId_ReceiverIdAndStatus(senderId, receiverId, FriendshipStatus.PENDING) ||
-                friendshipRepository.existsById_SenderIdAndId_ReceiverIdAndStatus(receiverId, senderId, FriendshipStatus.PENDING);
+            friendshipRepository.existsById_SenderIdAndId_ReceiverIdAndStatus(receiverId, senderId, FriendshipStatus.PENDING);
     }
 
 }

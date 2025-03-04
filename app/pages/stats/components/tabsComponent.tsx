@@ -2,14 +2,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChartCard } from "./barChartCard";
 import { LineChartCard } from "./lineChartCard";
 import React from "react";
-import { StatsResponse } from "@/api/models";
+import { StatsResponse, UserProfileResponse } from "@/api/models";
 
 type TabsComponentProps = {
   stats?: StatsResponse;
   chartColor: string;
+  loggedUser?: UserProfileResponse;
+  userId: number;
 };
 
-const TabsComponent: React.FC<TabsComponentProps> = ({ stats, chartColor }) => {
+const TabsComponent: React.FC<TabsComponentProps> = ({
+  stats,
+  chartColor,
+  loggedUser,
+  userId,
+}) => {
   return (
     <Tabs defaultValue="weekly" className="w-full mb-8">
       <TabsList>
@@ -18,11 +25,21 @@ const TabsComponent: React.FC<TabsComponentProps> = ({ stats, chartColor }) => {
       </TabsList>
 
       <TabsContent value="weekly">
-        <BarChartCard stats={stats} color={chartColor} />
+        <BarChartCard
+          stats={stats}
+          color={chartColor}
+          loggedUser={loggedUser}
+          userId={userId}
+        />
       </TabsContent>
 
       <TabsContent value="monthly">
-        <LineChartCard stats={stats} color={chartColor} />
+        <LineChartCard
+          stats={stats}
+          color={chartColor}
+          loggedUser={loggedUser}
+          userId={userId}
+        />
       </TabsContent>
     </Tabs>
   );
