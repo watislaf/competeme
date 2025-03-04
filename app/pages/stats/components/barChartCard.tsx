@@ -7,19 +7,34 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import React from "react";
-import { StatsResponse } from "@/api/models";
+import { StatsResponse, UserProfileResponse } from "@/api/models";
+import { useProfile } from "@/hooks/user/useProfile";
+import { isSameUser } from "@/utils/authorization";
 
 type BarChartCardProps = {
   stats?: StatsResponse;
   color: string;
+  loggedUser?: UserProfileResponse;
+  userId: number;
 };
 
-export const BarChartCard: React.FC<BarChartCardProps> = ({ stats, color }) => {
+export const BarChartCard: React.FC<BarChartCardProps> = ({
+  stats,
+  color,
+  loggedUser,
+  userId,
+}) => {
+  const { profile } = useProfile(userId);
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Weekly Overview</CardTitle>
-        <CardDescription>Your activity over the past week</CardDescription>
+        <CardDescription>
+          {isSameUser(userId, loggedUser)
+            ? "Your activity over the past week"
+            : `${profile?.name}'s activity over the past week`}
+        </CardDescription>
       </CardHeader>
       <CardContent className="h-[300px]">
         <BarChart

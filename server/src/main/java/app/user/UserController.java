@@ -7,6 +7,7 @@ import app.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class UserController {
 
     @GetMapping("/{userId}/profile")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    @PreAuthorize("@jwtService.hasAccess(authentication, #userId)")
     public UserProfileResponse getUserProfile(@PathVariable Integer userId) {
         return userService.getUserProfile(userId);
     }

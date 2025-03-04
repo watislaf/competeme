@@ -22,6 +22,9 @@ public record UserProfileResponse(
     String imageUrl,
 
     @Schema(requiredMode = REQUIRED)
-    ZonedDateTime dateJoined
+    ZonedDateTime dateJoined,
+
+    @Schema(requiredMode = REQUIRED)
+    String role
 ) {
 }
