@@ -1,5 +1,5 @@
 import { Link, useParams } from "@remix-run/react";
-import { Bell, Edit, Lock, Settings, User } from "lucide-react";
+import { Bell, Edit, Lock, Settings, ShieldCheck, User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -37,7 +37,12 @@ export default function ProfilePage() {
           </Avatar>
           <div>
             {/*will change it if needed*/}
-            <h1 className="text-2xl font-bold">{profile.name}</h1>
+            <div className="flex items-center">
+              <h1 className="text-2xl font-bold">{profile.name}</h1>
+              {profile.role === "ADMIN" && (
+                <ShieldCheck className="ml-2"/>
+              )}
+            </div>
             <p className="text-muted-foreground">{`Joined: ${moment(
               profile.dateJoined,
             ).format("DD MMM YYYY")}`}</p>
