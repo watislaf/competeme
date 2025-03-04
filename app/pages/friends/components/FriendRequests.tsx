@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Check, Loader2, X } from "lucide-react";
 import { Link } from "@remix-run/react";
 import { useFriendRequests } from "../hooks/useFriendRequests";
-import { useProfiles } from "../hooks/useProfiles";
+import { useProfiles } from "@/hooks/user/useProfiles";
 
 interface FriendRequestsProps {
   userId: number;

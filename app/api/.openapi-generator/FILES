@@ -18,6 +18,7 @@ models/activity-response.ts
 models/activity-stat.ts
 models/authentication-request.ts
 models/authentication-response.ts
+models/challenge-modification-request.ts
 models/challenge-request.ts
 models/challenge-response.ts
 models/friendship-key.ts

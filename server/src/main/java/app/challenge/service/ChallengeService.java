@@ -75,4 +75,59 @@ public class ChallengeService {
         participant.setProgress(progress);
         challengeParticipantsRepository.save(participant);
     }
+
+    public void modifyChallenge(Long challengeId, ChallengeModificationRequest challengeModificationRequest) {
+        Challenge challenge = challengeRepository.findById(challengeId)
+            .orElseThrow(() -> new RuntimeException("Challenge not found"));
+
+        if (challengeModificationRequest.title() != null) {
+            challenge.setTitle(challengeModificationRequest.title());
+        }
+        if (challengeModificationRequest.description() != null) {
+            challenge.setDescription(challengeModificationRequest.description());
+        }
+        if (challengeModificationRequest.goal() != null) {
+            challenge.setGoal(challengeModificationRequest.goal());
+        }
+        if (challengeModificationRequest.unit() != null) {
+            challenge.setUnit(challengeModificationRequest.unit());
+        }
+
+        challengeRepository.save(challenge);
+
+        if (challengeModificationRequest.participants() != null) {
+            modifyParticipants(challenge, challengeModificationRequest.participants());
+        }
+    }
+
+    private void modifyParticipants(Challenge challenge, List<String> participants) {
+        List<User> users = userRepository.findAllByNameIn(participants);
+
+        if (users.size() != participants.size()) {
+            throw new IllegalArgumentException("One or more participants not found");
+        }
+
+        users.forEach(user -> {
+            boolean alreadyParticipating = challengeParticipantsRepository.existsByUserIdAndChallengeId(user.getId(), challenge.getId());
+            if (!alreadyParticipating) {
+                addParticipant(user, challenge);
+            }
+        });
+    }
+
+    public void deleteChallenge(Integer userId, Long challengeId) {
+        Challenge challenge = challengeRepository.findById(challengeId)
+            .orElseThrow(() -> new RuntimeException("Challenge not found"));
+
+        ChallengeParticipants participant = challengeParticipantsRepository.findByUserIdAndChallengeId(userId, challengeId)
+            .orElseThrow(() -> new RuntimeException("User is not participating in this challenge"));
+
+        challengeParticipantsRepository.delete(participant);
+
+        boolean hasParticipants = challengeParticipantsRepository.existsByChallengeId(challengeId);
+        if (!hasParticipants) {
+            challengeRepository.delete(challenge);
+        }
+    }
+
 }

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apis } from "@/api/initializeApi";
-import { useProfiles } from "@/pages/friends/hooks/useProfiles";
+import { useProfiles } from "@/hooks/user/useProfiles";
 
 export function useFriends(userId: number) {
   const { data: friendIds, isLoading: isFriendsLoading } = useQuery({
