@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useParams } from "@remix-run/react";
 import { Bell, Edit, Lock, Settings, User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,8 +14,6 @@ export default function ProfilePage() {
   const { profile, isLoading } = useProfile(Number(userId));
   const { stats } = useStats(Number(userId));
 
-  const [, setIsEditingImage] = useState(false);
-
   const { updateProfileImage } = useUpdateProfileImage(Number(userId));
 
   if (isLoading) {
@@ -30,7 +27,6 @@ export default function ProfilePage() {
   const handleImageUpload = async (base64Image: string) => {
     try {
       await updateProfileImage(base64Image);
-      setIsEditingImage(false);
     } catch (error) {
       console.error("Failed to upload image:", error);
     }

@@ -11,11 +11,11 @@ import { Label } from "@/components/ui/label";
 import type React from "react";
 import { useState, useEffect, useRef } from "react";
 import type { ChallengeRequest } from "@/api";
-import { apis } from "@/api/initializeApi";
-import { useQuery } from "@tanstack/react-query";
 import { FriendSearchDropdown } from "./FriendSearchDropdown";
 import { challengeSchema } from "../utils/challengeSchema";
 import { useAddChallengeMutation } from "../hooks/useAddChallengeMutation";
+import { useFriendQueries } from "../hooks/useFriendQueries";
+import lodash from "lodash";
 
 export interface FriendOption {
   id: number;
@@ -39,59 +39,24 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({ userId }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const searchRef = useRef<HTMLDivElement>(null);
+
+  const debouncedSetSearchTerm = useRef(
+    lodash.debounce((term: string) => {
+      setDebouncedSearchTerm(term);
+    }, 300),
+  ).current;
+
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 300);
+    debouncedSetSearchTerm(searchTerm);
 
     return () => {
-      clearTimeout(timer);
+      debouncedSetSearchTerm.cancel();
     };
-  }, [searchTerm]);
+  }, [searchTerm, debouncedSetSearchTerm]);
 
-  const friendIdsQuery = useQuery({
-    queryKey: ["friendIds", userId],
-    queryFn: async () => {
-      const response = await apis().friends.getFriends(userId);
-      if (response.status !== 200) {
-        throw new Error(`Error fetching friends: ${response.statusText}`);
-      }
-      return response.data as number[];
-    },
-    enabled: !!userId,
-  });
-
-  const friendProfilesQuery = useQuery({
-    queryKey: ["friendProfiles", friendIdsQuery.data],
-    queryFn: async () => {
-      if (!friendIdsQuery.data) return [];
-
-      const friendProfiles = await Promise.all(
-        friendIdsQuery.data.map(async (id) => {
-          try {
-            const profileResponse = await apis().user.getUserProfile(id);
-            return {
-              id: profileResponse.data.id,
-              name: profileResponse.data.name,
-              imageUrl: profileResponse.data.imageUrl,
-            };
-          } catch (error) {
-            console.error(`Failed to fetch profile for user ${id}:`, error);
-            return null;
-          }
-        }),
-      );
-
-      return friendProfiles.filter(Boolean) as FriendOption[];
-    },
-    enabled: !!friendIdsQuery.data && friendIdsQuery.data.length > 0,
-  });
-
-  const isLoading = friendIdsQuery.isLoading || friendProfilesQuery.isLoading;
-  const loadError = friendIdsQuery.error || friendProfilesQuery.error;
-  const friends = friendProfilesQuery.data || [];
+  const { isLoading, loadError, friends } = useFriendQueries(userId);
 
   const filteredFriends = friends.filter(
     (friend) =>
@@ -142,7 +107,6 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({ userId }) => {
   };
 
   const handleSubmit = () => {
-    console.log(invitedFriends.map((friend) => friend.id));
     const parsedGoal = Number(formData.goal);
     const validationData = {
       ...formData,
@@ -164,7 +128,7 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({ userId }) => {
 
     setErrors({});
     handleAddChallenge(validationData);
-    setFormData({ title: "", description: "", goal: "", unit: "" }); // !!!!!!!!
+    setFormData({ title: "", description: "", goal: "", unit: "" });
     setInvitedFriends([]);
   };
 
