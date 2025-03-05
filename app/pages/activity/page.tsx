@@ -10,16 +10,14 @@ import {
 } from "@/components/ui/card";
 import RecentActivities from "./components/recentActivities";
 import { UserActivityResponse } from "@/api/models/user-activity-response";
-import { useProfile } from "@/hooks/user/useProfile";
-import { useUserId } from "@/hooks/user/useUserId";
-import { hasAccess, isSameUser } from "@/utils/authorization";
+import { useUserAccess } from "@/hooks/user/useUserAccess";
+import { useUser } from "@/hooks/user/useUser";
 
 const ActivityPage: React.FC = () => {
   const { userId } = useParams();
-  const { profile } = useProfile(Number(userId));
+  const { profile, isCurrentUser } = useUser(Number(userId));
   const { activities, isLoading, isForbidden } = useActivity(Number(userId));
-  const loggedUserId = useUserId();
-  const { profile: loggedUser } = useProfile(loggedUserId);
+  const { canModifyActivities } = useUserAccess(Number(userId));
 
   if (isLoading) return <p>Loading...</p>;
   if (isForbidden) return <p>Access Denied</p>;
@@ -32,11 +30,9 @@ const ActivityPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">
-        {isSameUser(Number(userId), loggedUser)
-          ? "Your Activity"
-          : `${profile?.name}'s Activity`}
+        {isCurrentUser ? "Your Activity" : `${profile?.name}'s Activity`}
       </h1>
-      {hasAccess(Number(userId), loggedUser) && (
+      {canModifyActivities && (
         <>
           <h2 className="text-2xl font-bold mb-8">Log Activity</h2>
           <ActivityForm
@@ -50,7 +46,7 @@ const ActivityPage: React.FC = () => {
         <CardHeader>
           <CardTitle>Recent Entries</CardTitle>
           <CardDescription>
-            {Number(loggedUserId) === Number(userId)
+            {isCurrentUser
               ? "Your last logged activities"
               : `${profile?.name}'s last logged activites`}
           </CardDescription>
@@ -59,7 +55,6 @@ const ActivityPage: React.FC = () => {
           <RecentActivities
             activities={activities || defaultActivities}
             userId={Number(userId)}
-            loggedUser={loggedUser}
           />
         </CardContent>
       </Card>

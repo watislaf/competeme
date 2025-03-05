@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useUserId } from "@/hooks/user/useUserId";
 import { useStats } from "@/hooks/stats/useStats";
+import { useUser } from "@/hooks/user/useUser";
 
 type LoaderData = {
   user: {
@@ -63,7 +63,7 @@ export const loader: LoaderFunction = async () => {
 
 export default function HomePage() {
   const data = useLoaderData<LoaderData>();
-  const userId = useUserId();
+  const { userId } = useUser();
   const { stats } = useStats(Number(userId));
 
   return (

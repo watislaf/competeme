@@ -5,16 +5,12 @@ import TabsComponent from "./components/tabsComponent";
 import StatCard from "./components/statCard";
 import ActivityBreakdown from "./components/activityBreakdown";
 import chroma from "chroma-js";
-import { useUserId } from "@/hooks/user/useUserId";
-import { useProfile } from "@/hooks/user/useProfile";
-import { isSameUser } from "@/utils/authorization";
+import { useUser } from "@/hooks/user/useUser";
 
 const StatsPage: React.FC = () => {
   const { userId } = useParams();
   const { stats, isLoading, isForbidden } = useStats(Number(userId));
-  const loggedUserId = useUserId();
-  const { profile: loggedUser } = useProfile(loggedUserId);
-  const { profile } = useProfile(Number(userId));
+  const { profile, isCurrentUser } = useUser(Number(userId));
 
   if (isForbidden) return <p>Access Denied</p>;
 
@@ -45,7 +41,6 @@ const StatsPage: React.FC = () => {
       <TabsComponent
         stats={stats}
         chartColor={colors[0]}
-        loggedUser={loggedUser}
         userId={Number(userId)}
       />
 
@@ -69,7 +64,7 @@ const StatsPage: React.FC = () => {
           title="Longest Streak"
           value={stats?.longestStreak}
           description={
-            isSameUser(Number(userId), loggedUser)
+            isCurrentUser
               ? "Your personal best"
               : `${profile?.name}'s personal best`
           }

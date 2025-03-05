@@ -6,23 +6,23 @@ import { Link } from "@remix-run/react";
 import { useFriends } from "../hooks/useFriends";
 import { useRemoveFriends } from "@/pages/friends/hooks/useRemoveFriends";
 import { UserProfileResponse } from "@/api";
-import { useProfile } from "@/hooks/user/useProfile";
-import { hasAccess, isSameUser } from "@/utils/authorization";
+import { useUserAccess } from "@/hooks/user/useUserAccess";
+import { useUser } from "@/hooks/user/useUser";
 
 interface FriendsListProps {
   userId: number;
-  loggedUser?: UserProfileResponse;
 }
 
 const FriendCard = ({
   friend,
   removeFriend,
-  hasAccess,
+  userId,
 }: {
   friend: UserProfileResponse;
   removeFriend: { mutate: (friendId: number) => void; isPending: boolean };
-  hasAccess: boolean;
+  userId: number;
 }) => {
+  const { canModifyFriends } = useUserAccess(userId);
   return (
     <div
       key={friend.id}
@@ -42,7 +42,7 @@ const FriendCard = ({
           </Link>
         </div>
       </div>
-      {hasAccess && (
+      {canModifyFriends && (
         <Button
           variant="outline"
           size="sm"
@@ -57,14 +57,10 @@ const FriendCard = ({
   );
 };
 
-export function FriendsList({ userId, loggedUser }: FriendsListProps) {
+export function FriendsList({ userId }: FriendsListProps) {
   const { friends, isLoading } = useFriends(userId);
   const removeFriend = useRemoveFriends(userId);
-  const { profile } = useProfile(userId);
-
-  const checkAccess = () => {
-    return hasAccess(userId, loggedUser);
-  };
+  const { profile, isCurrentUser } = useUser(userId);
 
   if (isLoading) {
     return (
@@ -89,9 +85,7 @@ export function FriendsList({ userId, loggedUser }: FriendsListProps) {
     <Card>
       <CardHeader>
         <CardTitle>
-          {isSameUser(userId, loggedUser)
-            ? "Your Friends"
-            : `${profile?.name}'s Friends`}
+          {isCurrentUser ? "Your Friends" : `${profile?.name}'s Friends`}
         </CardTitle>
       </CardHeader>
       <CardContent className="grid gap-4 md:grid-cols-2">
@@ -101,7 +95,7 @@ export function FriendsList({ userId, loggedUser }: FriendsListProps) {
               key={friend.id}
               friend={friend}
               removeFriend={removeFriend}
-              hasAccess={checkAccess()}
+              userId={userId}
             />
           ) : (
             <div key={index}> friend is missing</div>

@@ -1,23 +1,23 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "@remix-run/react";
-import { UserProfileResponse } from "@/api/models";
-import { isSameUser } from "@/utils/authorization";
+import { useUser } from "@/hooks/user/useUser";
 
 interface LeaderboardProps {
   leaderboard: { userId: number; score: number }[];
   profiles: { id: number; name: string; imageUrl?: string }[] | undefined;
-  loggedUser?: UserProfileResponse;
   isLoading: boolean;
   unit?: string;
+  userId: number;
 }
 
 export const Leaderboard: React.FC<LeaderboardProps> = ({
   leaderboard,
   profiles,
-  loggedUser,
   isLoading,
+  userId,
 }) => {
+  const { isCurrentUser } = useUser(userId);
   return (
     <div className="w-full">
       <h4 className="font-semibold mb-2">Leaderboard</h4>
@@ -46,9 +46,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
                         to={`/users/${profile.id}/profile`}
                         className="font-medium hover:underline"
                       >
-                        {isSameUser(profile.id, loggedUser)
-                          ? "YOU"
-                          : profile.name}
+                        {isCurrentUser ? "YOU" : profile.name}
                       </Link>
                     </div>
                   </div>

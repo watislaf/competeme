@@ -2,14 +2,12 @@
 import { Link, useLocation } from "@remix-run/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useProfile } from "@/hooks/user/useProfile";
 import { buttonVariants } from "@/components/ui/button";
-import { useUserId } from "@/hooks/user/useUserId";
+import { useUser } from "@/hooks/user/useUser";
 
 export const AvatarSection = () => {
   const location = useLocation();
-  const userId = useUserId();
-  const { profile } = useProfile(userId);
+  const { profile } = useUser();
   const queryClient = useQueryClient();
   const logout = () => {
     localStorage.removeItem("ACCESS_TOKEN_KEY");

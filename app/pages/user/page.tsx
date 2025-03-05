@@ -3,18 +3,16 @@ import { Bell, Edit, Lock, Settings, ShieldCheck, User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useProfile } from "@/hooks/user/useProfile";
 import moment from "moment";
 import { useStats } from "@/hooks/stats/useStats";
-import { useUserId } from "@/hooks/user/useUserId";
-import { hasAccess } from "@/utils/authorization";
+import { useUserAccess } from "@/hooks/user/useUserAccess";
+import { useUser } from "@/hooks/user/useUser";
 
 export default function ProfilePage() {
   const { userId } = useParams();
-  const { profile, isLoading, isForbidden } = useProfile(Number(userId));
+  const { profile, isLoading, isForbidden } = useUser(Number(userId));
   const { stats } = useStats(Number(userId));
-  const loggedUserId = useUserId();
-  const { profile: loggedUser } = useProfile(loggedUserId);
+  const { canModifyProfile } = useUserAccess(Number(userId));
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -88,7 +86,7 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-        {hasAccess(Number(userId), loggedUser) && (
+        {canModifyProfile && (
           <>
             <Card>
               <CardHeader>

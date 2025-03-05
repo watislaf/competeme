@@ -12,19 +12,16 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@radix-ui/react-popover";
-import { UserProfileResponse } from "@/api/models";
-import { hasAccess } from "@/utils/authorization";
+import { useUserAccess } from "@/hooks/user/useUserAccess";
 
 interface RecentActivitiesProps {
   activities: UserActivityResponse;
   userId: number;
-  loggedUser?: UserProfileResponse;
 }
 
 const RecentActivities: React.FC<RecentActivitiesProps> = ({
   activities,
   userId,
-  loggedUser,
 }) => {
   const [progressInputs, setProgressInputs] = useState<Record<number, number>>(
     {},
@@ -33,6 +30,7 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
     useUpdateProgressMutation();
   const { mutate: deleteActivity, error: deleteError } =
     useDeleteActivityMutation();
+  const { canModifyActivities } = useUserAccess(userId);
 
   const handleProgressChange = (id: number, value: number) => {
     setProgressInputs((prev) => ({
@@ -82,7 +80,7 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
               <span>{log.title}</span>
               <span className="text-muted-foreground">{log.duration}</span>
             </div>
-            {hasAccess(Number(userId), loggedUser) && (
+            {canModifyActivities && (
               <div className="flex items-center space-x-2">
                 <Popover>
                   <PopoverTrigger>

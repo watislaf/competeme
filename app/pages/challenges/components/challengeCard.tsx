@@ -14,25 +14,23 @@ import { Leaderboard } from "./leaderboard";
 import { Fireworks } from "./fireworks";
 import { ChallengeModificationPopover } from "./challengeModificationPopover";
 import { ProgressUpdatePopover } from "./progressUpdatePopover";
-import { UserProfileResponse } from "@/api/models";
-import { hasAccess } from "@/utils/authorization";
+import { useUserAccess } from "@/hooks/user/useUserAccess";
 
 interface ChallengeCardProps {
   challenge: ChallengeResponse;
   userId: number;
-  loggedUser?: UserProfileResponse;
 }
 
 export const ChallengeCard: React.FC<ChallengeCardProps> = ({
   challenge,
   userId,
-  loggedUser,
 }) => {
   const [showFireworks, setShowFireworks] = useState<boolean>(false);
   const [wasCompleted, setWasCompleted] = useState<boolean>(
     challenge.isCompleted,
   );
   const cardRef = useRef<HTMLDivElement>(null);
+  const { canModifyChallenges } = useUserAccess(userId);
 
   useEffect(() => {
     if (!wasCompleted && challenge.isCompleted) {
@@ -62,7 +60,7 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
               {challenge.description || "No description available"}
             </CardDescription>
           </div>
-          {hasAccess(userId, loggedUser) && (
+          {canModifyChallenges && (
             <ChallengeModificationPopover
               userId={userId}
               challenge={challenge}
@@ -80,7 +78,7 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
         />
       </CardContent>
       <CardContent>
-        {hasAccess(userId, loggedUser) && (
+        {canModifyChallenges && (
           <ProgressUpdatePopover userId={userId} challenge={challenge} />
         )}
       </CardContent>
@@ -89,8 +87,8 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
           <Leaderboard
             leaderboard={challenge.leaderboard}
             profiles={profiles}
-            loggedUser={loggedUser}
             isLoading={isLoading}
+            userId={userId}
           />
         </CardFooter>
       )}

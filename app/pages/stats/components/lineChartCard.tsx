@@ -7,30 +7,27 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import React from "react";
-import { StatsResponse, UserProfileResponse } from "@/api/models";
-import { useProfile } from "@/hooks/user/useProfile";
-import { isSameUser } from "@/utils/authorization";
+import { StatsResponse } from "@/api/models";
+import { useUser } from "@/hooks/user/useUser";
 
 type LineChartCardProps = {
   stats?: StatsResponse;
   color: string;
-  loggedUser?: UserProfileResponse;
   userId: number;
 };
 
 export const LineChartCard: React.FC<LineChartCardProps> = ({
   stats,
   color,
-  loggedUser,
   userId,
 }) => {
-  const { profile } = useProfile(userId);
+  const { profile, isCurrentUser } = useUser(userId);
   return (
     <Card>
       <CardHeader>
         <CardTitle>Monthly Overview</CardTitle>
         <CardDescription>
-          {isSameUser(userId, loggedUser)
+          {isCurrentUser
             ? "Your activity over the past month"
             : `${profile?.name}'s activity over the past month`}
         </CardDescription>

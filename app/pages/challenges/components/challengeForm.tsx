@@ -9,21 +9,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
-import { ChallengeRequest, UserProfileResponse } from "@/api";
+import { ChallengeRequest } from "@/api";
 import { challengeSchema } from "../utils/challengeSchema";
 import { useAddChallengeMutation } from "../hooks/useAddChallengeMutation";
-import { isSameUser } from "@/utils/authorization";
-import { useProfile } from "@/hooks/user/useProfile";
+import { useUser } from "@/hooks/user/useUser";
 
 interface ChallengeFormProps {
   userId: number;
-  loggedUser?: UserProfileResponse;
 }
 
-export const ChallengeForm: React.FC<ChallengeFormProps> = ({
-  userId,
-  loggedUser,
-}) => {
+export const ChallengeForm: React.FC<ChallengeFormProps> = ({ userId }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -33,7 +28,7 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
   const [friendIds, setFriendIds] = useState<string>("");
   const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const { profile } = useProfile(userId);
+  const { profile, isCurrentUser } = useUser(userId);
 
   const { mutate: addChallenge, error: addError } = useAddChallengeMutation();
 
@@ -93,7 +88,7 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
       <CardHeader>
         <CardTitle>Create New Challenge</CardTitle>
         <CardDescription>
-          {isSameUser(userId, loggedUser)
+          {isCurrentUser
             ? "Set up a new challenge for yourself and others!"
             : `Set up a new challenge for ${profile?.name} and others!`}
         </CardDescription>
