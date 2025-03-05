@@ -11,7 +11,7 @@ interface FriendRequestsProps {
 }
 
 export function FriendRequests({ userId }: FriendRequestsProps) {
-  const { requestIds, isLoading, acceptRequest, removeFriend } =
+  const { requestIds, isLoading, acceptRequest, cancelRequest } =
     useFriendRequests(userId);
   const { profiles, isLoading: isLoadingUsers } = useProfiles(requestIds);
   if (isLoading || isLoadingUsers) {
@@ -76,8 +76,8 @@ export function FriendRequests({ userId }: FriendRequestsProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => removeFriend.mutate(profile.id)}
-                  disabled={removeFriend.isPending}
+                  onClick={() => cancelRequest.mutate(profile.id)}
+                  disabled={cancelRequest.isPending}
                 >
                   <X className="mr-2 h-4 w-4" />
                   Decline

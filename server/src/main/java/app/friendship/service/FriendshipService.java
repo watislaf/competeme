@@ -79,6 +79,7 @@ public class FriendshipService {
 
     public void cancelFriendRequest(Integer senderId, Integer receiverId) {
         friendshipRepository.deleteAll(findFriendshipRequests(senderId, receiverId, FriendshipStatus.PENDING));
+        friendshipRepository.deleteAll(findFriendshipRequests(receiverId, senderId, FriendshipStatus.PENDING));
     }
 
     public List<Friendship> getStatuses(Integer userId1, List<FriendshipRequest> userId2) {

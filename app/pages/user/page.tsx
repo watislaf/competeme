@@ -6,11 +6,15 @@ import { Button } from "@/components/ui/button";
 import { useProfile } from "@/hooks/user/useProfile";
 import moment from "moment";
 import { useStats } from "@/hooks/stats/useStats";
+import ImageUploader from "./components/ImageUploader";
+import { useUpdateProfileImage } from "./hooks/useUpdateProfileImage";
 
 export default function ProfilePage() {
   const { userId } = useParams();
   const { profile, isLoading } = useProfile(Number(userId));
   const { stats } = useStats(Number(userId));
+
+  const { updateProfileImage } = useUpdateProfileImage(Number(userId));
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -19,6 +23,15 @@ export default function ProfilePage() {
   if (!profile) {
     return <div>User not found</div>;
   }
+
+  const handleImageUpload = async (base64Image: string) => {
+    try {
+      await updateProfileImage(base64Image);
+    } catch (error) {
+      console.error("Failed to upload image:", error);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-start mb-8">
@@ -30,11 +43,8 @@ export default function ProfilePage() {
             </AvatarFallback>
           </Avatar>
           <div>
-            {/*will change it if needed*/}
             <h1 className="text-2xl font-bold">{profile.name}</h1>
-            <p className="text-muted-foreground">{`Joined: ${moment(
-              profile.dateJoined,
-            ).format("DD MMM YYYY")}`}</p>
+            <p className="text-muted-foreground">{`Joined: ${moment(profile.dateJoined).format("DD MMM YYYY")}`}</p>
           </div>
         </div>
         <Link to="/settings">
@@ -85,12 +95,7 @@ export default function ProfilePage() {
           </CardHeader>
           <CardContent>
             <ul className="space-y-2">
-              <li>
-                <Button variant="outline" className="w-full justify-start">
-                  <Edit className="mr-2 h-4 w-4" />
-                  Update Profile Picture
-                </Button>
-              </li>
+              <ImageUploader onUpload={handleImageUpload} />
               <li>
                 <Button variant="outline" className="w-full justify-start">
                   <User className="mr-2 h-4 w-4" />

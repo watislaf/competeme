@@ -1,6 +1,15 @@
 import { json, type LoaderFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { Award, BarChart2, Clock, TrendingUp, Users } from "lucide-react";
+import {
+  Award,
+  BarChart2,
+  Clock,
+  TrendingUp,
+  Users,
+  Pencil,
+  Check,
+  X,
+} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -11,7 +20,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserId } from "@/hooks/user/useUserId";
-import { useStats } from "@/hooks/stats/useStats";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
 
 type LoaderData = {
   user: {
@@ -64,7 +74,23 @@ export const loader: LoaderFunction = async () => {
 export default function HomePage() {
   const data = useLoaderData<LoaderData>();
   const userId = useUserId();
-  const { stats } = useStats(Number(userId));
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempName, setTempName] = useState(data.user.name);
+  const [userName, setUserName] = useState(data.user.name);
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    setUserName(tempName);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setTempName(userName);
+    setIsEditing(false);
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -74,26 +100,29 @@ export default function HomePage() {
             <AvatarImage src={data.user.avatar} alt={data.user.name} />
             <AvatarFallback>{data.user.name[0]}</AvatarFallback>
           </Avatar>
-          <h1 className="text-2xl font-bold">Hi, {data.user.name}!</h1>
+          {isEditing ? (
+            <div className="flex items-center space-x-2">
+              <Input
+                value={tempName}
+                onChange={(e) => setTempName(e.target.value)}
+                className="border rounded-md px-2 py-1"
+              />
+              <Button size="icon" variant="ghost" onClick={handleSave}>
+                <Check className="h-4 w-4 text-green-500" />
+              </Button>
+              <Button size="icon" variant="ghost" onClick={handleCancel}>
+                <X className="h-4 w-4 text-red-500" />
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <h1 className="text-2xl font-bold">Hi, {userName}!</h1>
+              <Button size="icon" variant="ghost" onClick={handleEdit}>
+                <Pencil className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
         </div>
-        <Link to="/settings">
-          <Button variant="ghost" size="icon">
-            <span className="sr-only">Settings</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-6 w-6"
-            >
-              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-          </Button>
-        </Link>
       </header>
 
       <Card className="mb-8">
@@ -103,7 +132,7 @@ export default function HomePage() {
         </CardHeader>
         <CardContent>
           <p className="text-2xl font-bold">
-            You&apos;ve spent {stats?.totalTimeThisWeek} on productive
+            You&apos;ve spent {data.weeklyProgress} hours on productive
             activities this week!
           </p>
         </CardContent>
@@ -118,7 +147,7 @@ export default function HomePage() {
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.timeLoggedToday}</div>
+            <div className="text-2xl font-bold">{data.todayProgress}h</div>
           </CardContent>
         </Card>
         <Card>
@@ -129,18 +158,16 @@ export default function HomePage() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.currentStreak}</div>
+            <div className="text-2xl font-bold">{data.currentStreak} days</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Longest Streak
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Best Streak</CardTitle>
             <Award className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.longestStreak}</div>
+            <div className="text-2xl font-bold">{data.bestStreak} days</div>
           </CardContent>
         </Card>
         <Card>

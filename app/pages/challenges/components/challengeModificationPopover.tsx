@@ -82,7 +82,6 @@ export const ChallengeModificationPopover: React.FC<
       goal: parsedGoal,
       participants: invitedFriends,
     };
-
     const result = challengeSchema.safeParse(validationData);
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
