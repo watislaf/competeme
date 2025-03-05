@@ -8,6 +8,7 @@ import moment from "moment";
 import { useStats } from "@/hooks/stats/useStats";
 import ImageUploader from "./components/ImageUploader";
 import { useUpdateProfileImage } from "./hooks/useUpdateProfileImage";
+import { useState, useEffect } from "react";
 
 export default function ProfilePage() {
   const { userId } = useParams();
@@ -15,6 +16,16 @@ export default function ProfilePage() {
   const { stats } = useStats(Number(userId));
 
   const { updateProfileImage } = useUpdateProfileImage(Number(userId));
+
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(
+    profile?.imageUrl,
+  );
+
+  useEffect(() => {
+    if (profile?.imageUrl) {
+      setAvatarUrl(profile.imageUrl);
+    }
+  }, [profile?.imageUrl]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -26,9 +37,11 @@ export default function ProfilePage() {
 
   const handleImageUpload = async (base64Image: string) => {
     try {
+      setAvatarUrl(base64Image); // Immediately update the avatar in UI
       await updateProfileImage(base64Image);
     } catch (error) {
       console.error("Failed to upload image:", error);
+      setAvatarUrl(profile?.imageUrl); // Revert to original on error
     }
   };
 
@@ -37,7 +50,11 @@ export default function ProfilePage() {
       <div className="flex justify-between items-start mb-8">
         <div className="flex items-center gap-4">
           <Avatar className="w-24 h-24">
-            <AvatarImage src={profile.imageUrl} alt={profile.name} />
+            <AvatarImage
+              src={avatarUrl || profile.imageUrl}
+              alt={profile.name}
+              key={avatarUrl}
+            />
             <AvatarFallback>
               {profile.name.charAt(0).toUpperCase()}
             </AvatarFallback>
