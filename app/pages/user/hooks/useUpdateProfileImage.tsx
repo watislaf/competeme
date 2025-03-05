@@ -8,11 +8,7 @@ export const useUpdateProfileImage = (userId?: number) => {
     mutationFn: async (imageBase64: string) => {
       if (!userId) throw new Error("User ID is required");
 
-      const response = await apis().user.updateProfileImage(
-        userId,
-        imageBase64,
-      );
-      return response;
+      return await apis().user.updateProfileImage(userId, imageBase64);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile", userId] });
