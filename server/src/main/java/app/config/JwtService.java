@@ -18,6 +18,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 @Service
@@ -88,14 +89,30 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public boolean hasAccess(Authentication authentication, Integer userId) {
+    public boolean hasAccess(Authentication authentication, Integer userId, String permission) {
+        User user = extractUser(authentication);
+        return switch (permission) {
+            case "ADMIN_ACCESS" -> isAdmin(user);
+            case "USER_READ" -> areFriends(user, userId) || isCurrentUser(user, userId) || isAdmin(user);
+            case "USER_WRITE" -> isCurrentUser(user, userId) || isAdmin(user);
+            default -> false;
+        };
+    }
+
+    private boolean isCurrentUser(User user, Integer userId) {
+        return Objects.equals(user.getId(), userId);
+    }
+
+    private boolean areFriends(User user, Integer userId) {
+        return friendshipService.isFriend(user.getId(), userId);
+    }
+
+    private boolean isAdmin(User user) {
+        return user.getRole() == Role.ADMIN;
+    }
+
+    private User extractUser(Authentication authentication) {
         String email = authentication.getName();
-        User currentUser = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (currentUser.getRole() == Role.ADMIN) {
-            return true;
-        }
-
-        return currentUser.getId().equals(userId) || friendshipService.isFriend(currentUser.getId(), userId);
+        return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
     }
 }
