@@ -34,4 +34,10 @@ public class UserController {
     public void updateProfileImage(@PathVariable Integer id, @RequestBody String imageUrl) {
         userService.updateProfileImage(id, imageUrl);
     }
+
+    @PutMapping("/{userId}/updateName")
+    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    public void updateProfileName(@PathVariable Integer userId, @RequestBody String name) {
+        userService.updateProfileName(userId, name);
+    }
 }

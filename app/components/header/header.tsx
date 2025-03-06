@@ -36,7 +36,7 @@ export const Header = () => {
   const navLinks = [
     {
       name: "Home",
-      path: "/",
+      path: `/users/${profile.id}/home`,
       icon: Home,
     },
     {
