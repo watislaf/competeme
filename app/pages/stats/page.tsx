@@ -5,10 +5,14 @@ import TabsComponent from "./components/tabsComponent";
 import StatCard from "./components/statCard";
 import ActivityBreakdown from "./components/activityBreakdown";
 import chroma from "chroma-js";
+import { useUser } from "@/hooks/user/useUser";
 
 const StatsPage: React.FC = () => {
   const { userId } = useParams();
-  const { stats, isLoading } = useStats(Number(userId));
+  const { stats, isLoading, isForbidden } = useStats(Number(userId));
+  const { profile, isCurrentUser } = useUser(Number(userId));
+
+  if (isForbidden) return <p>Access Denied</p>;
 
   const parseTime = (timeString: string | undefined): number => {
     if (!timeString) return 0;
@@ -34,7 +38,11 @@ const StatsPage: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Statistics</h1>
 
-      <TabsComponent stats={stats} chartColor={colors[0]} />
+      <TabsComponent
+        stats={stats}
+        chartColor={colors[0]}
+        userId={Number(userId)}
+      />
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
         <StatCard
@@ -55,7 +63,11 @@ const StatsPage: React.FC = () => {
         <StatCard
           title="Longest Streak"
           value={stats?.longestStreak}
-          description="Your personal best"
+          description={
+            isCurrentUser
+              ? "Your personal best"
+              : `${profile?.name}'s personal best`
+          }
           icon={<Award className="h-4 w-4 text-muted-foreground" />}
         />
         <StatCard

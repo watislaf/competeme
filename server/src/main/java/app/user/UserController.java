@@ -1,6 +1,7 @@
 package app.user;
 
 
+import app.config.annotations.UserRead;
 import app.user.service.UserProfileResponse;
 import app.user.service.UserSearchResponse;
 import app.user.service.UserService;
@@ -19,6 +20,7 @@ public class UserController {
 
     @GetMapping("/{userId}/profile")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    @UserRead
     public UserProfileResponse getUserProfile(@PathVariable Integer userId) {
         return userService.getUserProfile(userId);
     }

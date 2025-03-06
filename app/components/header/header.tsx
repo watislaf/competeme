@@ -3,13 +3,11 @@ import { AvatarSection } from "./AvatarSection";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { NavSheet } from "./NavSheet";
 import { buttonVariants } from "@/components/ui/button";
-import { useUserId } from "@/hooks/user/useUserId";
-import { useProfile } from "@/hooks/user/useProfile";
 import { Activity, BarChart3, Home, Trophy, Users } from "lucide-react";
+import { useUser } from "@/hooks/user/useUser";
 
 export const Header = () => {
-  const userId = useUserId();
-  const { profile } = useProfile(userId);
+  const { profile } = useUser();
 
   if (!profile) {
     return (

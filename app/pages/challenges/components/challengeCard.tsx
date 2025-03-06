@@ -14,6 +14,7 @@ import { Leaderboard } from "./leaderboard";
 import { Fireworks } from "./fireworks";
 import { ChallengeModificationPopover } from "./challengeModificationPopover";
 import { ProgressUpdatePopover } from "./progressUpdatePopover";
+import { useUserAccess } from "@/hooks/user/useUserAccess";
 
 interface ChallengeCardProps {
   challenge: ChallengeResponse;
@@ -29,6 +30,7 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
     challenge.isCompleted,
   );
   const cardRef = useRef<HTMLDivElement>(null);
+  const { canModifyChallenges } = useUserAccess(userId);
 
   useEffect(() => {
     if (!wasCompleted && challenge.isCompleted) {
@@ -58,10 +60,16 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
               {challenge.description || "No description available"}
             </CardDescription>
           </div>
-          <ChallengeModificationPopover userId={userId} challenge={challenge} />
+          {canModifyChallenges && (
+            <ChallengeModificationPopover
+              userId={userId}
+              challenge={challenge}
+            />
+          )}
         </div>
       </CardHeader>
       <CardContent>
+        <p className="mb-2 text-right">{`${challenge.totalProgress} / ${challenge.goal} ${challenge.unit}`}</p>
         <Progress
           value={Math.min(
             (challenge.totalProgress / (challenge.goal || 1)) * 100,
@@ -70,14 +78,15 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
         />
       </CardContent>
       <CardContent>
-        <ProgressUpdatePopover userId={userId} challenge={challenge} />
+        {canModifyChallenges && (
+          <ProgressUpdatePopover userId={userId} challenge={challenge} />
+        )}
       </CardContent>
       {challenge.leaderboard && challenge.leaderboard.length > 1 && (
         <CardFooter>
           <Leaderboard
             leaderboard={challenge.leaderboard}
             profiles={profiles}
-            userId={userId}
             isLoading={isLoading}
           />
         </CardFooter>

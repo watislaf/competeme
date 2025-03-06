@@ -4,6 +4,8 @@ import app.challenge.service.ChallengeModificationRequest;
 import app.challenge.service.ChallengeRequest;
 import app.challenge.service.ChallengeResponse;
 import app.challenge.service.ChallengeService;
+import app.config.annotations.UserRead;
+import app.config.annotations.UserWrite;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/users/{userId}/challenges")
 @RequiredArgsConstructor
+@UserWrite
 public class ChallengeController {
     private final ChallengeService challengeService;
 
@@ -25,6 +28,7 @@ public class ChallengeController {
 
     @GetMapping("/")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    @UserRead
     public List<ChallengeResponse> getChallenges(@PathVariable Integer userId) {
         return challengeService.getChallenges(userId);
     }

@@ -50,5 +50,11 @@ export interface UserProfileResponse {
      * @memberof UserProfileResponse
      */
     'dateJoined': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserProfileResponse
+     */
+    'role': string;
 }
 

@@ -6,6 +6,8 @@ import { Link } from "@remix-run/react";
 import { useFriends } from "../hooks/useFriends";
 import { useRemoveFriends } from "@/pages/friends/hooks/useRemoveFriends";
 import { UserProfileResponse } from "@/api";
+import { useUserAccess } from "@/hooks/user/useUserAccess";
+import { useUser } from "@/hooks/user/useUser";
 
 interface FriendsListProps {
   userId: number;
@@ -14,10 +16,13 @@ interface FriendsListProps {
 const FriendCard = ({
   friend,
   removeFriend,
+  userId,
 }: {
   friend: UserProfileResponse;
   removeFriend: { mutate: (friendId: number) => void; isPending: boolean };
+  userId: number;
 }) => {
+  const { canModifyFriends } = useUserAccess(userId);
   return (
     <div
       key={friend.id}
@@ -37,15 +42,17 @@ const FriendCard = ({
           </Link>
         </div>
       </div>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => removeFriend.mutate(friend.id)}
-        disabled={removeFriend.isPending}
-      >
-        <UserMinus className="mr-2 h-4 w-4" />
-        Remove
-      </Button>
+      {canModifyFriends && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => removeFriend.mutate(friend.id)}
+          disabled={removeFriend.isPending}
+        >
+          <UserMinus className="mr-2 h-4 w-4" />
+          Remove
+        </Button>
+      )}
     </div>
   );
 };
@@ -53,6 +60,7 @@ const FriendCard = ({
 export function FriendsList({ userId }: FriendsListProps) {
   const { friends, isLoading } = useFriends(userId);
   const removeFriend = useRemoveFriends(userId);
+  const { profile, isCurrentUser } = useUser(userId);
 
   if (isLoading) {
     return (
@@ -76,7 +84,9 @@ export function FriendsList({ userId }: FriendsListProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Friends</CardTitle>
+        <CardTitle>
+          {isCurrentUser ? "Your Friends" : `${profile?.name}'s Friends`}
+        </CardTitle>
       </CardHeader>
       <CardContent className="grid gap-4 md:grid-cols-2">
         {friends.map((friend, index) =>
@@ -85,6 +95,7 @@ export function FriendsList({ userId }: FriendsListProps) {
               key={friend.id}
               friend={friend}
               removeFriend={removeFriend}
+              userId={userId}
             />
           ) : (
             <div key={index}> friend is missing</div>
