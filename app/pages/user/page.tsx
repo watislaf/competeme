@@ -7,12 +7,16 @@ import moment from "moment";
 import { useStats } from "@/hooks/stats/useStats";
 import { useUserAccess } from "@/hooks/user/useUserAccess";
 import { useUser } from "@/hooks/user/useUser";
+import ImageUploader from "./components/ImageUploader";
+import { useUpdateProfileImage } from "./hooks/useUpdateProfileImage";
 
 export default function ProfilePage() {
   const { userId } = useParams();
   const { profile, isLoading, isForbidden } = useUser(Number(userId));
   const { stats } = useStats(Number(userId));
   const { canModifyProfile } = useUserAccess(Number(userId));
+
+  const { updateProfileImage } = useUpdateProfileImage(Number(userId));
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -23,6 +27,15 @@ export default function ProfilePage() {
   if (!profile) {
     return <div>User not found</div>;
   }
+
+  const handleImageUpload = async (base64Image: string) => {
+    try {
+      await updateProfileImage(base64Image);
+    } catch (error) {
+      console.error("Failed to upload image:", error);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-start mb-8">
@@ -34,14 +47,11 @@ export default function ProfilePage() {
             </AvatarFallback>
           </Avatar>
           <div>
-            {/*will change it if needed*/}
             <div className="flex items-center">
               <h1 className="text-2xl font-bold">{profile.name}</h1>
               {profile.role === "ADMIN" && <ShieldCheck className="ml-2" />}
             </div>
-            <p className="text-muted-foreground">{`Joined: ${moment(
-              profile.dateJoined,
-            ).format("DD MMM YYYY")}`}</p>
+            <p className="text-muted-foreground">{`Joined: ${moment(profile.dateJoined).format("DD MMM YYYY")}`}</p>
           </div>
         </div>
         <Link to="/settings">
@@ -94,12 +104,7 @@ export default function ProfilePage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
-                  <li>
-                    <Button variant="outline" className="w-full justify-start">
-                      <Edit className="mr-2 h-4 w-4" />
-                      Update Profile Picture
-                    </Button>
-                  </li>
+                  <ImageUploader onUpload={handleImageUpload} />
                   <li>
                     <Button variant="outline" className="w-full justify-start">
                       <User className="mr-2 h-4 w-4" />

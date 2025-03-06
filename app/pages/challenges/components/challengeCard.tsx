@@ -88,7 +88,6 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
             leaderboard={challenge.leaderboard}
             profiles={profiles}
             isLoading={isLoading}
-            userId={userId}
           />
         </CardFooter>
       )}

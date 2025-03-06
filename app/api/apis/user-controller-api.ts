@@ -108,6 +108,49 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {number} id 
+         * @param {string} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateProfileImage: async (id: number, body: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateProfileImage', 'id', id)
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('updateProfileImage', 'body', body)
+            const localVarPath = `/api/v1/users/{id}/image`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -142,6 +185,19 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['UserControllerApi.searchUsers']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @param {number} id 
+         * @param {string} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateProfileImage(id: number, body: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateProfileImage(id, body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserControllerApi.updateProfileImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -169,6 +225,16 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
          */
         searchUsers(query: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<UserSearchResponse>> {
             return localVarFp.searchUsers(query, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {string} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateProfileImage(id: number, body: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.updateProfileImage(id, body, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -200,6 +266,18 @@ export class UserControllerApi extends BaseAPI {
      */
     public searchUsers(query: string, options?: RawAxiosRequestConfig) {
         return UserControllerApiFp(this.configuration).searchUsers(query, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {string} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserControllerApi
+     */
+    public updateProfileImage(id: number, body: string, options?: RawAxiosRequestConfig) {
+        return UserControllerApiFp(this.configuration).updateProfileImage(id, body, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

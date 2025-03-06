@@ -8,16 +8,13 @@ interface LeaderboardProps {
   profiles: { id: number; name: string; imageUrl?: string }[] | undefined;
   isLoading: boolean;
   unit?: string;
-  userId: number;
 }
 
 export const Leaderboard: React.FC<LeaderboardProps> = ({
   leaderboard,
   profiles,
   isLoading,
-  userId,
 }) => {
-  const { isCurrentUser } = useUser(userId);
   return (
     <div className="w-full">
       <h4 className="font-semibold mb-2">Leaderboard</h4>
@@ -27,6 +24,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
         <ul className="space-y-2">
           {leaderboard?.map((entry, index) => {
             const profile = profiles?.find((p) => p.id === entry.userId);
+            const { isCurrentUser } = useUser(profile?.id);
 
             return (
               <li

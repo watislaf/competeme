@@ -8,11 +8,21 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React, { useState } from "react";
-import { ChallengeRequest } from "@/api";
+import type React from "react";
+import { useState, useEffect, useRef } from "react";
+import type { ChallengeRequest } from "@/api";
+import { FriendSearchDropdown } from "./FriendSearchDropdown";
 import { challengeSchema } from "../utils/challengeSchema";
 import { useAddChallengeMutation } from "../hooks/useAddChallengeMutation";
 import { useUser } from "@/hooks/user/useUser";
+import { useFriendQueries } from "../hooks/useFriendQueries";
+import lodash from "lodash";
+
+export interface FriendOption {
+  id: number;
+  name: string;
+  imageUrl?: string;
+}
 
 interface ChallengeFormProps {
   userId: number;
@@ -25,10 +35,52 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({ userId }) => {
     goal: "",
     unit: "",
   });
-  const [friendIds, setFriendIds] = useState<string>("");
-  const [invitedFriends, setInvitedFriends] = useState<string[]>([]);
+  const [invitedFriends, setInvitedFriends] = useState<FriendOption[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { profile, isCurrentUser } = useUser(userId);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  const debouncedSetSearchTerm = useRef(
+    lodash.debounce((term: string) => {
+      setDebouncedSearchTerm(term);
+    }, 300),
+  ).current;
+
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+  useEffect(() => {
+    debouncedSetSearchTerm(searchTerm);
+
+    return () => {
+      debouncedSetSearchTerm.cancel();
+    };
+  }, [searchTerm, debouncedSetSearchTerm]);
+
+  const { isLoading, loadError, friends } = useFriendQueries(userId);
+
+  const filteredFriends = friends.filter(
+    (friend) =>
+      friend.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) &&
+      !invitedFriends.some((invited) => invited.id === friend.id),
+  );
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setIsSearchOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const { mutate: addChallenge, error: addError } = useAddChallengeMutation();
 
@@ -46,15 +98,14 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({ userId }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleAddFriend = () => {
-    if (friendIds.trim()) {
-      setInvitedFriends((prev) => [...prev, friendIds.trim()]);
-      setFriendIds("");
-    }
+  const handleAddFriend = (friend: FriendOption) => {
+    setInvitedFriends((prev) => [...prev, friend]);
+    setIsSearchOpen(false);
+    setSearchTerm("");
   };
 
-  const handleRemoveFriend = (id: string) => {
-    setInvitedFriends((prev) => prev.filter((friend) => friend !== id));
+  const handleRemoveFriend = (id: number) => {
+    setInvitedFriends((prev) => prev.filter((friend) => friend.id !== id));
   };
 
   const handleSubmit = () => {
@@ -62,7 +113,7 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({ userId }) => {
     const validationData = {
       ...formData,
       goal: parsedGoal,
-      participants: invitedFriends.map(Number),
+      participants: invitedFriends.map((friend) => friend.id),
     };
 
     const result = challengeSchema.safeParse(validationData);
@@ -79,7 +130,7 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({ userId }) => {
 
     setErrors({});
     handleAddChallenge(validationData);
-    setFormData({ title: "", description: "", goal: "", unit: "" }); // !!!!!!!!
+    setFormData({ title: "", description: "", goal: "", unit: "" });
     setInvitedFriends([]);
   };
 
@@ -144,37 +195,53 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({ userId }) => {
               {errors.unit && <p className="text-red-500">{errors.unit}</p>}
             </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="friendIds">Invite Friends (Enter Friend ID)</Label>
-            <div className="flex space-x-2">
+          <div className="space-y-2" ref={searchRef}>
+            <Label>Invite Friends</Label>
+            <div className="relative">
               <Input
-                id="friendIds"
-                name="friendIds"
-                value={friendIds}
-                onChange={(e) => setFriendIds(e.target.value)}
+                placeholder="Search for friends..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onFocus={() => setIsSearchOpen(true)}
+                onClick={() => setIsSearchOpen(true)}
+                disabled={isLoading}
               />
-              <Button type="button" onClick={handleAddFriend}>
-                Add
-              </Button>
+
+              {isLoading && (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              )}
+
+              <FriendSearchDropdown
+                isSearchOpen={isSearchOpen}
+                isLoading={isLoading}
+                loadError={loadError}
+                filteredFriends={filteredFriends}
+                handleAddFriend={handleAddFriend}
+              />
             </div>
             {invitedFriends.length > 0 && (
-              <ul className="mt-2 space-y-1">
-                {invitedFriends.map((friend) => (
-                  <li
-                    key={friend}
-                    className="flex justify-between items-center"
-                  >
-                    <span>{friend}</span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={() => handleRemoveFriend(friend)}
+              <div className="mt-2">
+                <h4 className="text-sm font-medium mb-2">Invited Friends:</h4>
+                <ul className="space-y-1">
+                  {invitedFriends.map((friend) => (
+                    <li
+                      key={friend.id}
+                      className="flex justify-between items-center p-2 bg-secondary/30 rounded-md"
                     >
-                      Remove
-                    </Button>
-                  </li>
-                ))}
-              </ul>
+                      <span>{friend.name}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => handleRemoveFriend(friend.id)}
+                      >
+                        Remove
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
           <Button onClick={handleSubmit} className="w-full">

@@ -30,4 +30,10 @@ public class UserController {
     public List<UserSearchResponse> searchUsers(@RequestParam String query) {
         return userService.searchUsersSorted(query);
     }
+
+    @PutMapping("/{id}/image")
+    @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    public void updateProfileImage(@PathVariable Integer id, @RequestBody String imageUrl) {
+        userService.updateProfileImage(id, imageUrl);
+    }
 }
