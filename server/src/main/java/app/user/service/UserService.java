@@ -1,7 +1,6 @@
 package app.user.service;
 
 import app.friendship.entity.FriendshipRepository;
-import app.friendship.entity.FriendshipStatus;
 import app.user.entity.User;
 import app.user.entity.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +31,7 @@ public class UserService {
             .email(user.getEmail())
             .imageUrl(user.getImageUrl())
             .dateJoined(user.getDateJoined())
+            .role(user.getRole().toString())
             .build();
     }
 

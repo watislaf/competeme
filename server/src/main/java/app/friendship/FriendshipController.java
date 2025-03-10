@@ -1,5 +1,7 @@
 package app.friendship;
 
+import app.config.annotations.UserRead;
+import app.config.annotations.UserWrite;
 import app.friendship.entity.Friendship;
 import app.friendship.service.FriendshipRequest;
 import app.friendship.service.FriendshipService;
@@ -13,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/users/{userId}/friends")
 @RequiredArgsConstructor
+@UserWrite
 public class FriendshipController {
     private final FriendshipService friendshipService;
 
@@ -48,6 +51,7 @@ public class FriendshipController {
 
     @GetMapping("/")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    @UserRead
     public List<Integer> getFriends(@PathVariable Integer userId) {
         return friendshipService.getFriends(userId);
     }
@@ -75,5 +79,4 @@ public class FriendshipController {
     public boolean hasPendingRequest(@PathVariable Integer userId, @PathVariable Integer receiverId) {
         return friendshipService.hasPendingRequest(userId, receiverId);
     }
-
 }

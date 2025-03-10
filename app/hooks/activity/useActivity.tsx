@@ -1,4 +1,5 @@
 import { apis } from "@/api/initializeApi";
+import { isAccessDenied } from "@/errors/AccessDenied";
 import { useQuery } from "@tanstack/react-query";
 
 export const useActivity = (userId: number) => {
@@ -15,5 +16,7 @@ export const useActivity = (userId: number) => {
   return {
     isLoading,
     activities: error ? undefined : data,
+    isForbidden: isAccessDenied(error),
+    error,
   };
 };
