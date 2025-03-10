@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link, useParams } from "@remix-run/react";
 import {
   Award,
   BarChart2,
@@ -18,16 +18,18 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useUserId } from "@/hooks/user/useUserId";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { useProfile } from "@/hooks/user/useProfile";
+import { useProfiles } from "@/hooks/user/useProfiles";
 import { useStats } from "@/hooks/stats/useStats";
 import { apis } from "@/api/initializeApi";
 
 export default function HomePage() {
-  const userId = useUserId();
-  const { profile, isLoading: isLoadingProfile } = useProfile(userId);
+  const { userId } = useParams();
+  const { profiles, isLoading: isLoadingProfile } = useProfiles([
+    Number(userId),
+  ]);
+  const profile = profiles?.[0];
   const { stats, isLoading: isLoadingStats } = useStats(Number(userId));
 
   const [isEditing, setIsEditing] = useState(false);
