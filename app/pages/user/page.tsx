@@ -1,19 +1,21 @@
 import { Link, useParams } from "@remix-run/react";
-import { Bell, Edit, Lock, Settings, User } from "lucide-react";
+import { Bell, Edit, Lock, Settings, ShieldCheck, User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useProfile } from "@/hooks/user/useProfile";
 import moment from "moment";
 import { useStats } from "@/hooks/stats/useStats";
+import { useUserAccess } from "@/hooks/user/useUserAccess";
+import { useUser } from "@/hooks/user/useUser";
 import ImageUploader from "./components/ImageUploader";
 import { useUpdateProfileImage } from "./hooks/useUpdateProfileImage";
 import { useState, useEffect } from "react";
 
 export default function ProfilePage() {
   const { userId } = useParams();
-  const { profile, isLoading } = useProfile(Number(userId));
+  const { profile, isLoading, isForbidden } = useUser(Number(userId));
   const { stats } = useStats(Number(userId));
+  const { canModifyProfile } = useUserAccess(Number(userId));
 
   const { updateProfileImage } = useUpdateProfileImage(Number(userId));
 
@@ -30,6 +32,8 @@ export default function ProfilePage() {
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  if (isForbidden) return <p>Access Denied</p>;
 
   if (!profile) {
     return <div>User not found</div>;
@@ -60,7 +64,10 @@ export default function ProfilePage() {
             </AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="text-2xl font-bold">{profile.name}</h1>
+            <div className="flex items-center">
+              <h1 className="text-2xl font-bold">{profile.name}</h1>
+              {profile.role === "ADMIN" && <ShieldCheck className="ml-2" />}
+            </div>
             <p className="text-muted-foreground">{`Joined: ${moment(profile.dateJoined).format("DD MMM YYYY")}`}</p>
           </div>
         </div>
@@ -106,56 +113,60 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Edit Preferences</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              <ImageUploader onUpload={handleImageUpload} />
-              <li>
-                <Button variant="outline" className="w-full justify-start">
-                  <User className="mr-2 h-4 w-4" />
-                  Change Username
-                </Button>
-              </li>
-              <li>
-                <Button variant="outline" className="w-full justify-start">
-                  <Edit className="mr-2 h-4 w-4" />
-                  Manage Activities
-                </Button>
-              </li>
-            </ul>
-          </CardContent>
-        </Card>
+        {canModifyProfile && (
+          <>
+            <Card>
+              <CardHeader>
+                <CardTitle>Edit Preferences</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  <ImageUploader onUpload={handleImageUpload} />
+                  <li>
+                    <Button variant="outline" className="w-full justify-start">
+                      <User className="mr-2 h-4 w-4" />
+                      Change Username
+                    </Button>
+                  </li>
+                  <li>
+                    <Button variant="outline" className="w-full justify-start">
+                      <Edit className="mr-2 h-4 w-4" />
+                      Manage Activities
+                    </Button>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Settings</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              <li>
-                <Button variant="outline" className="w-full justify-start">
-                  <Bell className="mr-2 h-4 w-4" />
-                  Notification Preferences
-                </Button>
-              </li>
-              <li>
-                <Button variant="outline" className="w-full justify-start">
-                  <Lock className="mr-2 h-4 w-4" />
-                  Privacy Settings
-                </Button>
-              </li>
-              <li>
-                <Button variant="outline" className="w-full justify-start">
-                  <User className="mr-2 h-4 w-4" />
-                  Account Details
-                </Button>
-              </li>
-            </ul>
-          </CardContent>
-        </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Settings</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  <li>
+                    <Button variant="outline" className="w-full justify-start">
+                      <Bell className="mr-2 h-4 w-4" />
+                      Notification Preferences
+                    </Button>
+                  </li>
+                  <li>
+                    <Button variant="outline" className="w-full justify-start">
+                      <Lock className="mr-2 h-4 w-4" />
+                      Privacy Settings
+                    </Button>
+                  </li>
+                  <li>
+                    <Button variant="outline" className="w-full justify-start">
+                      <User className="mr-2 h-4 w-4" />
+                      Account Details
+                    </Button>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
     </div>
   );

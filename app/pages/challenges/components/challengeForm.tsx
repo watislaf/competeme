@@ -14,6 +14,7 @@ import type { ChallengeRequest } from "@/api";
 import { FriendSearchDropdown } from "./FriendSearchDropdown";
 import { challengeSchema } from "../utils/challengeSchema";
 import { useAddChallengeMutation } from "../hooks/useAddChallengeMutation";
+import { useUser } from "@/hooks/user/useUser";
 import { useFriendQueries } from "../hooks/useFriendQueries";
 import lodash from "lodash";
 
@@ -36,6 +37,7 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({ userId }) => {
   });
   const [invitedFriends, setInvitedFriends] = useState<FriendOption[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const { profile, isCurrentUser } = useUser(userId);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const searchRef = useRef<HTMLDivElement>(null);
@@ -137,7 +139,9 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({ userId }) => {
       <CardHeader>
         <CardTitle>Create New Challenge</CardTitle>
         <CardDescription>
-          Set up a new challenge for yourself and others!
+          {isCurrentUser
+            ? "Set up a new challenge for yourself and others!"
+            : `Set up a new challenge for ${profile?.name} and others!`}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -217,7 +221,6 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({ userId }) => {
                 handleAddFriend={handleAddFriend}
               />
             </div>
-
             {invitedFriends.length > 0 && (
               <div className="mt-2">
                 <h4 className="text-sm font-medium mb-2">Invited Friends:</h4>

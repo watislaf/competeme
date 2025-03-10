@@ -1,5 +1,6 @@
 package app.stats;
 
+import app.config.annotations.UserRead;
 import app.stats.service.StatsResponse;
 import app.stats.service.StatsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +19,7 @@ public class StatsController {
 
     @GetMapping("/")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
+    @UserRead
     public StatsResponse getStats(@PathVariable Integer userId) {
         return statsService.getStats(userId);
     }
