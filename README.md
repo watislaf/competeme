@@ -1,5 +1,4 @@
 # Welcome to Compete me app
-
 ---
 
 ### Run the Spring Server
