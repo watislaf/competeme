@@ -15,7 +15,7 @@ export const Header = () => {
         <div className="flex items-center justify-between px-4 py-2 md:py-4">
           <div className="flex items-center space-x-4">
             <NavSheet />
-            <Link className="flex items-center space-x-2" to="/public">
+            <Link className="flex items-center space-x-2" to="/">
               <span className="text-lg font-bold">competeme</span>
             </Link>
           </div>
@@ -64,7 +64,7 @@ export const Header = () => {
       <div className="flex items-center justify-between px-4 py-2 md:py-4">
         <div className="flex items-center space-x-4">
           <NavSheet />
-          <Link className="flex items-center space-x-2" to="/public">
+          <Link className="flex items-center space-x-2" to="/">
             <span className="text-lg font-bold">competeme</span>
           </Link>
         </div>
