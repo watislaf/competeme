@@ -16,9 +16,13 @@ jobs:
           java-version: '23'
           distribution: 'temurin'
 
+      - name: Init gradle wrapper
+        run: gradle wrapper
+        working-directory: ./server
+
       - name: Grant execute permission for gradlew
         run: chmod +x ./server/gradlew
 
       - name: Build with Gradle
-        run: ./server/gradlew build
+        run: ./gradlew build
         working-directory: ./server
