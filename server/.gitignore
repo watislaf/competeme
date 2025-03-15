@@ -4,10 +4,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-# Gradle specific
-.gradle/
-build/
-
 
 ### STS ###
 .apt_generated

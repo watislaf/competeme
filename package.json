@@ -10,7 +10,7 @@
     "lintcheck": "eslint app"
   },
   "dependencies": {
-    "@openapitools/openapi-generator-cli": "^2.15.3",
+    "@openapitools/openapi-generator-cli": "^2.16.1",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-dropdown-menu": "2.0.6",
@@ -75,5 +75,10 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "overrides": {
+    "axios": "1.8.2",
+    "cookie": "0.7.0",
+    "undici": "6.21.1"
   }
 }
