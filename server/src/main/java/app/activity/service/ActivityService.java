@@ -5,6 +5,7 @@ import app.activity.entity.ActivityRepository;
 import app.user.entity.User;
 import app.user.entity.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -19,6 +20,7 @@ public class ActivityService {
     private final ActivityRepository activityRepository;
     private final UserRepository userRepository;
 
+    @CacheEvict(value = "statsCache", key = "#userId")
     public void addActivity(Integer userId, ActivityRequest activityRequest) {
         User user = findUser(userId);
 
@@ -33,7 +35,8 @@ public class ActivityService {
         activityRepository.save(activity);
     }
 
-    public void addProgress(Long activityId, Long progressInMinutes) {
+    @CacheEvict(value = "statsCache", key = "#userId")
+    public void addProgress(Long activityId, Long progressInMinutes, Integer userId) {
         Activity activity = findActivity(activityId);
 
         Duration progress = Duration.ofMinutes(progressInMinutes);
@@ -44,7 +47,8 @@ public class ActivityService {
         activityRepository.save(activity);
     }
 
-    public void deleteActivity(Long activityId) {
+    @CacheEvict(value = "statsCache", key = "#userId")
+    public void deleteActivity(Long activityId, Integer userId) {
         Activity activity = findActivity(activityId);
         activityRepository.delete(activity);
     }

@@ -3,6 +3,7 @@ package app.stats.service;
 import app.activity.entity.Activity;
 import app.activity.entity.ActivityRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -21,6 +22,7 @@ public class StatsService {
     private final ActivityRepository activityRepository;
     private final TimeFormatter timeFormatter;
 
+    @Cacheable(value = "statsCache", key = "#userId")
     public StatsResponse getStats(Integer userId) {
         List<Activity> userActivities = activityRepository.findByUserId(userId);
 
