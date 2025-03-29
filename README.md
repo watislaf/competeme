@@ -20,7 +20,7 @@
    ```
 
 4. **Run the Server**  
-   Start the server using the following command:
+   Start the server using the following  command:
    ```bash
    ./gradlew bootRun
    ```
