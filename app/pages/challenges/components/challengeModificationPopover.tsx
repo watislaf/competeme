@@ -105,7 +105,7 @@ export const ChallengeModificationPopover: React.FC<
 
   return (
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger asChild>
         <Button className="p-2 rounded-full">
           <Pencil size={20} />
         </Button>

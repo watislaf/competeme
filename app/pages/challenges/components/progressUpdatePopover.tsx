@@ -23,7 +23,7 @@ export const ProgressUpdatePopover: React.FC<ProgressUpdatePopoverProps> = ({
 
   return (
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger asChild>
         <Button>Update Progress</Button>
       </PopoverTrigger>
       <PopoverContent>
