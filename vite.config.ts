@@ -11,7 +11,6 @@ export default defineConfig({
     envOnly(),
     tsconfigPaths(),
     remix({
-      presets: [vercelPreset()],
       future: {
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
