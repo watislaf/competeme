@@ -4,6 +4,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Gradle specific
+.gradle/
+build/
+
 
 ### STS ###
 .apt_generated
@@ -32,3 +36,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Vercel ###
+.vercel/remix-build-result.json
