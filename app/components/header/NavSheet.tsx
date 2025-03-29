@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Link } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
 import { Activity, BarChart3, Home, Trophy, Users } from "lucide-react";
 import { useUser } from "@/hooks/user/useUser";
 
@@ -9,7 +9,8 @@ export const NavSheet = () => {
   const [open, setOpen] = React.useState(false);
   const closeSheet = () => setOpen(false);
   const { profile } = useUser();
-
+  const location = useLocation();
+  if (!location.pathname.startsWith("/user")) return null;
   const navLinks = [
     {
       name: "Home",

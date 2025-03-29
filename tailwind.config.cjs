@@ -78,11 +78,16 @@ module.exports = {
           "40%": { transform: "translateX(0) scaleX(0.4)" },
           "100%": { transform: "translateX(100%) scaleX(0.5)" },
         },
+        "fade-up": {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         progress: "progress 1s infinite linear",
+        "fade-up": "fade-up 1s ease-out",
       },
       transformOrigin: {
         "left-right": "0% 50%",
