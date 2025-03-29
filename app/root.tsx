@@ -1,3 +1,4 @@
+import { captureRemixErrorBoundaryError, withSentry } from "@sentry/remix";
 import {
   isRouteErrorResponse,
   Links,
@@ -83,13 +84,15 @@ function App({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function Root() {
+function Root() {
   return (
     <App>
       <Outlet />
     </App>
   );
 }
+
+export default withSentry(Root);
 
 export function ErrorBoundary() {
   const error = useRouteError();
@@ -105,6 +108,8 @@ export function ErrorBoundary() {
   } else {
     console.error(error);
   }
+
+  captureRemixErrorBoundaryError(error);
 
   return (
     <App>
