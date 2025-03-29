@@ -15,11 +15,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final FriendshipRepository friendshipRepository;
 
     public User getUserById(Integer userId) {
         return userRepository.findById(userId)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found with receiverId: " + userId));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with receiverId: " + userId));
     }
 
     public UserProfileResponse getUserProfile(Integer userId) {
@@ -38,8 +37,8 @@ public class UserService {
     public List<UserSearchResponse> searchUsersSorted(String keyword) {
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
         return userRepository.findByNameContainingIgnoreCase(keyword, sort).stream()
-            .map(user -> new UserSearchResponse(user.getId(), user.getName(), user.getImageUrl()))
-            .collect(Collectors.toList());
+                .map(user -> new UserSearchResponse(user.getId(), user.getName(), user.getImageUrl()))
+                .collect(Collectors.toList());
     }
 
     public void updateProfileImage(Integer userId, String imageUrl) {
@@ -48,5 +47,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-
+    public void updateProfileName (Integer userId, String name) {
+        User user = getUserById(userId);
+        user.setName(name);
+        userRepository.save(user);
+    }
 }

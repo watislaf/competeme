@@ -23,13 +23,13 @@ public class ActivityController {
     @PostMapping("/{activityId}/progress")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
     public void addProgress(@PathVariable Integer userId, @PathVariable Long activityId, Long progressInMinutes) {
-        activityService.addProgress(activityId, progressInMinutes);
+        activityService.addProgress(activityId, progressInMinutes, userId);
     }
 
     @DeleteMapping("/{activityId}")
     @Operation(security = {@SecurityRequirement(name = "JwtAuth")})
     public void deleteActivity(@PathVariable Integer userId, @PathVariable Long activityId) {
-        activityService.deleteActivity(activityId);
+        activityService.deleteActivity(activityId, userId);
     }
 
     @GetMapping("/")
