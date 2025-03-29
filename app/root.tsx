@@ -24,6 +24,7 @@ import {
 } from "@tanstack/react-query";
 import { isUnauthorized } from "@/errors/Unauthorized";
 import { useMemo } from "react";
+import { LinksFunction } from "@remix-run/node";
 
 function App({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
@@ -115,3 +116,12 @@ export function ErrorBoundary() {
     </App>
   );
 }
+
+export const links: LinksFunction = () => {
+  return [
+    {
+      rel: "icon",
+      href: "/favicon.ico",
+    },
+  ];
+};
