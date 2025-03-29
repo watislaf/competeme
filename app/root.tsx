@@ -16,7 +16,6 @@ import {
 } from "@/components/theme-switcher";
 
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/remix";
 import {
   MutationCache,
   QueryCache,
@@ -77,7 +76,6 @@ function App({ children }: { children: React.ReactNode }) {
           {children}
           <ScrollRestoration />
           <Scripts />
-          <Analytics />
         </QueryClientProvider>
       </body>
     </ThemeSwitcherSafeHTML>

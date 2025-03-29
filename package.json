@@ -7,7 +7,8 @@
     "build": "remix vite:build",
     "dev": "remix vite:dev",
     "typecheck": "tsc --noEmit",
-    "lintcheck": "eslint app"
+    "lintcheck": "eslint app",
+    "start": "remix-serve build/server/index.js"
   },
   "dependencies": {
     "@openapitools/openapi-generator-cli": "^2.15.3",
@@ -30,8 +31,7 @@
     "@sentry/remix": "^9.10.1",
     "@sentry/vite-plugin": "^3.2.4",
     "@tanstack/react-query": "^5.61.3",
-    "@vercel/analytics": "^1.4.0",
-    "@vercel/remix": "^2.14.0",
+    "axios": "^1.8.4",
     "chroma-js": "^3.1.2",
     "class-variance-authority": "0.7.0",
     "clsx": "2.1.0",
