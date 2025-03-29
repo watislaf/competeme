@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { vitePlugin as remix } from "@remix-run/dev";
 import { defineConfig } from "vite";
 import envOnly from "vite-env-only";
@@ -9,7 +10,6 @@ export default defineConfig({
   plugins: [
     envOnly(),
     tsconfigPaths(),
-
     remix({
       presets: [vercelPreset()],
       future: {
@@ -18,5 +18,17 @@ export default defineConfig({
         v3_throwAbortReason: true,
       },
     }),
+    sentryVitePlugin({
+      org: "competeme-0j",
+      project: "competeme",
+    }),
+    sentryVitePlugin({
+      org: "competeme-0j",
+      project: "competeme",
+    }),
   ],
+
+  build: {
+    sourcemap: true,
+  },
 });
