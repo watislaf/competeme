@@ -1,5 +1,37 @@
+version: '3.8'
+
 services:
   web:
     build: .
     ports:
       - "3000:3000"
+    depends_on:
+      - server
+
+  server:
+    build: ./server
+    container_name: my_server
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: jdbc:postgresql://database:5432/mydatabase
+      DATABASE_USER: myuser
+      DATABASE_PASSWORD: mypassword
+    ports:
+      - "8080:8080"
+
+  database:
+    image: postgres:16
+    container_name: my_database
+    restart: always
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
