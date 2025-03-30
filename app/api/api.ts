@@ -14,10 +14,13 @@
 
 
 
-export * from './apis/activity-controller-api';
-export * from './apis/authentication-controller-api';
-export * from './apis/challenge-controller-api';
+export * from './apis/activities-api';
+export * from './apis/authentication-api';
+export * from './apis/challenges-api';
+export * from './apis/friendship-management-api';
+export * from './apis/user-management-api';
+export * from './apis/user-statistics-api';
+export * from './apis/user-statistics-api';
 export * from './apis/friendship-controller-api';
 export * from './apis/stats-controller-api';
-export * from './apis/user-controller-api';
 

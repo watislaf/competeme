@@ -93,8 +93,8 @@ public class JwtService {
         User user = extractUser(authentication);
         return switch (permission) {
             case "ADMIN_ACCESS" -> isAdmin(user);
-            case "USER_READ" -> areFriends(user, userId) || isCurrentUser(user, userId) || isAdmin(user);
-            case "USER_WRITE" -> isCurrentUser(user, userId) || isAdmin(user);
+            case "USER_READ_ACCESS" -> areFriends(user, userId) || isCurrentUser(user, userId) || isAdmin(user);
+            case "USER_MODIFICATION_ACCESS" -> isCurrentUser(user, userId) || isAdmin(user);
             default -> false;
         };
     }

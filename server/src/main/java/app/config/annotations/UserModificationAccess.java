@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE_USE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("@jwtService.hasAccess(authentication, #userId, 'USER_WRITE')")
-public @interface UserWrite {
+@PreAuthorize("@jwtService.hasAccess(authentication, #userId, 'USER_MODIFICATION_ACCESS')")
+public @interface UserModificationAccess {
 }
