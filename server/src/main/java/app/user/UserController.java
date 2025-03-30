@@ -1,6 +1,6 @@
 package app.user;
 
-import app.config.annotations.UserRead;
+import app.config.annotations.UserReadAccess;
 import app.user.service.UserProfileResponse;
 import app.user.service.UserSearchResponse;
 import app.user.service.UserService;
@@ -32,7 +32,7 @@ public class UserController {
         @ApiResponse(responseCode = "401", description = "Unauthorized access"),
         @ApiResponse(responseCode = "403", description = "Access denied")
     })
-    @UserRead
+    @UserReadAccess
     public UserProfileResponse getUserProfile(@PathVariable Integer userId) {
         return userService.getUserProfile(userId);
     }

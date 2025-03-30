@@ -1,7 +1,7 @@
 package app.friendship;
 
-import app.config.annotations.UserRead;
-import app.config.annotations.UserWrite;
+import app.config.annotations.UserModificationAccess;
+import app.config.annotations.UserReadAccess;
 import app.friendship.entity.Friendship;
 import app.friendship.service.FriendshipRequest;
 import app.friendship.service.FriendshipService;
@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/users/{userId}/friends")
 @RequiredArgsConstructor
-@UserWrite
+@UserModificationAccess
 @Tag(name = "Friendship Management", description = "Endpoints for managing user friendships and friend requests")
 public class FriendshipController {
     private final FriendshipService friendshipService;
@@ -104,7 +104,7 @@ public class FriendshipController {
         description = "Retrieves list of user IDs who are friends with the current user",
         security = {@SecurityRequirement(name = "JwtAuth")}
     )
-    @UserRead
+    @UserReadAccess
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Friends list retrieved successfully"),
         @ApiResponse(responseCode = "401", description = "Unauthorized access"),

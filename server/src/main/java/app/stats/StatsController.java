@@ -1,6 +1,6 @@
 package app.stats;
 
-import app.config.annotations.UserRead;
+import app.config.annotations.UserReadAccess;
 import app.stats.service.StatsResponse;
 import app.stats.service.StatsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +32,7 @@ public class StatsController {
         @ApiResponse(responseCode = "401", description = "Unauthorized access"),
         @ApiResponse(responseCode = "403", description = "Access denied")
     })
-    @UserRead
+    @UserReadAccess
     public StatsResponse getStats(@PathVariable Integer userId) {
         return statsService.getStats(userId);
     }

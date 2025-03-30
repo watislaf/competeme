@@ -1,7 +1,7 @@
 package app.activity.service;
 
-import app.config.annotations.UserRead;
-import app.config.annotations.UserWrite;
+import app.config.annotations.UserModificationAccess;
+import app.config.annotations.UserReadAccess;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/users/{userId}/activities")
 @RequiredArgsConstructor
-@UserWrite
+@UserModificationAccess
 @Tag(name = "Activities", description = "Endpoints for managing user activities and progress tracking")
 public class ActivityController {
     private final ActivityService activityService;
@@ -69,7 +69,7 @@ public class ActivityController {
         description = "Retrieves all activities for the specified user",
         security = {@SecurityRequirement(name = "JwtAuth")}
     )
-    @UserRead
+    @UserReadAccess
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Activities successfully retrieved"),
         @ApiResponse(responseCode = "401", description = "Unauthorized access"),

@@ -4,8 +4,8 @@ import app.challenge.service.ChallengeModificationRequest;
 import app.challenge.service.ChallengeRequest;
 import app.challenge.service.ChallengeResponse;
 import app.challenge.service.ChallengeService;
-import app.config.annotations.UserRead;
-import app.config.annotations.UserWrite;
+import app.config.annotations.UserModificationAccess;
+import app.config.annotations.UserReadAccess;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/users/{userId}/challenges")
 @RequiredArgsConstructor
-@UserWrite
+@UserModificationAccess
 @Tag(name = "Challenges", description = "Endpoints for managing user challenges and tracking progress")
 public class ChallengeController {
     private final ChallengeService challengeService;
@@ -45,7 +45,7 @@ public class ChallengeController {
         description = "Retrieves all challenges for the specified user",
         security = {@SecurityRequirement(name = "JwtAuth")}
     )
-    @UserRead
+    @UserReadAccess
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Challenges retrieved successfully"),
         @ApiResponse(responseCode = "401", description = "Unauthorized access"),
