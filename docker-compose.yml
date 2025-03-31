@@ -10,24 +10,24 @@ services:
 
   server:
     build: ./server
-    container_name: my_server
+    container_name: competeme_server
     depends_on:
       - database
     environment:
-      DATABASE_URL: jdbc:postgresql://database:5432/mydatabase
-      DATABASE_USER: myuser
-      DATABASE_PASSWORD: mypassword
+      DATABASE_URL: jdbc:postgresql://database:5432/psqlDbName
+      DATABASE_USER: psqlUser
+      DATABASE_PASSWORD: psqlPassword
     ports:
       - "8080:8080"
 
   database:
     image: postgres:16
-    container_name: my_database
+    container_name: psqlDbName
     restart: always
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydatabase
+      POSTGRES_USER: psqlUser
+      POSTGRES_PASSWORD: psqlPassword
+      POSTGRES_DB: psqlDbName
     ports:
       - "5432:5432"
     volumes:
