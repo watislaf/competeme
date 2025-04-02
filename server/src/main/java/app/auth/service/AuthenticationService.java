@@ -2,6 +2,7 @@ package app.auth.service;
 
 import app.config.JwtService;
 import app.excpetions.Unauthorized;
+import app.excpetions.UserAlreadyExists;
 import app.user.entity.Role;
 import app.user.entity.User;
 import app.user.entity.UserRepository;
@@ -9,6 +10,7 @@ import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,11 +29,11 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegistrationRequest request) {
         if (repository.findByName(request.username()).isPresent()) {
-            throw new IllegalArgumentException("Username is already in use");
+            throw new UserAlreadyExists("Username is already in use");
         }
 
         if (repository.findByEmail(request.email()).isPresent()) {
-            throw new IllegalArgumentException("User with this email already exists");
+            throw new UserAlreadyExists("User with this email already exists");
         }
 
         var user = User.builder()
@@ -56,12 +58,16 @@ public class AuthenticationService {
         var user = repository.findByEmail(request.email())
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                request.email(),
-                request.password()
-            )
-        );
+        try {
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    request.email(),
+                    request.password()
+                )
+            );
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException("Invalid email or password");
+        }
 
         log.info("Authenticating user: {}", user.getEmail());
 

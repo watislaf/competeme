@@ -5,9 +5,6 @@ import { ChallengeCard } from "./components/challengeCard";
 import { useParams } from "@remix-run/react";
 import { useUserAccess } from "@/hooks/user/useUserAccess";
 import { useUser } from "@/hooks/user/useUser";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-const queryClient = new QueryClient();
 
 const ChallengesPage: React.FC = () => {
   const { userId } = useParams();
@@ -21,11 +18,7 @@ const ChallengesPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Challenges</h1>
-      {canModifyChallenges && (
-        <QueryClientProvider client={queryClient}>
-          <ChallengeForm userId={Number(userId)} />
-        </QueryClientProvider>
-      )}
+      {canModifyChallenges && <ChallengeForm userId={Number(userId)} />}
       <h2 className="text-xl font-bold mt-8 mb-4">
         {isCurrentUser ? "Your Challenges" : `${profile?.name}'s Challenges`}
       </h2>

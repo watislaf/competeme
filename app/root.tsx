@@ -16,7 +16,6 @@ import {
 } from "@/components/theme-switcher";
 
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/remix";
 import {
   MutationCache,
   QueryCache,
@@ -25,6 +24,7 @@ import {
 } from "@tanstack/react-query";
 import { isUnauthorized } from "@/errors/Unauthorized";
 import { useMemo } from "react";
+import { LinksFunction } from "@remix-run/node";
 
 function App({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
@@ -77,7 +77,6 @@ function App({ children }: { children: React.ReactNode }) {
           {children}
           <ScrollRestoration />
           <Scripts />
-          <Analytics />
         </QueryClientProvider>
       </body>
     </ThemeSwitcherSafeHTML>
@@ -120,3 +119,12 @@ export function ErrorBoundary() {
     </App>
   );
 }
+
+export const links: LinksFunction = () => {
+  return [
+    {
+      rel: "icon",
+      href: "/favicon.ico",
+    },
+  ];
+};

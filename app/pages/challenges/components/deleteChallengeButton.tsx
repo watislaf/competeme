@@ -25,7 +25,7 @@ export const DeleteChallengeButton: React.FC<DeleteChallengeButtonProps> = ({
 
   return (
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger asChild>
         <button className="border-2 border-red-500 text-red-500 ml-4 px-4 py-1 rounded-lg transition-all duration-200 hover:bg-red-500 hover:text-white">
           Delete Challenge
         </button>
