@@ -1,0 +1,214 @@
+{
+  "buildManifest": {
+    "serverBundles": {
+      "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0": {
+        "id": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+        "file": "build/server/nodejs-eyJydW50aW1lIjoibm9kZWpzIn0/index.js",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    },
+    "routeIdToServerBundleId": {
+      "routes/users.$userId.challenges": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/users.$userId.activity": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/users.$userId.friends": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/users.$userId.profile": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/users.$userId.stats": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/users.$userId.home": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/healthcheck": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/friends": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_index": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/login": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0"
+    },
+    "routes": {
+      "root": {
+        "path": "",
+        "id": "root",
+        "file": "app/root.tsx",
+        "config": {}
+      },
+      "routes/users.$userId.challenges": {
+        "file": "app/routes/users.$userId.challenges.tsx",
+        "id": "routes/users.$userId.challenges",
+        "path": "users/:userId/challenges",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/users.$userId.activity": {
+        "file": "app/routes/users.$userId.activity.tsx",
+        "id": "routes/users.$userId.activity",
+        "path": "users/:userId/activity",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/users.$userId.friends": {
+        "file": "app/routes/users.$userId.friends.tsx",
+        "id": "routes/users.$userId.friends",
+        "path": "users/:userId/friends",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/users.$userId.profile": {
+        "file": "app/routes/users.$userId.profile.tsx",
+        "id": "routes/users.$userId.profile",
+        "path": "users/:userId/profile",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/users.$userId.stats": {
+        "file": "app/routes/users.$userId.stats.tsx",
+        "id": "routes/users.$userId.stats",
+        "path": "users/:userId/stats",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/users.$userId.home": {
+        "file": "app/routes/users.$userId.home.tsx",
+        "id": "routes/users.$userId.home",
+        "path": "users/:userId/home",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/healthcheck": {
+        "file": "app/routes/healthcheck.ts",
+        "id": "routes/healthcheck",
+        "path": "healthcheck",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/friends": {
+        "file": "app/routes/friends.tsx",
+        "id": "routes/friends",
+        "path": "friends",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/_index": {
+        "file": "app/routes/_index.tsx",
+        "id": "routes/_index",
+        "index": true,
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/login": {
+        "file": "app/routes/login.tsx",
+        "id": "routes/login",
+        "path": "login",
+        "parentId": "root",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    }
+  },
+  "remixConfig": {
+    "appDirectory": "C:\\Users\\kacpe\\Desktop\\competeme-new-jc\\app",
+    "basename": "/",
+    "buildDirectory": "C:\\Users\\kacpe\\Desktop\\competeme-new-jc\\build",
+    "future": {
+      "v3_fetcherPersist": true,
+      "v3_relativeSplatPath": true,
+      "v3_throwAbortReason": true,
+      "v3_singleFetch": false,
+      "v3_lazyRouteDiscovery": false,
+      "unstable_optimizeDeps": false,
+      "unstable_routeConfig": false
+    },
+    "manifest": false,
+    "publicPath": "/",
+    "routes": {
+      "root": {
+        "path": "",
+        "id": "root",
+        "file": "root.tsx"
+      },
+      "routes/users.$userId.challenges": {
+        "file": "routes/users.$userId.challenges.tsx",
+        "id": "routes/users.$userId.challenges",
+        "path": "users/:userId/challenges",
+        "parentId": "root"
+      },
+      "routes/users.$userId.activity": {
+        "file": "routes/users.$userId.activity.tsx",
+        "id": "routes/users.$userId.activity",
+        "path": "users/:userId/activity",
+        "parentId": "root"
+      },
+      "routes/users.$userId.friends": {
+        "file": "routes/users.$userId.friends.tsx",
+        "id": "routes/users.$userId.friends",
+        "path": "users/:userId/friends",
+        "parentId": "root"
+      },
+      "routes/users.$userId.profile": {
+        "file": "routes/users.$userId.profile.tsx",
+        "id": "routes/users.$userId.profile",
+        "path": "users/:userId/profile",
+        "parentId": "root"
+      },
+      "routes/users.$userId.stats": {
+        "file": "routes/users.$userId.stats.tsx",
+        "id": "routes/users.$userId.stats",
+        "path": "users/:userId/stats",
+        "parentId": "root"
+      },
+      "routes/users.$userId.home": {
+        "file": "routes/users.$userId.home.tsx",
+        "id": "routes/users.$userId.home",
+        "path": "users/:userId/home",
+        "parentId": "root"
+      },
+      "routes/healthcheck": {
+        "file": "routes/healthcheck.ts",
+        "id": "routes/healthcheck",
+        "path": "healthcheck",
+        "parentId": "root"
+      },
+      "routes/friends": {
+        "file": "routes/friends.tsx",
+        "id": "routes/friends",
+        "path": "friends",
+        "parentId": "root"
+      },
+      "routes/_index": {
+        "file": "routes/_index.tsx",
+        "id": "routes/_index",
+        "index": true,
+        "parentId": "root"
+      },
+      "routes/login": {
+        "file": "routes/login.tsx",
+        "id": "routes/login",
+        "path": "login",
+        "parentId": "root"
+      }
+    },
+    "serverBuildFile": "index.js",
+    "serverModuleFormat": "esm",
+    "ssr": true
+  },
+  "viteConfig": {
+    "build": {
+      "assetsDir": "assets"
+    }
+  }
+}

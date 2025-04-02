@@ -36,3 +36,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Vercel ###
+.vercel/remix-build-result.json

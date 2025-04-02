@@ -66,4 +66,19 @@ public class UserController {
     public void updateProfileImage(@PathVariable Integer id, @RequestBody String imageUrl) {
         userService.updateProfileImage(id, imageUrl);
     }
+
+    @PutMapping("/{userId}/updateName")
+    @Operation(
+            summary = "Update profile name",
+            description = "Updates the profile name for the authenticated user",
+            security = {@SecurityRequirement(name = "JwtAuth")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Profile name updated successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized access"),
+            @ApiResponse(responseCode = "403", description = "Access denied")
+    })
+    public void updateProfileName(@PathVariable Integer userId, @RequestBody String name) {
+        userService.updateProfileName(userId, name);
+    }
 }

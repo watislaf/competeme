@@ -45,7 +45,7 @@ public class ActivityController {
         @ApiResponse(responseCode = "403", description = "Access denied")
     })
     public void addProgress(@PathVariable Integer userId, @PathVariable Long activityId, Long progressInMinutes) {
-        activityService.addProgress(activityId, progressInMinutes);
+        activityService.addProgress(activityId, progressInMinutes, userId);
     }
 
     @DeleteMapping("/{activityId}")
@@ -60,7 +60,7 @@ public class ActivityController {
         @ApiResponse(responseCode = "403", description = "Access denied")
     })
     public void deleteActivity(@PathVariable Integer userId, @PathVariable Long activityId) {
-        activityService.deleteActivity(activityId);
+        activityService.deleteActivity(activityId, userId);
     }
 
     @GetMapping("/")
