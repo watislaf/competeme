@@ -3,10 +3,18 @@ name: Snyk Security Scan
 on:
   push:
   pull_request:
+    branches:
+      - main
 
 jobs:
   security:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+  java-scan:
+    runs-on: ubuntu-latest
+    needs: security
     steps:
       - uses: actions/checkout@v4
 
@@ -16,9 +24,29 @@ jobs:
           distribution: 'temurin'
           java-version: '23'
 
-      - name: Run Snyk to check for vulnerabilities
+      - name: Run Snyk for Java (Gradle)
         uses: snyk/actions/gradle@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --severity-threshold=high
+          directory: ./server
+
+  nodejs-scan:
+    runs-on: ubuntu-latest
+    needs: security
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Snyk for Node.js
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+          directory: ./web
