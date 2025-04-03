@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { Link } from "@remix-run/react";
 import { ArrowRight } from "lucide-react";
+import { Button } from "web/app/components/ui/button";
 
 export default function HeroSection() {
   return (

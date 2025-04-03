@@ -1,11 +1,11 @@
 import React from "react";
-import { ChallengeResponse } from "@/api/models";
 import { useDeleteChallengeMutation } from "../hooks/useDeleteChallengeMutation";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "web/app/components/ui/popover";
+import { ChallengeResponse } from "web/app/api";
 
 interface DeleteChallengeButtonProps {
   userId: number;

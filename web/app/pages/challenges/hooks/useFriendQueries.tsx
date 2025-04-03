@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { apis } from "@/api/initializeApi";
+import { apis } from "web/app/api/initializeApi";
 import type { FriendOption } from "../components/challengeForm";
 
 export const useFriendQueries = (userId: number) => {

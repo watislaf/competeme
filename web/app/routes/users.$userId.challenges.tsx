@@ -1,4 +1,4 @@
-import ChallengesPage from "@/pages/challenges/page";
+import ChallengesPage from "../pages/challenges/page";
 
 const page = () => <ChallengesPage />;
 

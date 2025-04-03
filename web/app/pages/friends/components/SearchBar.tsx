@@ -1,11 +1,15 @@
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "web/app/components/ui/button";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "web/app/components/ui/avatar";
 import { Loader2, UserPlus } from "lucide-react";
 import { Link } from "@remix-run/react";
 import { useSearchUsers } from "../hooks/useSearchUsers";
 import { useFriendRequests } from "../hooks/useFriendRequests";
+import { Input } from "web/app/components/ui/input";
+import { Card, CardContent } from "web/app/components/ui/card";
 
 interface SearchBarProps {
   userId: number;

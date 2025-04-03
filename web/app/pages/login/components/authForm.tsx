@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Eye, EyeOff, Mail, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { SubmitAction } from "@/pages/login/types";
+import { Button } from "web/app/components/ui/button";
+import { Input } from "web/app/components/ui/input";
+import { Label } from "web/app/components/ui/label";
+import { SubmitAction } from "../types";
 
 interface AuthFormProps {
   isSignUp: boolean;

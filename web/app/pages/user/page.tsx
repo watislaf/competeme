@@ -1,15 +1,24 @@
 import { Link, useParams } from "@remix-run/react";
 import { Bell, Edit, Lock, Settings, ShieldCheck, User } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "web/app/components/ui/card";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "web/app/components/ui/avatar";
+import { Button } from "web/app/components/ui/button";
 import moment from "moment";
-import { useStats } from "@/hooks/stats/useStats";
-import { useUserAccess } from "@/hooks/user/useUserAccess";
-import { useUser } from "@/hooks/user/useUser";
 import ImageUploader from "./components/ImageUploader";
 import { useUpdateProfileImage } from "./hooks/useUpdateProfileImage";
 import { useState, useEffect } from "react";
+import { useUser } from "web/app/hooks/user/useUser";
+import { useStats } from "web/app/hooks/stats/useStats";
+import { useUserAccess } from "web/app/hooks/user/useUserAccess";
 
 export default function ProfilePage() {
   const { userId } = useParams();

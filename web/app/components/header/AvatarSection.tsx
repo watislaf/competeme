@@ -1,9 +1,9 @@
 // AvatarSection.tsx
 import { Link, useLocation } from "@remix-run/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { buttonVariants } from "@/components/ui/button";
-import { useUser } from "@/hooks/user/useUser";
+import { useUser } from "web/app/hooks/user/useUser";
+import { buttonVariants } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export const AvatarSection = () => {
   const location = useLocation();

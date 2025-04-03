@@ -1,11 +1,11 @@
+import { API_URL } from "../config/vars";
+import { FriendshipControllerApi, StatsControllerApi } from "./api";
+import { ActivityControllerApi } from "./apis/activity-controller-api";
 import { AuthenticationControllerApi } from "./apis/authentication-controller-api";
+import { ChallengeControllerApi } from "./apis/challenge-controller-api";
+import { UserControllerApi } from "./apis/user-controller-api";
 import { Configuration } from "./configuration";
-import { API_URL } from "@/config/vars";
 import { jwtDecode } from "jwt-decode";
-import { UserControllerApi } from "@/api/apis/user-controller-api";
-import { ActivityControllerApi } from "@/api/apis/activity-controller-api";
-import { ChallengeControllerApi } from "@/api/apis/challenge-controller-api";
-import { FriendshipControllerApi, StatsControllerApi } from "@/api";
 
 const isTokenAboutToExpire = (
   token: string,

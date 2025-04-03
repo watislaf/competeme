@@ -15,14 +15,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { useProfiles } from "@/hooks/user/useProfiles";
-import { useStats } from "@/hooks/stats/useStats";
-import { apis } from "@/api/initializeApi";
+import { Input } from "../components/ui/input";
+import { useProfiles } from "../hooks/user/useProfiles";
+import { useStats } from "../hooks/stats/useStats";
+import { apis } from "../api/initializeApi";
 
 export default function HomePage() {
   const { userId } = useParams();

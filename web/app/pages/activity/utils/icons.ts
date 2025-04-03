@@ -25,7 +25,7 @@ import {
   Star,
   Users,
 } from "lucide-react";
-import { ActivityRequestTypeEnum } from "@/api/models/activity-request";
+import { ActivityRequestTypeEnum } from "web/app/api";
 
 export const icons = [
   { icon: Beer, type: ActivityRequestTypeEnum.Beer },

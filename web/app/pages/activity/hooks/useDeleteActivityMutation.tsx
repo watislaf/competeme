@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apis } from "@/api/initializeApi";
+import { apis } from "web/app/api/initializeApi";
 
 export const useDeleteActivityMutation = () => {
   const queryClient = useQueryClient();

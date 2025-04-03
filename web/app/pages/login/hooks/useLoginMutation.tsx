@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apis } from "@/api/initializeApi";
 import { useNavigate } from "@remix-run/react";
+import { apis } from "web/app/api/initializeApi";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const transformationError = (error: any) => {

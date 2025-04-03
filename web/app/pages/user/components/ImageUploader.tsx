@@ -1,9 +1,7 @@
-"use client";
-
 import type React from "react";
 import { useState, useRef } from "react";
 import { Edit } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "web/app/components/ui/button";
 
 interface ImageUploaderProps {
   onUpload: (base64Image: string) => void;

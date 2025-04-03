@@ -3,10 +3,10 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { ChallengeResponse } from "@/api/models";
+} from "web/app/components/ui/popover";
+import { Button } from "web/app/components/ui/button";
 import { ProgressEditor } from "./progressEditor";
+import { ChallengeResponse } from "web/app/api";
 
 interface ProgressUpdatePopoverProps {
   userId: number;

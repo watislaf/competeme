@@ -2,9 +2,9 @@ import { useParams } from "@remix-run/react";
 import { SearchBar } from "./components/SearchBar";
 import { FriendRequests } from "./components/FriendRequests";
 import { FriendsList } from "./components/FriendsList";
-import { SentFriendRequests } from "@/pages/friends/components/SentFriendRequests";
 import { useFriends } from "./hooks/useFriends";
-import { useUserAccess } from "@/hooks/user/useUserAccess";
+import { useUserAccess } from "web/app/hooks/user/useUserAccess";
+import { SentFriendRequests } from "./components/SentFriendRequests";
 
 export default function FriendsPage() {
   const { userId } = useParams();

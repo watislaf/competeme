@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { apis } from "@/api/initializeApi";
+import { apis } from "web/app/api/initializeApi";
 
 export function useFriendRequests(userId: number) {
   const queryClient = useQueryClient();

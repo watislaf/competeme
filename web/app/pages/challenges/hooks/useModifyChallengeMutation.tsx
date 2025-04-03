@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apis } from "@/api/initializeApi";
-import { ChallengeModificationRequest } from "@/api";
+import { ChallengeModificationRequest } from "web/app/api";
+import { apis } from "web/app/api/initializeApi";
 
 export const useModifyChallengeMutation = () => {
   const queryClient = useQueryClient();

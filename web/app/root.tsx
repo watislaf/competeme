@@ -9,11 +9,6 @@ import {
   useNavigate,
   useRouteError,
 } from "@remix-run/react";
-import { Header } from "@/components/header/header";
-import {
-  ThemeSwitcherSafeHTML,
-  ThemeSwitcherScript,
-} from "@/components/theme-switcher";
 
 import "./globals.css";
 import {
@@ -22,9 +17,14 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { isUnauthorized } from "@/errors/Unauthorized";
 import { useMemo } from "react";
 import { LinksFunction } from "@remix-run/node";
+import {
+  ThemeSwitcherSafeHTML,
+  ThemeSwitcherScript,
+} from "./components/theme-switcher";
+import { Header } from "./components/header/header";
+import { isUnauthorized } from "./errors/Unauthorized";
 
 function App({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();

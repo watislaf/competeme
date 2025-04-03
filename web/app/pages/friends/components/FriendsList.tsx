@@ -1,13 +1,23 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, UserMinus } from "lucide-react";
 import { Link } from "@remix-run/react";
 import { useFriends } from "../hooks/useFriends";
-import { useRemoveFriends } from "@/pages/friends/hooks/useRemoveFriends";
-import { UserProfileResponse } from "@/api";
-import { useUserAccess } from "@/hooks/user/useUserAccess";
-import { useUser } from "@/hooks/user/useUser";
+import { UserProfileResponse } from "web/app/api";
+import { useUserAccess } from "web/app/hooks/user/useUserAccess";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "web/app/components/ui/avatar";
+import { Button } from "web/app/components/ui/button";
+import { useRemoveFriends } from "../hooks/useRemoveFriends";
+import { useUser } from "web/app/hooks/user/useUser";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "web/app/components/ui/card";
+import { Key } from "react";
 
 interface FriendsListProps {
   userId: number;
@@ -89,7 +99,7 @@ export function FriendsList({ userId }: FriendsListProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="grid gap-4 md:grid-cols-2">
-        {friends.map((friend, index) =>
+        {friends.map((friend: UserProfileResponse, index: Key) =>
           friend ? (
             <FriendCard
               key={friend.id}

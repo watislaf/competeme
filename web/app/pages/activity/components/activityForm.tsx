@@ -1,22 +1,21 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "web/app/components/ui/button";
+import { Input } from "web/app/components/ui/input";
+import { Label } from "web/app/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "web/app/components/ui/select";
 import { Plus } from "lucide-react";
-import { ActivityRequestTypeEnum } from "@/api/models/activity-request";
-import { UserActivityResponse } from "@/api/models/user-activity-response";
 import { useAddActivityMutation } from "../hooks/useAddActivityMutation";
 import EmoticonPicker from "./emoticonPicker";
 import { getIconComponent } from "../utils/iconsHelper";
 import React from "react";
 import { z } from "zod";
+import { ActivityRequestTypeEnum, UserActivityResponse } from "web/app/api";
 
 const activitySchema = z.object({
   selectedActivity: z.string().nonempty("Please select an activity."),

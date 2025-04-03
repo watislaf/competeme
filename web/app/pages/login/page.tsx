@@ -1,4 +1,9 @@
-import { Button } from "@/components/ui/button";
+import { AuthForm } from "./components/authForm";
+import { SocialButtons } from "./components/socialButtons";
+import { useState } from "react";
+import { useSignUpMutation } from "./hooks/useSignUpMutation";
+import { useLoginMutation } from "./hooks/useLoginMutation";
+import { SubmitAction } from "./types";
 import {
   Card,
   CardContent,
@@ -6,13 +11,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { AuthForm } from "./components/authForm";
-import { SocialButtons } from "./components/socialButtons";
-import { useState } from "react";
-import { SubmitAction } from "@/pages/login/types";
-import { useSignUpMutation } from "@/pages/login/hooks/useSignUpMutation";
-import { useLoginMutation } from "@/pages/login/hooks/useLoginMutation";
+} from "web/app/components/ui/card";
+import { Button } from "web/app/components/ui/button";
 
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);

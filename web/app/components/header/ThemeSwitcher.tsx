@@ -1,7 +1,8 @@
 // ThemeSwitcher.tsx
 import * as React from "react";
 import { LaptopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import { Button } from "@/components/ui/button";
+import { useHydrated } from "remix-utils/use-hydrated";
+import { getTheme, setTheme as setSystemTheme } from "../theme-switcher";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,12 +10,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useHydrated } from "remix-utils/use-hydrated";
-import {
-  getTheme,
-  setTheme as setSystemTheme,
-} from "@/components/theme-switcher";
+} from "../ui/dropdown-menu";
+import { Button } from "../ui/button";
 
 export const ThemeSwitcher = () => {
   const hydrated = useHydrated();

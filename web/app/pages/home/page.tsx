@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { json, type LoaderFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import {
@@ -10,19 +11,18 @@ import {
   Check,
   X,
 } from "lucide-react";
+import { useState } from "react";
+import { Button } from "web/app/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useStats } from "@/hooks/stats/useStats";
-import { useUser } from "@/hooks/user/useUser";
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
+} from "web/app/components/ui/card";
+import { Input } from "web/app/components/ui/input";
+import { useStats } from "web/app/hooks/stats/useStats";
+import { useUser } from "web/app/hooks/user/useUser";
 
 type LoaderData = {
   user: {

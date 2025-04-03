@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "web/app/components/ui/button";
+import { Card, CardContent } from "web/app/components/ui/card";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { ActivityRequestTypeEnum } from "@/api/models/activity-request";
+} from "web/app/components/ui/popover";
 import React from "react";
 import { icons } from "../utils/icons";
 import { Smile } from "lucide-react";
+import { ActivityRequestTypeEnum } from "web/app/api";
 
 interface EmoticonPickerProps {
   onSelect: (activityType: ActivityRequestTypeEnum) => void;

@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Link, useLocation } from "@remix-run/react";
 import { Activity, BarChart3, Home, Trophy, Users } from "lucide-react";
-import { useUser } from "@/hooks/user/useUser";
+import { useUser } from "web/app/hooks/user/useUser";
+import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { Button, buttonVariants } from "../ui/button";
 
 export const NavSheet = () => {
   const [open, setOpen] = React.useState(false);

@@ -1,8 +1,13 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "web/app/components/ui/tabs";
 import { BarChartCard } from "./barChartCard";
 import { LineChartCard } from "./lineChartCard";
 import React from "react";
-import { StatsResponse } from "@/api/models";
+import { StatsResponse } from "web/app/api";
 
 type TabsComponentProps = {
   stats?: StatsResponse;

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { apis } from "@/api/initializeApi";
-import { useProfiles } from "@/hooks/user/useProfiles";
-import { isAccessDenied } from "@/errors/AccessDenied";
+import { apis } from "web/app/api/initializeApi";
+import { isAccessDenied } from "web/app/errors/AccessDenied";
+import { useProfiles } from "web/app/hooks/user/useProfiles";
 
 export function useFriends(userId: number) {
   const {

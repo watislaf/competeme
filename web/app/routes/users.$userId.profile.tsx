@@ -1,4 +1,4 @@
-import ProfilePage from "@/pages/user/page";
+import ProfilePage from "../pages/user/page";
 
 const page = () => <ProfilePage />;
 

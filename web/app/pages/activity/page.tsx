@@ -1,5 +1,4 @@
 import { useParams } from "@remix-run/react";
-import { useActivity } from "@/hooks/activity/useActivity";
 import ActivityForm from "./components/activityForm";
 import {
   Card,
@@ -7,11 +6,12 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "web/app/components/ui/card";
 import RecentActivities from "./components/recentActivities";
-import { UserActivityResponse } from "@/api/models/user-activity-response";
-import { useUserAccess } from "@/hooks/user/useUserAccess";
-import { useUser } from "@/hooks/user/useUser";
+import { useUser } from "web/app/hooks/user/useUser";
+import { useActivity } from "web/app/hooks/activity/useActivity";
+import { useUserAccess } from "web/app/hooks/user/useUserAccess";
+import { UserActivityResponse } from "web/app/api";
 
 const ActivityPage: React.FC = () => {
   const { userId } = useParams();

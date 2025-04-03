@@ -7,7 +7,7 @@
     "build": "remix vite:build",
     "dev": "remix vite:dev",
     "typecheck": "tsc --noEmit",
-    "lintcheck": "eslint app",
+    "lintcheck": "eslint ./app",
     "start": "remix-serve build/server/index.js"
   },
   "dependencies": {

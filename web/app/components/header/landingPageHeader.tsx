@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { Link } from "@remix-run/react";
 import { ThemeSwitcher } from "./ThemeSwitcher";
+import { Button } from "../ui/button";
 
 export default function LandingPageHeader() {
   return (

@@ -1,14 +1,19 @@
 import { useSearchParams } from "@remix-run/react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ChallengesPage from "../pages/challenges/page";
+import FriendsManagement from "../pages/friends";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import ChallengesPage from "../pages/challenges/page";
-import FriendsManagement from "../pages/friends/index";
+} from "../components/ui/card";
 
 export default function FriendsPage() {
   const [searchParams, setSearchParams] = useSearchParams();

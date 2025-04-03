@@ -1,10 +1,10 @@
-import { useChallenges } from "@/hooks/challenges/useChallenges";
 import React from "react";
 import { ChallengeForm } from "./components/challengeForm";
 import { ChallengeCard } from "./components/challengeCard";
 import { useParams } from "@remix-run/react";
-import { useUserAccess } from "@/hooks/user/useUserAccess";
-import { useUser } from "@/hooks/user/useUser";
+import { useUser } from "web/app/hooks/user/useUser";
+import { useChallenges } from "web/app/hooks/challenges/useChallenges";
+import { useUserAccess } from "web/app/hooks/user/useUserAccess";
 
 const ChallengesPage: React.FC = () => {
   const { userId } = useParams();

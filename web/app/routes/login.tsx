@@ -1,4 +1,4 @@
-import AuthPage from "@/pages/login/page";
+import AuthPage from "../pages/login/page";
 
 export const loader = async () => {
   return null;

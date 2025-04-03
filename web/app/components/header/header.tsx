@@ -2,9 +2,9 @@ import { Link, NavLink } from "@remix-run/react";
 import { AvatarSection } from "./AvatarSection";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { NavSheet } from "./NavSheet";
-import { buttonVariants } from "@/components/ui/button";
 import { Activity, BarChart3, Home, Trophy, Users } from "lucide-react";
-import { useUser } from "@/hooks/user/useUser";
+import { useUser } from "web/app/hooks/user/useUser";
+import { buttonVariants } from "../ui/button";
 
 export const Header = () => {
   const { profile } = useUser();

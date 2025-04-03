@@ -2,7 +2,7 @@ FROM node:21-alpine AS builder
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install   --legacy-peer-deps
-COPY . .
+COPY .. .
 RUN npm run build
 
 FROM node:21-alpine

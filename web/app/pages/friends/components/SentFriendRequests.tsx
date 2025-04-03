@@ -1,10 +1,19 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "web/app/components/ui/button";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "web/app/components/ui/avatar";
 import { Loader2, X } from "lucide-react";
 import { useFriendRequests } from "../hooks/useFriendRequests";
-import { useProfiles } from "@/hooks/user/useProfiles";
+import { useProfiles } from "web/app/hooks/user/useProfiles";
 import { Link } from "@remix-run/react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "web/app/components/ui/card";
 
 interface SentFriendRequestsProps {
   userId: number;

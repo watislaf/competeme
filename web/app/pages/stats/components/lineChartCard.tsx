@@ -1,14 +1,14 @@
-import { LineChart } from "@/components/ui/chart";
+import { LineChart } from "web/app/components/ui/chart";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "web/app/components/ui/card";
 import React from "react";
-import { StatsResponse } from "@/api/models";
-import { useUser } from "@/hooks/user/useUser";
+import { StatsResponse } from "web/app/api";
+import { useUser } from "web/app/hooks/user/useUser";
 
 type LineChartCardProps = {
   stats?: StatsResponse;

@@ -1,4 +1,4 @@
-import StatsPage from "@/pages/stats/page";
+import StatsPage from "../pages/stats/page";
 
 const page = () => <StatsPage />;
 
