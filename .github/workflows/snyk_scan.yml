@@ -2,9 +2,6 @@ name: Snyk Security Scan
 
 on:
   push:
-  pull_request:
-    branches:
-      - main
 
 jobs:
   security:
@@ -29,8 +26,8 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high
-          directory: ./server
+          # Specify the server folder and minimum severity
+          args: --severity-threshold=high --project-directory=server
 
   nodejs-scan:
     runs-on: ubuntu-latest
@@ -43,10 +40,13 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install Dependencies
+        run: cd web && npm install
+
       - name: Run Snyk for Node.js
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high
-          directory: ./web
+          # Specify the web folder and minimum severity
+          args: --severity-threshold=high --project-directory=web
