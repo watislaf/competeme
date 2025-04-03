@@ -4,7 +4,8 @@
 .DS_Store
 **/.env
 *.log
-
+.vercel
+.vscode
 **/.idea
 **/.vscode
 
@@ -12,4 +13,4 @@
 **/node_modules
 
 # Sentry Config File
-.env.sentry-build-plugin
+**/.env.sentry-build-plugin
