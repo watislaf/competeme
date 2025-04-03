@@ -3,7 +3,7 @@ import { Award, CalendarDays, Clock, TrendingUp } from "lucide-react";
 import TabsComponent from "./components/tabsComponent";
 import StatCard from "./components/statCard";
 import ActivityBreakdown from "./components/activityBreakdown";
-import chroma from "web/chroma-js";
+import chroma from "chroma-js";
 import { useStats } from "web/app/hooks/stats/useStats";
 import { useUser } from "web/app/hooks/user/useUser";
 
