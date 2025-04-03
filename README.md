@@ -36,3 +36,9 @@
       ```
 
 If the `_user` table appears in the list of tables, the server has been successfully set up and is running.
+
+## API Documentation
+- Once the server is running, access the Swagger UI documentation at:
+  ```
+  http://localhost:8080/swagger-ui.html
+  ```

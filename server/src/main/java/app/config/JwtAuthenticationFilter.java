@@ -26,7 +26,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         "/api/v1/auth/register",
         "/api/v1/auth/authenticate",
         "/api/v1/auth/refresh-token",
-        "/api/spec"
+        "/api/spec/**",
+        "/swagger-ui/**",
+        "/swagger-ui.html",
+        "/v3/api-docs/**"
     );
     private final JwtService jwtService;
     private final UserService userService;
