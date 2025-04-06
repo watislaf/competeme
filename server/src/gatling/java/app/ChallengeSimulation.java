@@ -57,9 +57,7 @@ public class ChallengeSimulation extends Simulation {
                         jsonPath("$.accessToken").saveAs("accessToken"),
                         jsonPath("$.userId").saveAs("userId")
                     )
-
             );
-
 
     private final ChainBuilder createAndGetChallenges =
         exec(
