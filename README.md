@@ -37,6 +37,9 @@ Once the containers are running, you can access the application services:
       - **Timestamp field**: `@timestamp`
    - Click **Save**
 
+<img width="1440" alt="image" src="https://github.com/user-attachments/assets/e12cf17b-b9ab-4463-85f8-b53857358c1b" />
+
+
 ### Viewing Logs
 
 1. **Navigate to:** 
@@ -48,3 +51,5 @@ Once the containers are running, you can access the application services:
    - **Search**: Filter logs (e.g., `level:ERROR`)
    - **Time range**: Adjust in top-right corner
    - **Fields**: Filter by available log fields
+
+<img width="1440" alt="image" src="https://github.com/user-attachments/assets/e2f36cd8-7dea-424c-912a-5603d3257222" />
