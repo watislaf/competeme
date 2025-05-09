@@ -2,6 +2,7 @@ plugins {
     java
     id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.6"
+    id("io.gatling.gradle") version "3.13.5.2"
 }
 
 group = "com.competeme"
@@ -24,6 +25,7 @@ repositories {
 }
 
 dependencies {
+    gatlingImplementation("io.gatling.highcharts:gatling-charts-highcharts:3.13.5")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
