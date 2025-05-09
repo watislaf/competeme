@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AuthenticationService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
@@ -28,13 +28,17 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegistrationRequest request) {
-        if (repository.findByName(request.username()).isPresent()) {
-            throw new UserAlreadyExists("Username is already in use");
-        }
+        log.info("Attempting to register new user with email: {}", request.email());
 
-        if (repository.findByEmail(request.email()).isPresent()) {
+        repository.findByName(request.username()).ifPresent(user -> {
+            log.warn("Registration failed - username already taken: {}", request.username());
+            throw new UserAlreadyExists("Username is already in use");
+        });
+
+        repository.findByEmail(request.email()).ifPresent(user -> {
+            log.warn("Registration failed - email already registered: {}", request.email());
             throw new UserAlreadyExists("User with this email already exists");
-        }
+        });
 
         var user = User.builder()
             .email(request.email())
@@ -45,18 +49,23 @@ public class AuthenticationService {
             .build();
 
         repository.save(user);
-
-        log.info("Saving user: {}", user.getEmail());
+        log.info("User registered successfully - ID: {}, Email: {}", user.getId(), user.getEmail());
 
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
+        log.debug("Tokens generated for user ID: {}", user.getId());
         return new AuthenticationResponse(accessToken, refreshToken, user.getId());
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        log.info("Authentication attempt for email: {}", request.email());
+
         var user = repository.findByEmail(request.email())
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            .orElseThrow(() -> {
+                log.warn("Authentication failed - user not found for email: {}", request.email());
+                return new UsernameNotFoundException("User not found");
+            });
 
         try {
             authenticationManager.authenticate(
@@ -65,29 +74,40 @@ public class AuthenticationService {
                     request.password()
                 )
             );
+            log.debug("Authentication successful for user ID: {}", user.getId());
         } catch (BadCredentialsException e) {
+            log.warn("Authentication failed - invalid credentials for email: {}", request.email());
             throw new BadCredentialsException("Invalid email or password");
         }
-
-        log.info("Authenticating user: {}", user.getEmail());
 
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
+        log.info("User authenticated successfully - ID: {}, Email: {}", user.getId(), user.getEmail());
         return new AuthenticationResponse(accessToken, refreshToken, user.getId());
     }
 
     public AuthenticationResponse refresh(String refreshToken) {
+        log.debug("Refresh token request received");
+
         if (refreshToken == null || !jwtService.isTokenValid(refreshToken)) {
+            log.warn("Invalid refresh token attempt");
             throw new JwtException("Invalid refresh token");
         }
 
         String userId = jwtService.extractUserId(refreshToken);
+        log.debug("Processing refresh token for user ID: {}", userId);
+
         var user = repository.findById(Integer.valueOf(userId))
-            .orElseThrow(Unauthorized::new);
+            .orElseThrow(() -> {
+                log.error("User not found during refresh for ID: {}", userId);
+                return new Unauthorized();
+            });
 
         String newAccessToken = jwtService.generateAccessToken(user);
         String newRefreshToken = jwtService.generateRefreshToken(user);
+
+        log.info("Tokens refreshed successfully for user ID: {}", userId);
         return new AuthenticationResponse(newAccessToken, newRefreshToken, user.getId());
     }
 }
