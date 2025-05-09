@@ -3,7 +3,7 @@ import { SearchBar } from "./components/SearchBar";
 import { FriendRequests } from "./components/FriendRequests";
 import { FriendsList } from "./components/FriendsList";
 import { useFriends } from "./hooks/useFriends";
-import { useUserAccess } from "web/app/hooks/user/useUserAccess";
+import { useUserAccess } from "@/hooks/user/useUserAccess";
 import { SentFriendRequests } from "./components/SentFriendRequests";
 
 export default function FriendsPage() {

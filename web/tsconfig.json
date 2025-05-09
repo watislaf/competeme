@@ -2,7 +2,7 @@
   "include": ["**/*.ts", "**/*.tsx", "server.js"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "types": ["node", "vite/client"],
+    "types": ["node", "vite/client", "chroma-js"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
@@ -14,7 +14,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": "..",
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./app/*"]
     },

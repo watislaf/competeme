@@ -1,14 +1,14 @@
-import { BarChart } from "web/app/components/ui/chart";
+import React from "react";
+import { StatsResponse } from "@/api";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "web/app/components/ui/card";
-import React from "react";
-import { StatsResponse } from "web/app/api";
-import { useUser } from "web/app/hooks/user/useUser";
+} from "@/components/ui/card";
+import { BarChart } from "@/components/ui/chart";
+import { useUser } from "@/hooks/user/useUser";
 
 type BarChartCardProps = {
   stats?: StatsResponse;

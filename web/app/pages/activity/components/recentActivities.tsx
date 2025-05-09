@@ -2,8 +2,8 @@ import { getIconComponent } from "../utils/iconsHelper";
 import React from "react";
 import ProgressUpdatePopover from "./progressUpdatePopover";
 import DeleteActivityButton from "./deleteActivityButton";
-import { useUserAccess } from "web/app/hooks/user/useUserAccess";
-import { UserActivityResponse } from "web/app/api";
+import { useUserAccess } from "@/hooks/user/useUserAccess";
+import { UserActivityResponse } from "@/api";
 
 interface RecentActivitiesProps {
   activities: UserActivityResponse;

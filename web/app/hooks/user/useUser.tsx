@@ -1,7 +1,7 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
-import { apis } from "web/app/api/initializeApi";
-import { isAccessDenied } from "web/app/errors/AccessDenied";
-import { extractIdFromToken } from "web/app/utils/jwt";
+import { apis } from "@/api/initializeApi";
+import { isAccessDenied } from "@/errors/AccessDenied";
+import { extractIdFromToken } from "@/utils/jwt";
 
 export const useUser = (userId?: number) => {
   const loggedInUserId = (() => {

@@ -3,7 +3,7 @@ import { AvatarSection } from "./AvatarSection";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { NavSheet } from "./NavSheet";
 import { Activity, BarChart3, Home, Trophy, Users } from "lucide-react";
-import { useUser } from "web/app/hooks/user/useUser";
+import { useUser } from "@/hooks/user/useUser";
 import { buttonVariants } from "../ui/button";
 
 export const Header = () => {

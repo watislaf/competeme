@@ -12,17 +12,17 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
-import { Button } from "web/app/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "web/app/components/ui/card";
-import { Input } from "web/app/components/ui/input";
-import { useStats } from "web/app/hooks/stats/useStats";
-import { useUser } from "web/app/hooks/user/useUser";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { useStats } from "@/hooks/stats/useStats";
+import { useUser } from "@/hooks/user/useUser";
 
 type LoaderData = {
   user: {

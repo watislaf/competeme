@@ -1,5 +1,5 @@
 import { Github, Twitter } from "lucide-react";
-import { Button } from "web/app/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 export function SocialButtons() {
   return (

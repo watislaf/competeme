@@ -1,5 +1,5 @@
 import { BarChart3, Clock, Users } from "lucide-react";
-import { Card, CardContent } from "web/app/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function Features() {
   return (

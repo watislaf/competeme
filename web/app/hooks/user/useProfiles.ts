@@ -1,6 +1,6 @@
 import { useQueries } from "@tanstack/react-query";
-import { apis } from "web/app/api/initializeApi";
-import { UserProfileResponse } from "web/app/api/models/user-profile-response";
+import { apis } from "@/api/initializeApi";
+import { UserProfileResponse } from "@/api/models/user-profile-response";
 
 export const useProfiles = (userIds: number[]) => {
   const queries = useQueries({
