@@ -21,13 +21,15 @@ jobs:
           distribution: 'temurin'
           java-version: '23'
 
+      - name: Change to server directory
+        run: cd server
+
       - name: Run Snyk for Java (Gradle)
         uses: snyk/actions/gradle@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          # Specify the server folder and minimum severity
-          args: --severity-threshold=high --project-directory=server
+          args: --severity-threshold=high
 
   nodejs-scan:
     runs-on: ubuntu-latest
@@ -41,12 +43,13 @@ jobs:
           node-version: '20'
 
       - name: Install Dependencies
-        run: cd web && npm install
+        run: |
+          cd web
+          npm install
 
       - name: Run Snyk for Node.js
-        uses: snyk/actions/node@master
+        run: |
+          cd web
+          npx snyk test --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          # Specify the web folder and minimum severity
-          args: --severity-threshold=high --project-directory=web

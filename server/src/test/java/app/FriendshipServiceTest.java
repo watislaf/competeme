@@ -18,6 +18,10 @@ class FriendshipServiceTest {
     private FriendshipRepository friendshipRepository;
     private FriendshipService friendshipService;
 
+    private final Integer senderId = 1;
+    private final Integer receiverId = 2;
+    private final Integer userId = 1;
+
     @BeforeEach
     void setUp() {
         friendshipRepository = mock(FriendshipRepository.class);
@@ -26,9 +30,6 @@ class FriendshipServiceTest {
 
     @Test
     void shouldSendFriendRequest_whenRequestNotExists() {
-        Integer senderId = 1;
-        Integer receiverId = 2;
-
         when(friendshipRepository.existsById_SenderIdAndId_ReceiverId(senderId, receiverId)).thenReturn(false);
         when(friendshipRepository.existsById_SenderIdAndId_ReceiverId(receiverId, senderId)).thenReturn(false);
 
@@ -45,9 +46,6 @@ class FriendshipServiceTest {
 
     @Test
     void shouldNotSendFriendRequest_whenRequestAlreadyExists() {
-        Integer senderId = 1;
-        Integer receiverId = 2;
-
         when(friendshipRepository.existsById_SenderIdAndId_ReceiverId(senderId, receiverId)).thenReturn(true);
 
         friendshipService.sendFriendRequest(senderId, receiverId);
@@ -58,9 +56,6 @@ class FriendshipServiceTest {
 
     @Test
     void shouldAcceptFriendRequest_whenPendingExists() {
-        Integer senderId = 1;
-        Integer receiverId = 2;
-
         Friendship pending = Friendship.builder()
                 .id(FriendshipKey.builder().senderId(senderId).receiverId(receiverId).build())
                 .status(FriendshipStatus.PENDING)
@@ -77,9 +72,6 @@ class FriendshipServiceTest {
 
     @Test
     void shouldThrowException_whenAcceptingNonexistentFriendRequest() {
-        Integer senderId = 1;
-        Integer receiverId = 2;
-
         when(friendshipRepository.findByStatusAndSenderOrReceiver(FriendshipStatus.PENDING, senderId, receiverId))
                 .thenReturn(List.of());
 
@@ -110,9 +102,6 @@ class FriendshipServiceTest {
 
     @Test
     void shouldDoNothing_whenNoPendingFriendRequestExists() {
-        Integer senderId = 1;
-        Integer receiverId = 2;
-
         when(friendshipRepository.findByStatusAndSenderOrReceiver(FriendshipStatus.PENDING, senderId, receiverId))
                 .thenReturn(List.of());
         when(friendshipRepository.findByStatusAndSenderOrReceiver(FriendshipStatus.PENDING, receiverId, senderId))
@@ -125,8 +114,6 @@ class FriendshipServiceTest {
 
     @Test
     void shouldReturnPendingFriendRequests_whenTheyExist() {
-        Integer userId = 1;
-
         Friendship pending1 = Friendship.builder()
                 .id(FriendshipKey.builder().senderId(2).receiverId(userId).build())
                 .status(FriendshipStatus.PENDING)
@@ -146,8 +133,6 @@ class FriendshipServiceTest {
 
     @Test
     void shouldReturnEmptyList_whenNoPendingFriendRequestsExist() {
-        Integer userId = 1;
-
         when(friendshipRepository.findById_ReceiverIdAndStatus(userId, FriendshipStatus.PENDING))
                 .thenReturn(List.of());
 
@@ -158,16 +143,8 @@ class FriendshipServiceTest {
 
     @Test
     void shouldReturnSentFriendRequests_whenTheyExist() {
-        Integer userId = 1;
-
-        Friendship sent1 = Friendship.builder()
-                .id(FriendshipKey.builder().senderId(userId).receiverId(2).build())
-                .status(FriendshipStatus.PENDING)
-                .build();
-        Friendship sent2 = Friendship.builder()
-                .id(FriendshipKey.builder().senderId(userId).receiverId(3).build())
-                .status(FriendshipStatus.PENDING)
-                .build();
+        Friendship sent1 = TestFriendshipFactory.create(userId, 2, FriendshipStatus.PENDING);
+        Friendship sent2 = TestFriendshipFactory.create(userId, 3, FriendshipStatus.PENDING);
 
         when(friendshipRepository.findById_SenderIdAndStatus(userId, FriendshipStatus.PENDING))
                 .thenReturn(List.of(sent1, sent2));
@@ -179,8 +156,6 @@ class FriendshipServiceTest {
 
     @Test
     void shouldReturnEmptyList_whenNoSentFriendRequestsExist() {
-        Integer userId = 1;
-
         when(friendshipRepository.findById_SenderIdAndStatus(userId, FriendshipStatus.PENDING))
                 .thenReturn(List.of());
 
@@ -191,8 +166,6 @@ class FriendshipServiceTest {
 
     @Test
     void shouldReturnListOfFriends_whenFriendsExist() {
-        Integer userId = 1;
-
         Friendship sentFriendship = Friendship.builder()
                 .id(FriendshipKey.builder().senderId(userId).receiverId(2).build())
                 .status(FriendshipStatus.ACCEPTED)
@@ -215,8 +188,6 @@ class FriendshipServiceTest {
 
     @Test
     void shouldReturnEmptyList_whenNoFriendsExist() {
-        Integer userId = 1;
-
         when(friendshipRepository.findByStatusAndId_SenderId(FriendshipStatus.ACCEPTED, userId))
                 .thenReturn(List.of());
         when(friendshipRepository.findByStatusAndId_ReceiverId(FriendshipStatus.ACCEPTED, userId))
@@ -229,10 +200,7 @@ class FriendshipServiceTest {
 
     @Test
     void shouldCancelFriendRequest_whenPendingRequestsExistInBothDirections() {
-        Integer senderId = 1;
-        Integer receiverId = 2;
-
-        Friendship pending1 = Friendship.builder()
+       Friendship pending1 = Friendship.builder()
                 .id(FriendshipKey.builder().senderId(senderId).receiverId(receiverId).build())
                 .status(FriendshipStatus.PENDING)
                 .build();
@@ -254,9 +222,6 @@ class FriendshipServiceTest {
 
     @Test
     void shouldNotThrow_whenNoPendingRequestsToCancel() {
-        Integer senderId = 1;
-        Integer receiverId = 2;
-
         when(friendshipRepository.findByStatusAndSenderOrReceiver(FriendshipStatus.PENDING, senderId, receiverId))
                 .thenReturn(List.of());
         when(friendshipRepository.findByStatusAndSenderOrReceiver(FriendshipStatus.PENDING, receiverId, senderId))
