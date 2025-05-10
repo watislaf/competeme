@@ -1,13 +1,13 @@
-import { Button } from "web/app/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "web/app/components/ui/card";
-import { Input } from "web/app/components/ui/input";
-import { Label } from "web/app/components/ui/label";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import type React from "react";
 import { useState, useEffect, useRef } from "react";
 import { FriendSearchDropdown } from "./FriendSearchDropdown";
@@ -15,8 +15,8 @@ import { challengeSchema } from "../utils/challengeSchema";
 import { useAddChallengeMutation } from "../hooks/useAddChallengeMutation";
 import { useFriendQueries } from "../hooks/useFriendQueries";
 import lodash from "lodash";
-import { useUser } from "web/app/hooks/user/useUser";
-import { ChallengeRequest } from "web/app/api";
+import { useUser } from "@/hooks/user/useUser";
+import { ChallengeRequest } from "@/api";
 
 export interface FriendOption {
   id: number;

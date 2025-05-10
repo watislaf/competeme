@@ -6,15 +6,15 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "web/app/components/ui/card";
-import { Progress } from "web/app/components/ui/progress";
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { Leaderboard } from "./leaderboard";
 import { Fireworks } from "./fireworks";
 import { ChallengeModificationPopover } from "./challengeModificationPopover";
 import { ProgressUpdatePopover } from "./progressUpdatePopover";
-import { ChallengeResponse } from "web/app/api";
-import { useUserAccess } from "web/app/hooks/user/useUserAccess";
-import { useProfiles } from "web/app/hooks/user/useProfiles";
+import { ChallengeResponse } from "@/api";
+import { useUserAccess } from "@/hooks/user/useUserAccess";
+import { useProfiles } from "@/hooks/user/useProfiles";
 
 interface ChallengeCardProps {
   challenge: ChallengeResponse;

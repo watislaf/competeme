@@ -4,8 +4,8 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "web/app/components/ui/popover";
-import { ChallengeResponse } from "web/app/api";
+} from "@/components/ui/popover";
+import { ChallengeResponse } from "@/api";
 
 interface DeleteChallengeButtonProps {
   userId: number;

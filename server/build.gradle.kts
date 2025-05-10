@@ -5,7 +5,7 @@ plugins {
     id("io.gatling.gradle") version "3.13.5.2"
 }
 
-group = "com.colorpicker"
+group = "com.competeme"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -32,6 +32,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")

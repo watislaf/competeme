@@ -3,15 +3,15 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "web/app/components/ui/popover";
-import { Button } from "web/app/components/ui/button";
-import { Label } from "web/app/components/ui/label";
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { Pencil } from "lucide-react";
-import { Input } from "web/app/components/ui/input";
+import { Input } from "@/components/ui/input";
 import { challengeSchema } from "../utils/challengeSchema";
 import { useModifyChallengeMutation } from "../hooks/useModifyChallengeMutation";
 import { DeleteChallengeButton } from "./deleteChallengeButton";
-import { ChallengeModificationRequest, ChallengeResponse } from "web/app/api";
+import { ChallengeModificationRequest, ChallengeResponse } from "@/api";
 
 interface ModificationPopoverProps {
   userId: number;

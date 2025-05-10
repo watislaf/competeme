@@ -3,6 +3,7 @@ import { vitePlugin as remix } from "@remix-run/dev";
 import { defineConfig } from "vite";
 import envOnly from "vite-env-only";
 import tsconfigPaths from "vite-tsconfig-paths";
+import path from "path";
 
 export default defineConfig({
   plugins: [
@@ -19,13 +20,15 @@ export default defineConfig({
       org: "competeme-0j",
       project: "competeme",
     }),
-    sentryVitePlugin({
-      org: "competeme-0j",
-      project: "competeme",
-    }),
   ],
 
   build: {
     sourcemap: true,
+  },
+
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './app'),
+    }
   },
 });

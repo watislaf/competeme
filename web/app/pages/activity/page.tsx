@@ -6,12 +6,12 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "web/app/components/ui/card";
+} from "@/components/ui/card";
 import RecentActivities from "./components/recentActivities";
-import { useUser } from "web/app/hooks/user/useUser";
-import { useActivity } from "web/app/hooks/activity/useActivity";
-import { useUserAccess } from "web/app/hooks/user/useUserAccess";
-import { UserActivityResponse } from "web/app/api";
+import { useUser } from "@/hooks/user/useUser";
+import { useActivity } from "@/hooks/activity/useActivity";
+import { useUserAccess } from "@/hooks/user/useUserAccess";
+import { UserActivityResponse } from "@/api";
 
 const ActivityPage: React.FC = () => {
   const { userId } = useParams();

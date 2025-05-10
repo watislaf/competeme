@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { apis } from "web/app/api/initializeApi";
-import { isAccessDenied } from "web/app/errors/AccessDenied";
+import { apis } from "@/api/initializeApi";
+import { isAccessDenied } from "@/errors/AccessDenied";
 
 export const useChallenges = (userId: number) => {
   const queryKey = ["challenges", userId];

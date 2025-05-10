@@ -4,8 +4,8 @@ import TabsComponent from "./components/tabsComponent";
 import StatCard from "./components/statCard";
 import ActivityBreakdown from "./components/activityBreakdown";
 import chroma from "chroma-js";
-import { useStats } from "web/app/hooks/stats/useStats";
-import { useUser } from "web/app/hooks/user/useUser";
+import { useStats } from "@/hooks/stats/useStats";
+import { useUser } from "@/hooks/user/useUser";
 
 const StatsPage: React.FC = () => {
   const { userId } = useParams();

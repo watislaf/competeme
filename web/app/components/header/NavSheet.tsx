@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link, useLocation } from "@remix-run/react";
 import { Activity, BarChart3, Home, Trophy, Users } from "lucide-react";
-import { useUser } from "web/app/hooks/user/useUser";
+import { useUser } from "@/hooks/user/useUser";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button, buttonVariants } from "../ui/button";
 
