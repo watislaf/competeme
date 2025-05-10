@@ -21,11 +21,9 @@ jobs:
           distribution: 'temurin'
           java-version: '23'
 
-      - name: Change to server directory
-        run: cd server
-
       - name: Run Snyk for Java (Gradle)
         uses: snyk/actions/gradle@master
+        working-directory: server
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
@@ -43,13 +41,13 @@ jobs:
           node-version: '20'
 
       - name: Install Dependencies
-        run: |
-          cd web
-          npm install
+        working-directory: web
+        run: npm install
 
       - name: Run Snyk for Node.js
-        run: |
-          cd web
-          npx snyk test --severity-threshold=high
+        uses: snyk/actions/node@master
+        working-directory: web
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
