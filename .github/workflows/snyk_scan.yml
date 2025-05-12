@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  snyk-backend:
+  security:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,36 +16,9 @@ jobs:
           distribution: 'temurin'
           java-version: '23'
 
-      - name: Install Snyk CLI
-        run: npm install -g snyk
-
-      - name: Run Snyk for Gradle backend
-        run: |
-          cd server
-          snyk test --severity-threshold=high
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/gradle@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-  snyk-frontend:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
         with:
-          node-version: '20'
-
-      - name: Install Dependencies
-        run: npm install
-        working-directory: web
-
-      - name: Install Snyk CLI
-        run: npm install -g snyk
-
-      - name: Run Snyk for Node.js frontend
-        run: |
-          cd web
-          snyk test --severity-threshold=high
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          args: --severity-threshold=high --all-projects
