@@ -1,7 +1,7 @@
 // AvatarSection.tsx
 import { Link, useLocation } from "@remix-run/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useUser } from "web/app/hooks/user/useUser";
+import { useUser } from "@/hooks/user/useUser";
 import { buttonVariants } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 

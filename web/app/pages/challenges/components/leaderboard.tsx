@@ -1,11 +1,7 @@
 import React from "react";
 import { Link } from "@remix-run/react";
-import { useUser } from "web/app/hooks/user/useUser";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "web/app/components/ui/avatar";
+import { useUser } from "@/hooks/user/useUser";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface LeaderboardProps {
   leaderboard: { userId: number; score: number }[];

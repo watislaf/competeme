@@ -11,8 +11,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "web/app/components/ui/card";
-import { Button } from "web/app/components/ui/button";
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);

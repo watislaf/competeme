@@ -12,7 +12,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { cn } from "web/app/lib/styles";
+import { cn } from "@/lib/styles";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;

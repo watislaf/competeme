@@ -1,5 +1,5 @@
 import { Link } from "@remix-run/react";
-import { Button } from "web/app/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 export default function CTA() {
   return (

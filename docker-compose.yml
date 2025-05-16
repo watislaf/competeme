@@ -8,18 +8,24 @@ services:
       - "3000:3000"
     depends_on:
       - server
+    networks:
+      - app-network
 
   server:
     build: ./server
     container_name: competeme_server
     depends_on:
       - database
+      - logstash
     environment:
       DATABASE_URL: jdbc:postgresql://database:5432/psqlDbName
       DATABASE_USER: psqlUser
       DATABASE_PASSWORD: psqlPassword
+      SPRING_APPLICATION_NAME: competeme-server
     ports:
       - "8080:8080"
+    networks:
+      - app-network
 
   database:
     image: postgres:16
@@ -33,6 +39,56 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - elk-network
+      - app-network
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.12.0
+    container_name: logstash
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./logstash-config:/usr/share/logstash/pipeline/
+    environment:
+      - LS_JAVA_OPTS=-Xmx256m -Xms256m
+    ports:
+      - "5050:5000"
+    networks:
+      - elk-network
+      - app-network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.12.0
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+    networks:
+      - elk-network
+      - app-network
 
 volumes:
   postgres_data:
+  es_data:
+
+networks:
+  app-network:
+    driver: bridge
+  elk-network:
+    driver: bridge

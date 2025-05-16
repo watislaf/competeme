@@ -1,13 +1,13 @@
-import { PieChart } from "web/app/components/ui/chart";
+import React from "react";
+import { StatsResponse } from "@/api";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "web/app/components/ui/card";
-import React from "react";
-import { StatsResponse } from "web/app/api";
+} from "@/components/ui/card";
+import { PieChart } from "@/components/ui/chart";
 
 type ActivityBreakdownProps = {
   stats?: StatsResponse;

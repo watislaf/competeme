@@ -2,9 +2,11 @@ package app.activity.service;
 
 import app.activity.entity.Activity;
 import app.activity.entity.ActivityRepository;
+import app.stats.service.TimeFormatter;
 import app.user.entity.User;
 import app.user.entity.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +16,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ActivityService {
     private final ActivityRepository activityRepository;
     private final UserRepository userRepository;
+    private final TimeFormatter timeFormatter;
 
     @CacheEvict(value = "statsCache", key = "#userId")
     public void addActivity(Integer userId, ActivityRequest activityRequest) {
+        log.info("Attempting to add activity for user ID: {}", userId);
         User user = findUser(userId);
 
         Activity activity = Activity.builder()
@@ -33,32 +38,44 @@ public class ActivityService {
             .build();
 
         activityRepository.save(activity);
+        log.info("Successfully added activity: {} for user: {}", activity.getTitle(), user.getUsername());
     }
 
     @CacheEvict(value = "statsCache", key = "#userId")
     public void addProgress(Long activityId, Long progressInMinutes, Integer userId) {
+        log.debug("Adding progress: {} minutes to activity ID: {}", progressInMinutes, activityId);
         Activity activity = findActivity(activityId);
 
         Duration progress = Duration.ofMinutes(progressInMinutes);
         Duration currentDuration = activity.getDuration();
         Duration updatedDuration = currentDuration.plus(progress);
+
         activity.setDuration(updatedDuration);
         activity.setDate(ZonedDateTime.now());
         activityRepository.save(activity);
+
+        log.info("Updated activity ID: {}. New duration: {}", activityId, timeFormatter.formatDuration(updatedDuration));
     }
 
     @CacheEvict(value = "statsCache", key = "#userId")
     public void deleteActivity(Long activityId, Integer userId) {
+        log.warn("Deleting activity ID: {} for user ID: {}", activityId, userId);
         Activity activity = findActivity(activityId);
         activityRepository.delete(activity);
+        log.info("Activity ID: {} successfully deleted", activityId);
     }
 
     private Activity findActivity(Long activityId) {
+        log.debug("Looking for activity ID: {}", activityId);
         return activityRepository.findById(activityId)
-            .orElseThrow(() -> new IllegalArgumentException("Activity not found"));
+            .orElseThrow(() -> {
+                log.error("Activity not found for ID: {}", activityId);
+                return new IllegalArgumentException("Activity not found");
+            });
     }
 
     public UserActivityResponse getActivities(Integer userId) {
+        log.info("Fetching activities for user ID: {}", userId);
         List<Activity> activities = activityRepository.findByUserId(userId);
 
         List<ActivityResponse> available = activities.stream()
@@ -78,31 +95,22 @@ public class ActivityService {
                 activity.getId(),
                 activity.getTitle(),
                 activity.getType(),
-                formatDuration(activity.getDuration())
+                timeFormatter.formatDuration(activity.getDuration())
             ))
             .toList();
 
+        log.debug("Returning {} available and {} recent activities for user ID: {}",
+            available.size(), recent.size(), userId
+        );
         return new UserActivityResponse(available, recent);
     }
 
-    private String formatDuration(Duration duration) {
-        long hours = duration.toHours();
-        long minutes = duration.toMinutes() % 60;
-
-        StringBuilder formattedDuration = new StringBuilder();
-
-        if (hours > 0) {
-            formattedDuration.append(hours).append("h ");
-        }
-        if (minutes > 0) {
-            formattedDuration.append(minutes).append("min");
-        }
-
-        return formattedDuration.toString().trim();
-    }
-
     private User findUser(Integer userId) {
+        log.debug("Looking for user ID: {}", userId);
         return userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+            .orElseThrow(() -> {
+                log.error("User not found for ID: {}", userId);
+                return new IllegalArgumentException("User not found");
+            });
     }
 }

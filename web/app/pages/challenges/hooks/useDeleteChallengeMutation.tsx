@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apis } from "web/app/api/initializeApi";
+import { apis } from "@/api/initializeApi";
 
 export const useDeleteChallengeMutation = () => {
   const queryClient = useQueryClient();
