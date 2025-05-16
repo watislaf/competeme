@@ -18,6 +18,6 @@ jobs:
           java-version: '23'
           distribution: 'temurin'
 
-      - name: Build with system Gradle (without tests)
-        run: gradle build -x test
+      - name: Build with system Gradle
+        run: gradle build
         working-directory: ./server
