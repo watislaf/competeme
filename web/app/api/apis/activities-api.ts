@@ -204,6 +204,44 @@ export const ActivitiesApiAxiosParamCreator = function (configuration?: Configur
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Retrieves a random activity
+         * @summary Get random activity
+         * @param {number} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getRandomActivity: async (userId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('getRandomActivity', 'userId', userId)
+            const localVarPath = `/api/v1/users/{userId}/activities/random`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JwtAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -270,6 +308,19 @@ export const ActivitiesApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['ActivitiesApi.getActivities']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * Retrieves a random activity
+         * @summary Get random activity
+         * @param {number} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getRandomActivity(userId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getRandomActivity(userId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ActivitiesApi.getRandomActivity']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -323,6 +374,16 @@ export const ActivitiesApiFactory = function (configuration?: Configuration, bas
          */
         getActivities(userId: number, options?: RawAxiosRequestConfig): AxiosPromise<UserActivityResponse> {
             return localVarFp.getActivities(userId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Retrieves a random activity
+         * @summary Get random activity
+         * @param {number} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getRandomActivity(userId: number, options?: RawAxiosRequestConfig): AxiosPromise<string> {
+            return localVarFp.getRandomActivity(userId, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -384,6 +445,18 @@ export class ActivitiesApi extends BaseAPI {
      */
     public getActivities(userId: number, options?: RawAxiosRequestConfig) {
         return ActivitiesApiFp(this.configuration).getActivities(userId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Retrieves a random activity
+     * @summary Get random activity
+     * @param {number} userId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ActivitiesApi
+     */
+    public getRandomActivity(userId: number, options?: RawAxiosRequestConfig) {
+        return ActivitiesApiFp(this.configuration).getRandomActivity(userId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

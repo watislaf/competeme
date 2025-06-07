@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
@@ -112,5 +113,11 @@ public class ActivityService {
                 log.error("User not found for ID: {}", userId);
                 return new IllegalArgumentException("User not found");
             });
+    }
+
+    public String getRandomActivity() {
+        RestTemplate restTemplate = new RestTemplate();
+        String apiUrl = "https://bored-api.appbrewery.com/random";
+        return restTemplate.getForObject(apiUrl, String.class);
     }
 }
