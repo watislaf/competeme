@@ -91,6 +91,6 @@ public class ActivityController {
         @ApiResponse(responseCode = "403", description = "Access denied")
     })
     public String getRandomActivity(@PathVariable Integer userId) {
-        return activityService.getRandomActivity();
+        return activityService.getRandomActivity(userId);
     }
 }

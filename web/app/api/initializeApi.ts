@@ -1,9 +1,5 @@
 import { API_URL } from "../config/vars";
-import { FriendshipControllerApi, StatsControllerApi } from "./api";
-import { ActivityControllerApi } from "./apis/activity-controller-api";
-import { AuthenticationControllerApi } from "./apis/authentication-controller-api";
-import { ChallengeControllerApi } from "./apis/challenge-controller-api";
-import { UserControllerApi } from "./apis/user-controller-api";
+import { ActivitiesApi, AuthenticationApi, ChallengesApi, FriendshipManagementApi, UserManagementApi, UserStatisticsApi } from "./api";
 import { Configuration } from "./configuration";
 import { jwtDecode } from "jwt-decode";
 
@@ -60,12 +56,12 @@ const Api = () => {
   });
 
   return {
-    auth: new AuthenticationControllerApi(configuration),
-    user: new UserControllerApi(configuration),
-    challenge: new ChallengeControllerApi(configuration),
-    activity: new ActivityControllerApi(configuration),
-    friends: new FriendshipControllerApi(configuration),
-    stats: new StatsControllerApi(configuration)
+    auth: new AuthenticationApi(configuration),
+    user: new UserManagementApi(configuration),
+    challenge: new ChallengesApi(configuration),
+    activity: new ActivitiesApi(configuration),
+    friends: new FriendshipManagementApi(configuration),
+    stats: new UserStatisticsApi(configuration)
   };
 };
 

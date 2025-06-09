@@ -5,6 +5,8 @@ import app.activity.entity.ActivityRepository;
 import app.stats.service.TimeFormatter;
 import app.user.entity.User;
 import app.user.entity.UserRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -115,9 +117,19 @@ public class ActivityService {
             });
     }
 
-    public String getRandomActivity() {
+    public String getRandomActivity(Integer userId) {
         RestTemplate restTemplate = new RestTemplate();
         String apiUrl = "https://bored-api.appbrewery.com/random";
-        return restTemplate.getForObject(apiUrl, String.class);
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            log.info("Fetching random activity for user ID: {}", userId);
+            String fullJson = restTemplate.getForObject(apiUrl, String.class);
+            JsonNode rootNode = mapper.readTree(fullJson);
+            return rootNode.get("activity").asText();
+        } catch (Exception e) {
+            log.error("Error fetching random activity");
+            return "Could not fetch activity";
+        }
     }
 }
