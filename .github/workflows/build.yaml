@@ -21,3 +21,11 @@ jobs:
       - name: Build with system Gradle
         run: gradle build
         working-directory: ./server
+
+      - name: Publish Test Result
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: JUnit Test Results
+          path: ./server/build/test-result/test/
+          reporter: java-junit
