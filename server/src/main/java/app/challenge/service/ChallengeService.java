@@ -20,39 +20,60 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ChallengeService {
+    
+    private static final String PARTICIPANTS_NOT_FOUND_MESSAGE = "One or more participants not found";
+    private static final String CHALLENGE_NOT_FOUND_MESSAGE = "Challenge not found";
+    private static final String USER_NOT_PARTICIPATING_MESSAGE = "User %d isn't participating in challenge %d";
+    private static final String USER_NOT_IN_CHALLENGE_MESSAGE = "User is not participating in this challenge";
+    
     private final ChallengeRepository challengeRepository;
     private final ChallengeParticipantsRepository challengeParticipantsRepository;
     private final UserRepository userRepository;
     private final ChallengeMapper challengeMapper;
+    private final ChallengeLogger challengeLogger = new ChallengeLogger(log);
 
     public void addChallenge(Integer userId, ChallengeRequest challengeRequest) {
-        log.info("Attempting to add new challenge by user ID: {}", userId);
-        log.debug("Challenge details - Title: {}, Participants: {}",
-            challengeRequest.title(), challengeRequest.participants()
-        );
+        challengeLogger.logAddingChallenge(userId);
+        challengeLogger.logChallengeDetails(challengeRequest.title(), challengeRequest.participants());
 
-        List<Integer> participantIds = challengeRequest.participants();
+        List<Integer> participantIds = buildParticipantIds(userId, challengeRequest.participants());
+        List<User> participants = validateAndGetUsers(participantIds);
+
+        Challenge challenge = buildChallenge(challengeRequest);
+        challengeRepository.save(challenge);
+        challengeLogger.logChallengeCreated(challenge.getId(), challenge.getTitle());
+        
+        addParticipantsToChallenge(participants, challenge);
+        challengeLogger.logParticipantsAdded(participants.size(), challenge.getId());
+    }
+
+    private List<Integer> buildParticipantIds(Integer userId, List<Integer> requestParticipants) {
+        List<Integer> participantIds = new ArrayList<>(requestParticipants);
         participantIds.add(userId);
+        return participantIds;
+    }
+
+    private List<User> validateAndGetUsers(List<Integer> participantIds) {
         List<User> participants = userRepository.findAllById(participantIds);
-
         if (participants.size() != participantIds.size()) {
-            log.error("Failed to add challenge - one or more participants not found");
-            throw new IllegalArgumentException("One or more participants not found");
+            challengeLogger.logParticipantsNotFoundError();
+            throw new IllegalArgumentException(PARTICIPANTS_NOT_FOUND_MESSAGE);
         }
+        return participants;
+    }
 
-        Challenge challenge = Challenge.builder()
+    private Challenge buildChallenge(ChallengeRequest challengeRequest) {
+        return Challenge.builder()
             .title(challengeRequest.title())
             .description(challengeRequest.description())
             .goal(challengeRequest.goal())
             .unit(challengeRequest.unit())
             .createdAt(ZonedDateTime.now())
             .build();
+    }
 
-        challengeRepository.save(challenge);
-        log.info("Challenge created successfully - ID: {}, Title: {}", challenge.getId(), challenge.getTitle());
-
+    private void addParticipantsToChallenge(List<User> participants, Challenge challenge) {
         participants.forEach(user -> addParticipant(user, challenge));
-        log.debug("Added {} participants to challenge ID: {}", participants.size(), challenge.getId());
     }
 
     private void addParticipant(User user, Challenge challenge) {
@@ -63,136 +84,151 @@ public class ChallengeService {
             .build();
 
         challengeParticipantsRepository.save(participant);
-        log.trace("Added participant - User ID: {} to Challenge ID: {}", user.getId(), challenge.getId());
+        challengeLogger.logParticipantAdded(user.getId(), challenge.getId());
     }
 
     public List<ChallengeResponse> getChallenges(Integer userId) {
-        log.info("Fetching challenges for user ID: {}", userId);
+        challengeLogger.logFetchingChallenges(userId);
 
         List<ChallengeParticipants> participantRecords = challengeParticipantsRepository.findByUserId(userId);
 
         if (participantRecords.isEmpty()) {
-            log.debug("No challenges found for user ID: {}", userId);
+            challengeLogger.logNoChallengesFound(userId);
             return new ArrayList<>();
         }
 
-        List<Challenge> challenges = participantRecords.stream()
+        List<Challenge> challenges = extractAndSortChallenges(participantRecords);
+        challengeLogger.logChallengesFound(challenges.size(), userId);
+        return mapToResponses(challenges);
+    }
+
+    private List<Challenge> extractAndSortChallenges(List<ChallengeParticipants> participantRecords) {
+        return participantRecords.stream()
             .map(ChallengeParticipants::getChallenge)
             .sorted(Comparator.comparingLong(Challenge::getId))
             .toList();
+    }
 
-        log.debug("Found {} challenges for user ID: {}", challenges.size(), userId);
+    private List<ChallengeResponse> mapToResponses(List<Challenge> challenges) {
         return challenges.stream()
             .map(challengeMapper::mapToChallengeResponse)
             .collect(Collectors.toList());
     }
 
     public void updateProgress(Integer userId, Long challengeId, Integer progress) {
-        log.info("Updating progress - User ID: {}, Challenge ID: {}, Progress: {}",
-            userId, challengeId, progress
-        );
+        challengeLogger.logUpdatingProgress(userId, challengeId, progress);
 
-        ChallengeParticipants participant = challengeParticipantsRepository
-            .findByUserIdAndChallengeId(userId, challengeId)
-            .orElseThrow(() -> {
-                log.error("Participant not found - User ID: {}, Challenge ID: {}", userId, challengeId);
-                return new RuntimeException("User " + userId + " isn't participating in challenge " + challengeId);
-            });
-
+        ChallengeParticipants participant = findParticipantOrThrow(userId, challengeId);
         participant.setProgress(progress);
         challengeParticipantsRepository.save(participant);
-        log.debug("Progress updated successfully for participant ID: {}", participant.getId());
+        challengeLogger.logProgressUpdated(participant.getId());
+    }
+
+    private ChallengeParticipants findParticipantOrThrow(Integer userId, Long challengeId) {
+        return challengeParticipantsRepository.findByUserIdAndChallengeId(userId, challengeId)
+            .orElseThrow(() -> {
+                challengeLogger.logParticipantNotFoundError(userId, challengeId);
+                return new RuntimeException(
+                    String.format(USER_NOT_PARTICIPATING_MESSAGE, userId, challengeId));
+            });
     }
 
     public void modifyChallenge(Long challengeId, ChallengeModificationRequest challengeModificationRequest) {
-        log.info("Modifying challenge ID: {}", challengeId);
-        log.debug("Modification details: {}", challengeModificationRequest);
+        challengeLogger.logModifyingChallenge(challengeId);
+        challengeLogger.logModificationDetails(challengeModificationRequest);
 
-        Challenge challenge = challengeRepository.findById(challengeId)
-            .orElseThrow(() -> {
-                log.error("Challenge not found - ID: {}", challengeId);
-                return new RuntimeException("Challenge not found");
-            });
-
-        if (challengeModificationRequest.title() != null) {
-            log.debug("Updating title from '{}' to '{}'",
-                challenge.getTitle(), challengeModificationRequest.title()
-            );
-            challenge.setTitle(challengeModificationRequest.title());
-        }
-        if (challengeModificationRequest.description() != null) {
-            log.debug("Updating description");
-            challenge.setDescription(challengeModificationRequest.description());
-        }
-        if (challengeModificationRequest.goal() != null) {
-            log.debug("Updating goal from {} to {}",
-                challenge.getGoal(), challengeModificationRequest.goal()
-            );
-            challenge.setGoal(challengeModificationRequest.goal());
-        }
-        if (challengeModificationRequest.unit() != null) {
-            log.debug("Updating unit from '{}' to '{}'",
-                challenge.getUnit(), challengeModificationRequest.unit()
-            );
-            challenge.setUnit(challengeModificationRequest.unit());
-        }
-
+        Challenge challenge = findChallengeOrThrow(challengeId);
+        
+        updateChallengeFields(challenge, challengeModificationRequest);
         challengeRepository.save(challenge);
-        log.info("Challenge ID: {} updated successfully", challengeId);
+        challengeLogger.logChallengeUpdated(challengeId);
 
         if (challengeModificationRequest.participants() != null) {
-            log.debug("Processing participants modification");
+            challengeLogger.logProcessingParticipants();
             modifyParticipants(challenge, challengeModificationRequest.participants());
         }
     }
 
-    private void modifyParticipants(Challenge challenge, List<String> participants) {
-        log.debug("Modifying participants for challenge ID: {}", challenge.getId());
+    private Challenge findChallengeOrThrow(Long challengeId) {
+        return challengeRepository.findById(challengeId)
+            .orElseThrow(() -> {
+                challengeLogger.logChallengeNotFoundError(challengeId);
+                return new RuntimeException(CHALLENGE_NOT_FOUND_MESSAGE);
+            });
+    }
 
-        List<User> users = userRepository.findAllByNameIn(participants);
-
-        if (users.size() != participants.size()) {
-            log.error("Participant modification failed - one or more participants not found");
-            throw new IllegalArgumentException("One or more participants not found");
+    private void updateChallengeFields(Challenge challenge, ChallengeModificationRequest request) {
+        if (request.title() != null) {
+            challengeLogger.logUpdatingTitle(challenge.getTitle(), request.title());
+            challenge.setTitle(request.title());
         }
+        if (request.description() != null) {
+            challengeLogger.logUpdatingDescription();
+            challenge.setDescription(request.description());
+        }
+        if (request.goal() != null) {
+            challengeLogger.logUpdatingGoal(challenge.getGoal(), request.goal());
+            challenge.setGoal(request.goal());
+        }
+        if (request.unit() != null) {
+            challengeLogger.logUpdatingUnit(challenge.getUnit(), request.unit());
+            challenge.setUnit(request.unit());
+        }
+    }
 
+    private void modifyParticipants(Challenge challenge, List<String> participantNames) {
+        challengeLogger.logModifyingParticipants(challenge.getId());
+        List<User> users = validateAndGetUsersByNames(participantNames);
+        addNewParticipants(challenge, users);
+    }
+
+    private List<User> validateAndGetUsersByNames(List<String> participantNames) {
+        List<User> users = userRepository.findAllByNameIn(participantNames);
+        if (users.size() != participantNames.size()) {
+            challengeLogger.logParticipantModificationError();
+            throw new IllegalArgumentException(PARTICIPANTS_NOT_FOUND_MESSAGE);
+        }
+        return users;
+    }
+
+    private void addNewParticipants(Challenge challenge, List<User> users) {
         users.forEach(user -> {
             boolean alreadyParticipating = challengeParticipantsRepository
                 .existsByUserIdAndChallengeId(user.getId(), challenge.getId());
             if (!alreadyParticipating) {
-                log.debug("Adding new participant - User ID: {}", user.getId());
+                challengeLogger.logAddingParticipant(user.getId());
                 addParticipant(user, challenge);
             }
         });
     }
 
     public void deleteChallenge(Integer userId, Long challengeId) {
-        log.info("Deleting challenge - User ID: {}, Challenge ID: {}", userId, challengeId);
+        challengeLogger.logDeletingChallenge(userId, challengeId);
 
-        Challenge challenge = challengeRepository.findById(challengeId)
-            .orElseThrow(() -> {
-                log.error("Delete failed - challenge not found - ID: {}", challengeId);
-                return new RuntimeException("Challenge not found");
-            });
-
-        ChallengeParticipants participant = challengeParticipantsRepository
-            .findByUserIdAndChallengeId(userId, challengeId)
-            .orElseThrow(() -> {
-                log.error("Delete failed - user not participating - User ID: {}, Challenge ID: {}",
-                    userId, challengeId
-                );
-                return new RuntimeException("User is not participating in this challenge");
-            });
+        Challenge challenge = findChallengeOrThrow(challengeId);
+        ChallengeParticipants participant = findParticipantForDeletion(userId, challengeId);
 
         challengeParticipantsRepository.delete(participant);
-        log.debug("Removed participant - User ID: {} from Challenge ID: {}", userId, challengeId);
+        challengeLogger.logParticipantRemoved(userId, challengeId);
+        
+        deleteChallengeIfNoParticipants(challengeId, challenge);
+    }
 
+    private ChallengeParticipants findParticipantForDeletion(Integer userId, Long challengeId) {
+        return challengeParticipantsRepository.findByUserIdAndChallengeId(userId, challengeId)
+            .orElseThrow(() -> {
+                challengeLogger.logDeleteUserNotParticipatingError(userId, challengeId);
+                return new RuntimeException(USER_NOT_IN_CHALLENGE_MESSAGE);
+            });
+    }
+
+    private void deleteChallengeIfNoParticipants(Long challengeId, Challenge challenge) {
         boolean hasParticipants = challengeParticipantsRepository.existsByChallengeId(challengeId);
         if (!hasParticipants) {
             challengeRepository.delete(challenge);
-            log.info("Challenge ID: {} deleted (no remaining participants)", challengeId);
+            challengeLogger.logChallengeDeleted(challengeId);
         } else {
-            log.debug("Challenge ID: {} retained (remaining participants exist)", challengeId);
+            challengeLogger.logChallengeRetained(challengeId);
         }
     }
 }
