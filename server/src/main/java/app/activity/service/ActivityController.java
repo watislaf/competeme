@@ -78,4 +78,19 @@ public class ActivityController {
     public UserActivityResponse getActivities(@PathVariable Integer userId) {
         return activityService.getActivities(userId);
     }
+
+    @GetMapping("/random")
+    @Operation(
+        summary = "Get random activity",
+        description = "Retrieves a random activity",
+        security = {@SecurityRequirement(name = "JwtAuth")}
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Activity successfully retrieved"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized access"),
+        @ApiResponse(responseCode = "403", description = "Access denied")
+    })
+    public String getRandomActivity(@PathVariable Integer userId) {
+        return activityService.getRandomActivity(userId);
+    }
 }

@@ -5,10 +5,13 @@ import app.activity.entity.ActivityRepository;
 import app.stats.service.TimeFormatter;
 import app.user.entity.User;
 import app.user.entity.UserRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
@@ -112,5 +115,21 @@ public class ActivityService {
                 log.error("User not found for ID: {}", userId);
                 return new IllegalArgumentException("User not found");
             });
+    }
+
+    public String getRandomActivity(Integer userId) {
+        RestTemplate restTemplate = new RestTemplate();
+        String apiUrl = "https://bored-api.appbrewery.com/random";
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            log.info("Fetching random activity for user ID: {}", userId);
+            String fullJson = restTemplate.getForObject(apiUrl, String.class);
+            JsonNode rootNode = mapper.readTree(fullJson);
+            return rootNode.get("activity").asText();
+        } catch (Exception e) {
+            log.error("Error fetching random activity");
+            return "Could not fetch activity";
+        }
     }
 }

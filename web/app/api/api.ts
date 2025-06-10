@@ -20,7 +20,4 @@ export * from './apis/challenges-api';
 export * from './apis/friendship-management-api';
 export * from './apis/user-management-api';
 export * from './apis/user-statistics-api';
-export * from './apis/user-statistics-api';
-export * from './apis/friendship-controller-api';
-export * from './apis/stats-controller-api';
 

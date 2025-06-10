@@ -8,11 +8,11 @@ import {
   Pencil,
   Check,
   X,
+  Dice5,
 } from "lucide-react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "../components/ui/card";
@@ -23,6 +23,7 @@ import { Input } from "../components/ui/input";
 import { useProfiles } from "../hooks/user/useProfiles";
 import { useStats } from "../hooks/stats/useStats";
 import { apis } from "../api/initializeApi";
+import { useActivity } from "@/hooks/activity/useActivity";
 
 export default function HomePage() {
   const { userId } = useParams();
@@ -35,6 +36,10 @@ export default function HomePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [tempName, setTempName] = useState("");
   const [userName, setUserName] = useState("");
+
+  const { getRandomActivity } = useActivity(Number(userId));
+  const [randomActivity, setRandomActivity] = useState<string | null>(null);
+  const [isLoadingRandom, setIsLoadingRandom] = useState(false);
 
   useEffect(() => {
     if (profile?.name) {
@@ -68,6 +73,23 @@ export default function HomePage() {
   const handleCancel = () => {
     setTempName(userName);
     setIsEditing(false);
+  };
+
+  const handleRandomActivity = async () => {
+    setIsLoadingRandom(true);
+    try {
+      const result = await getRandomActivity();
+      setRandomActivity(result);
+    } catch (error) {
+      console.error("Error fetching random activity:", error);
+      const errorMessage =
+        error instanceof Error
+          ? `Failed to fetch activity: ${error.message}`
+          : "Failed to fetch random activity";
+      setRandomActivity(errorMessage);
+    } finally {
+      setIsLoadingRandom(false);
+    }
   };
 
   if (isLoadingProfile || isLoadingStats) {
@@ -181,11 +203,38 @@ export default function HomePage() {
         </Link>
       </div>
 
-      <Card>
+      <Card className="mt-8">
         <CardHeader>
-          <CardTitle>Leaderboard</CardTitle>
-          <CardDescription>Top 3 friends this week</CardDescription>
+          <CardTitle className="flex items-center justify-between">
+            <span>Don&apos;t know what to do?</span>
+            <Button
+              onClick={handleRandomActivity}
+              disabled={isLoadingRandom}
+              size="sm"
+            >
+              {isLoadingRandom ? (
+                "Loading..."
+              ) : (
+                <>
+                  <Dice5 className="mr-2 h-4 w-4" />
+                  Get Random Activity
+                </>
+              )}
+            </Button>
+          </CardTitle>
         </CardHeader>
+        <CardContent>
+          {randomActivity ? (
+            <div className="text-lg">
+              <p className="font-semibold">Try this:</p>
+              <p>{randomActivity}</p>
+            </div>
+          ) : (
+            <p className="text-muted-foreground">
+              Click the button to get a random activity suggestion
+            </p>
+          )}
+        </CardContent>
       </Card>
 
       {stats?.topActivity && (
