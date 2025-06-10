@@ -26,47 +26,88 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final AuthLogger authLogger = new AuthLogger(log);
 
     public AuthenticationResponse register(RegistrationRequest request) {
-        log.info("Attempting to register new user with email: {}", request.email());
+        long startTime = System.currentTimeMillis();
+        authLogger.logRegistrationAttempt(request.email());
 
+        validateRegistrationRequest(request);
+
+        User user = createUser(request);
+        repository.save(user);
+        authLogger.logRegistrationSuccess(user.getId(), user.getEmail());
+
+        AuthenticationResponse response = generateTokensForUser(user);
+        authLogger.logTokensGenerated(user.getId());
+        authLogger.logRegistrationPerformance(request.email(), startTime);
+        
+        return response;
+    }
+
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        long startTime = System.currentTimeMillis();
+        authLogger.logAuthAttempt(request.email());
+
+        User user = findUserByEmail(request.email());
+        authenticateUser(request, user);
+
+        AuthenticationResponse response = generateTokensForUser(user);
+        authLogger.logAuthSuccess(user.getId(), user.getEmail());
+        authLogger.logAuthenticationPerformance(request.email(), startTime);
+        
+        return response;
+    }
+
+    public AuthenticationResponse refresh(String refreshToken) {
+        long startTime = System.currentTimeMillis();
+        authLogger.logRefreshRequest();
+
+        validateRefreshToken(refreshToken);
+        
+        String userId = jwtService.extractUserId(refreshToken);
+        authLogger.logRefreshProcessing(userId);
+
+        User user = findUserById(Integer.valueOf(userId));
+        AuthenticationResponse response = generateTokensForUser(user);
+        
+        authLogger.logRefreshSuccess(userId);
+        authLogger.logTokenRefreshPerformance(userId, startTime);
+        
+        return response;
+    }
+
+    private void validateRegistrationRequest(RegistrationRequest request) {
         repository.findByName(request.username()).ifPresent(user -> {
-            log.warn("Registration failed - username already taken: {}", request.username());
+            authLogger.logUsernameTaken(request.username());
             throw new UserAlreadyExists("Username is already in use");
         });
 
         repository.findByEmail(request.email()).ifPresent(user -> {
-            log.warn("Registration failed - email already registered: {}", request.email());
+            authLogger.logEmailAlreadyExists(request.email());
             throw new UserAlreadyExists("User with this email already exists");
         });
+    }
 
-        var user = User.builder()
+    private User createUser(RegistrationRequest request) {
+        return User.builder()
             .email(request.email())
             .password(passwordEncoder.encode(request.password()))
             .name(request.username())
             .dateJoined(ZonedDateTime.now())
             .role(Role.USER)
             .build();
-
-        repository.save(user);
-        log.info("User registered successfully - ID: {}, Email: {}", user.getId(), user.getEmail());
-
-        var accessToken = jwtService.generateAccessToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-
-        log.debug("Tokens generated for user ID: {}", user.getId());
-        return new AuthenticationResponse(accessToken, refreshToken, user.getId());
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        log.info("Authentication attempt for email: {}", request.email());
-
-        var user = repository.findByEmail(request.email())
+    private User findUserByEmail(String email) {
+        return repository.findByEmail(email)
             .orElseThrow(() -> {
-                log.warn("Authentication failed - user not found for email: {}", request.email());
+                authLogger.logAuthUserNotFound(email);
                 return new UsernameNotFoundException("User not found");
             });
+    }
 
+    private void authenticateUser(AuthenticationRequest request, User user) {
         try {
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -74,40 +115,31 @@ public class AuthenticationService {
                     request.password()
                 )
             );
-            log.debug("Authentication successful for user ID: {}", user.getId());
+            authLogger.logAuthCredentialsSuccess(user.getId());
         } catch (BadCredentialsException e) {
-            log.warn("Authentication failed - invalid credentials for email: {}", request.email());
+            authLogger.logAuthInvalidCredentials(request.email());
             throw new BadCredentialsException("Invalid email or password");
         }
-
-        var accessToken = jwtService.generateAccessToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-
-        log.info("User authenticated successfully - ID: {}, Email: {}", user.getId(), user.getEmail());
-        return new AuthenticationResponse(accessToken, refreshToken, user.getId());
     }
 
-    public AuthenticationResponse refresh(String refreshToken) {
-        log.debug("Refresh token request received");
-
+    private void validateRefreshToken(String refreshToken) {
         if (refreshToken == null || !jwtService.isTokenValid(refreshToken)) {
-            log.warn("Invalid refresh token attempt");
+            authLogger.logRefreshInvalidToken();
             throw new JwtException("Invalid refresh token");
         }
+    }
 
-        String userId = jwtService.extractUserId(refreshToken);
-        log.debug("Processing refresh token for user ID: {}", userId);
-
-        var user = repository.findById(Integer.valueOf(userId))
+    private User findUserById(Integer userId) {
+        return repository.findById(userId)
             .orElseThrow(() -> {
-                log.error("User not found during refresh for ID: {}", userId);
+                authLogger.logRefreshUserNotFound(userId.toString());
                 return new Unauthorized();
             });
+    }
 
-        String newAccessToken = jwtService.generateAccessToken(user);
-        String newRefreshToken = jwtService.generateRefreshToken(user);
-
-        log.info("Tokens refreshed successfully for user ID: {}", userId);
-        return new AuthenticationResponse(newAccessToken, newRefreshToken, user.getId());
+    private AuthenticationResponse generateTokensForUser(User user) {
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        return new AuthenticationResponse(accessToken, refreshToken, user.getId());
     }
 }
