@@ -64,7 +64,9 @@ public class UserController {
         @ApiResponse(responseCode = "403", description = "Access denied")
     })
     public void updateProfileImage(@PathVariable Integer id, @RequestBody String imageUrl) {
-        userService.updateProfileImage(id, imageUrl);
+        // Convert JSON string "null" to actual null
+        String actualImageUrl = "null".equals(imageUrl) ? null : imageUrl;
+        userService.updateProfileImage(id, actualImageUrl);
     }
 
     @PutMapping("/{userId}/updateName")

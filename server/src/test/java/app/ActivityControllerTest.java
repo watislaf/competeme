@@ -80,9 +80,9 @@ class ActivityControllerTest extends BaseControllerTest {
 
         performGet("/api/v1/users/1/activities/")
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.availableActivities.size()").value(2))
-                .andExpect(jsonPath("$.recentActivities.size()").value(1))
-                .andExpect(jsonPath("$.availableActivities[0].title").value("Push-ups"));
+                .andExpect(jsonPath("$.available.size()").value(2))
+                .andExpect(jsonPath("$.recent.size()").value(1))
+                .andExpect(jsonPath("$.available[0].title").value("Push-ups"));
     }
 
     @Test
@@ -92,8 +92,8 @@ class ActivityControllerTest extends BaseControllerTest {
 
         performGet("/api/v1/users/1/activities/")
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.availableActivities.size()").value(0))
-                .andExpect(jsonPath("$.recentActivities.size()").value(0));
+                .andExpect(jsonPath("$.available.size()").value(0))
+                .andExpect(jsonPath("$.recent.size()").value(0));
     }
 
     @Test

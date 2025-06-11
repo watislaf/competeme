@@ -23,13 +23,13 @@ class StatsControllerTest extends BaseControllerTest {
 
     @Test
     void shouldGetUserStats() throws Exception {
-        var mockResponse = new StatsResponse("150", "300", "7", null, "21", "45%", null, null, List.of(), List.of(), List.of(), "Great progress!");
+        var mockResponse = new StatsResponse("150", "7", "21", null, "45", "300", null, null, List.of(), List.of(), List.of(), "Great progress!");
         when(statsService.getStats(1)).thenReturn(mockResponse);
 
         performGet("/api/v1/users/1/stats/")
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalTimeThisWeek").value("150"))
-                .andExpect(jsonPath("$.totalTimeThisMonth").value("300"));
+                .andExpect(jsonPath("$.currentStreak").value("7"));
     }
 
     @Test

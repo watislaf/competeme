@@ -44,7 +44,7 @@ public class ActivityController {
         @ApiResponse(responseCode = "401", description = "Unauthorized access"),
         @ApiResponse(responseCode = "403", description = "Access denied")
     })
-    public void addProgress(@PathVariable Integer userId, @PathVariable Long activityId, Long progressInMinutes) {
+    public void addProgress(@PathVariable Integer userId, @PathVariable Long activityId, @RequestBody Long progressInMinutes) {
         activityService.addProgress(activityId, progressInMinutes, userId);
     }
 
