@@ -15,7 +15,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.Clock;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +37,9 @@ class ActivityServiceTest {
     
     @Mock
     private TimeFormatter timeFormatter;
+    
+    @Mock
+    private Clock clock;
     
     @InjectMocks
     private ActivityService activityService;
@@ -61,6 +67,10 @@ class ActivityServiceTest {
             .build();
 
         activityRequest = new ActivityRequest("Running", Type.DUMBBELL, 30L);
+        
+        // Mock clock to return a fixed time
+        when(clock.getZone()).thenReturn(ZoneId.systemDefault());
+        when(clock.instant()).thenReturn(Instant.parse("2023-01-01T00:00:00Z"));
     }
 
     @Test
@@ -76,7 +86,7 @@ class ActivityServiceTest {
             activity.getType().equals(Type.DUMBBELL) &&
             activity.getDuration().equals(Duration.ofMinutes(30)) &&
             activity.getUser().equals(testUser) &&
-            activity.getDate() != null
+            activity.getDate().equals(ZonedDateTime.now(clock))
         ));
     }
 
@@ -111,7 +121,7 @@ class ActivityServiceTest {
         verify(activityRepository).findById(1L);
         verify(activityRepository).save(argThat(activity ->
             activity.getDuration().equals(Duration.ofMinutes(50)) &&
-            activity.getDate().isAfter(ZonedDateTime.now().minusMinutes(1))
+            activity.getDate().equals(ZonedDateTime.now(clock))
         ));
         verify(timeFormatter).formatDuration(Duration.ofMinutes(50));
     }
@@ -224,15 +234,13 @@ class ActivityServiceTest {
 
     @Test
     void addActivity_CreatesActivityWithCorrectTimestamp() {
-        ZonedDateTime beforeCall = ZonedDateTime.now().minusSeconds(1);
         when(userRepository.findById(1)).thenReturn(Optional.of(testUser));
         when(activityRepository.save(any(Activity.class))).thenReturn(testActivity);
 
         activityService.addActivity(1, activityRequest);
 
         verify(activityRepository).save(argThat(activity ->
-            activity.getDate().isAfter(beforeCall) &&
-            activity.getDate().isBefore(ZonedDateTime.now().plusSeconds(1))
+            activity.getDate().equals(ZonedDateTime.now(clock))
         ));
     }
 
@@ -247,14 +255,13 @@ class ActivityServiceTest {
             .user(testUser)
             .build();
 
-        ZonedDateTime originalDate = existingActivity.getDate();
         when(activityRepository.findById(1L)).thenReturn(Optional.of(existingActivity));
         when(timeFormatter.formatDuration(any(Duration.class))).thenReturn("50 minutes");
 
         activityService.addProgress(1L, 20L, 1);
 
         verify(activityRepository).save(argThat(activity ->
-            activity.getDate().isAfter(originalDate)
+            activity.getDate().equals(ZonedDateTime.now(clock))
         ));
     }
 
@@ -351,7 +358,8 @@ class ActivityServiceTest {
         activityService.addProgress(1L, 0L, 1);
 
         verify(activityRepository).save(argThat(activity ->
-            activity.getDuration().equals(Duration.ofMinutes(30))
+            activity.getDuration().equals(Duration.ofMinutes(30)) &&
+            activity.getDate().equals(ZonedDateTime.now(clock))
         ));
     }
 } 

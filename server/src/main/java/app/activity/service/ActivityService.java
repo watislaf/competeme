@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.time.Clock;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ public class ActivityService {
     private final ActivityRepository activityRepository;
     private final UserRepository userRepository;
     private final TimeFormatter timeFormatter;
+    private final Clock clock;
     private final ActivityLogger activityLogger = new ActivityLogger(log);
 
     @CacheEvict(value = "statsCache", key = "#userId")
@@ -137,7 +139,7 @@ public class ActivityService {
             .title(activityRequest.title())
             .type(activityRequest.type())
             .duration(Duration.ofMinutes(activityRequest.duration()))
-            .date(ZonedDateTime.now())
+            .date(ZonedDateTime.now(clock))
             .user(user)
             .build();
     }
@@ -148,7 +150,7 @@ public class ActivityService {
         Duration updatedDuration = currentDuration.plus(progress);
         
         activity.setDuration(updatedDuration);
-        activity.setDate(ZonedDateTime.now());
+        activity.setDate(ZonedDateTime.now(clock));
         
         return updatedDuration;
     }
