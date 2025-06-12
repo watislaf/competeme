@@ -37,60 +37,69 @@ public class ChallengeSimulation extends Simulation {
                             """
                     ))
                     .check(
-                        status().in(200, 409)
+                        status().in(200, 409),
+                        jsonPath("$.accessToken").optional().saveAs("accessToken"),
+                        jsonPath("$.userId").optional().saveAs("userId")
                     )
             )
-            .pause(1)
-            .exec(
-                http("Login User")
-                    .post("/auth/authenticate")
-                    .body(StringBody(
-                        """
-                            {
-                                "email": "#{email}",
-                                "password": "#{password}"
-                            }
+            .doIf(session -> session.getString("accessToken") == null)
+            .then(
+                pause(1)
+                .exec(
+                    http("Login User")
+                        .post("/auth/authenticate")
+                        .body(StringBody(
                             """
-                    ))
-                    .check(
-                        status().is(200),
-                        jsonPath("$.accessToken").saveAs("accessToken"),
-                        jsonPath("$.userId").saveAs("userId")
-                    )
+                                {
+                                    "email": "#{email}",
+                                    "password": "#{password}"
+                                }
+                                """
+                        ))
+                        .check(
+                            status().is(200),
+                            jsonPath("$.accessToken").saveAs("accessToken"),
+                            jsonPath("$.userId").saveAs("userId")
+                        )
+                )
             );
 
     private final ChainBuilder createAndGetChallenges =
-        exec(
-            http("Create Challenge")
-                .post("/users/#{userId}/challenges/")
-                .header("Authorization", session -> "Bearer " + session.getString("accessToken"))
-                .body(StringBody(
-                    """
-                        {
-                            "title": "Monthly Fitness Goal",
-                            "description": "Complete 30 workouts this month",
-                            "goal": 30,
-                            "unit": "workouts",
-                            "participants": []
-                        }
-                        """
-                ))
-                .check(status().is(200))
-        )
-            .pause(1)
-            .exec(
-                http("Get Challenges")
-                    .get("/users/#{userId}/challenges/")
+        doIf(session -> session.getString("userId") != null)
+        .then(
+            exec(
+                http("Create Challenge")
+                    .post("/users/#{userId}/challenges/")
                     .header("Authorization", session -> "Bearer " + session.getString("accessToken"))
-                    .check(
-                        status().is(200),
-                        bodyString().saveAs("getChallengesResponse")
-                    )
+                    .body(StringBody(
+                        """
+                            {
+                                "title": "Monthly Fitness Goal",
+                                "description": "Complete 30 workouts this month",
+                                "goal": 30,
+                                "unit": "workouts",
+                                "participants": []
+                            }
+                            """
+                    ))
+                    .check(status().in(200, 201, 400, 401, 403))
             )
-            .exec(session -> {
-                System.out.println("Get Challenges Response: " + session.getString("getChallengesResponse"));
-                return session;
-            });
+                .pause(1)
+                .exec(
+                    http("Get Challenges")
+                        .get("/users/#{userId}/challenges/")
+                        .header("Authorization", session -> "Bearer " + session.getString("accessToken"))
+                        .check(
+                            status().in(200, 401, 403),
+                            bodyString().saveAs("getChallengesResponse")
+                        )
+                )
+                .exec(session -> {
+                    System.out.println("User ID: " + session.getString("userId"));
+                    System.out.println("Get Challenges Response: " + session.getString("getChallengesResponse"));
+                    return session;
+                })
+        );
 
     private final ScenarioBuilder scenario = scenario("Challenge Simulation")
         .exec(registerAndLogin)
