@@ -25,6 +25,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
 class ActivityServiceTest {
@@ -68,9 +69,9 @@ class ActivityServiceTest {
 
         activityRequest = new ActivityRequest("Running", Type.DUMBBELL, 30L);
         
-        // Mock clock to return a fixed time
-        when(clock.getZone()).thenReturn(ZoneId.systemDefault());
-        when(clock.instant()).thenReturn(Instant.parse("2023-01-01T00:00:00Z"));
+        // Mock clock to return a fixed time (lenient for tests that don't use it)
+        lenient().when(clock.getZone()).thenReturn(ZoneId.systemDefault());
+        lenient().when(clock.instant()).thenReturn(Instant.parse("2023-01-01T00:00:00Z"));
     }
 
     @Test
