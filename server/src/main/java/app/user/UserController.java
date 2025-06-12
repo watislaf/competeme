@@ -32,7 +32,6 @@ public class UserController {
         @ApiResponse(responseCode = "401", description = "Unauthorized access"),
         @ApiResponse(responseCode = "403", description = "Access denied")
     })
-    @UserReadAccess
     public UserProfileResponse getUserProfile(@PathVariable Integer userId) {
         return userService.getUserProfile(userId);
     }
