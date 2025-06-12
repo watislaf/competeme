@@ -2,10 +2,7 @@ package app.config.logging;
 
 import org.slf4j.Logger;
 
-/**
- * Base logging utility class that provides standardized logging patterns
- * and common functionality for all service loggers.
- */
+
 public abstract class BaseLogger {
     
     protected final Logger logger;

@@ -53,7 +53,6 @@ public class AuthenticationController {
     public AuthenticationResponse refresh(
         @RequestBody String refreshToken
     ) {
-        // Convert JSON string "null" to actual null
         String actualRefreshToken = "null".equals(refreshToken) ? null : refreshToken;
         return service.refresh(actualRefreshToken);
     }
