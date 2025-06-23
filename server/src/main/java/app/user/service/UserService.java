@@ -68,7 +68,7 @@ public class UserService {
     public void updateProfileImage(Integer userId, String imageUrl) {
         long startTime = System.currentTimeMillis();
         validateUserId(userId);
-        validateImageUrl(imageUrl);
+        //validateImageUrl(imageUrl);
         userLogger.logUpdatingProfileImage(userId);
 
         User user = getUserById(userId);
@@ -120,7 +120,7 @@ public class UserService {
     }
 
     private void validateImageUrl(String imageUrl) {
-        if (imageUrl != null && imageUrl.length() > 1000) {
+        if (imageUrl != null /* && imageUrl.length() > 1000*/) {
             userLogger.logImageUrlTooLong();
             throw new IllegalArgumentException("Image URL too long");
         }
